@@ -18,3 +18,6 @@ media/js/sherdjs/
 media/CACHE
 libpeerconnection.log
 reports
+media/admin/
+media/django_extensions/
+media/stick.js

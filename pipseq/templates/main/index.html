@@ -1,21 +1,176 @@
 {% extends 'base.html' %}
 
+{% block css %}
+    <link href="{{STATIC_URL}}css/tablesorter.css" rel="stylesheet" />
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/jquery.tablesorter.js"></script>
+
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery(function() {
+                jQuery("#sessions").tablesorter({
+                    sortList: [[2,1]],
+                    dateFormat:'mm/dd/yyyy hh:mm:ss tt'
+                 });
+            });
+        });
+    </script>
+{% endblock %}
+
 {% block content %}
-<div class="jumbotron">
-<h1>It works</h1>
-<p>Congratulations! Now start coding.</p>
-{% if not request.user.is_anonymous %}
-<p>This project includes Pagetree by default.</p>
+    {% if user.is_anonymous or not user.is_staff %}
+        <div class="jumbotron">
+            <h2>Meaningful Consent</h2>
+            <p>Vestibulum dapibus orci eu dignissim dapibus. Aliquam erat volutpat. 
+            Ut a volutpat diam. Duis ut aliquam lectus. Nunc eget pulvinar ipsum. 
+            Pellentesque feugiat eros in faucibus pulvinar. Phasellus elementum dui 
+            eget nisi pharetra, a venenatis sapien commodo. Suspendisse ac diam diam. 
+            Proin pellentesque tempor lectus, vitae imperdiet felis sodales ut. 
+            Nunc mauris elit, adipiscing a luctus nec, mollis at lorem. Sed semper molestie egestas.
+        </div>
+    
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8 intro-video">
+                <iframe width="640" height="384" src="https://surelink.ccnmtl.columbia.edu/video/?player=mp4_public_stream&file=/0dd4e098-7fa9-11e3-bc48-00163e3b1544-cdm_albert_spring2014_tobacco_cessation_nyp_dvd_clip1-mp4-aac-480w-850kbps-ffmpeg.mp4&width=640&height=360&poster=http://wardenclyffe.ccnmtl.columbia.edu/uploads/images/13255/00000011.jpg"></iframe>                            
+            </div>
+            <div class="col-md-2"></div>
+        </div>
+        <br /><br />
+        <div class="row">
+            <div class="col-md-3">
+                <h4>Helpful</h4>
+                <p>Aliquam posuere velit et dui vehicula auctor. 
+                Phasellus elementum risus nisl, et accumsan 
+                ligula mollis vel. Quisque sit amet bibendum eros. 
+                Fusce fermentum tincidunt nisl et sodales. 
+                Mauris vel lacus magna.</p>
+            </div>
+            <div class="col-md-3">
+                <h4>Scientific</h4>
+                <p>Aliquam posuere velit et dui vehicula auctor. 
+                Phasellus elementum risus nisl, et accumsan 
+                ligula mollis vel. Quisque sit amet bibendum eros. 
+                Fusce fermentum tincidunt nisl et sodales. 
+                Mauris vel lacus magna.</p>
+            </div>
+            <div class="col-md-3">
+                <h4>Educational</h4>
+                <p>Aliquam posuere velit et dui vehicula auctor. 
+                Phasellus elementum risus nisl, et accumsan 
+                ligula mollis vel. Quisque sit amet bibendum eros. 
+                Fusce fermentum tincidunt nisl et sodales. 
+                Mauris vel lacus magna.</p>
+            </div>
+            <div class="col-md-3">
+                <h4>Easy</h4>
+                <p>Aliquam posuere velit et dui vehicula auctor. 
+                Phasellus elementum risus nisl, et accumsan 
+                ligula mollis vel. Quisque sit amet bibendum eros. 
+                Fusce fermentum tincidunt nisl et sodales. 
+                Mauris vel lacus magna.</p>
+            </div>
+        </div>
+    {% else %}{% if user.is_staff %}
+        <h1>Welcome {{user.get_short_name}}!</h1>
+        <br />
+        {% if user.is_superuser %}
+            <div>
+                <h3>Manage Content</h3>
+                <ul class="nav nav-pills">
+                  <li><a href="/pages/en/edit/">English</a></li>
+                  <li><a href="/pages/es/edit/">Spanish</a></li>
+                </ul>
+            </div>
+        {% endif %}
+        
+        
+        <br />
+        <div>
+            <h3>Meaningful Consent</h3>
+            <p>Tellus ac cursus commodo, tortor mauris condimentum nibh, ut 
+            fermentum massa justo sit amet risus. Maecenas faucibus mollis interdum.</p>
+            <a class="btn btn-primary">Create Session</a>
+            
+            <!-- Button trigger modal -->
+            <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                Create Session
+            </button>
+            
+            <div class="modal fade">
+                <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Modal title</h4>
+                  </div>
+                  <div class="modal-body">
+                    <p>One fine body&hellip;</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                  </div>
+                </div><!-- /.modal-content -->
+                </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+        </div>
+        
+        <br />
+        <div>
+            <h3>Recent Sessions</h3>
+            <p>Tellus ac cursus commodo, tortor mauris condimentum nibh, ut 
+            fermentum massa justo sit amet risus. Maecenas faucibus mollis interdum.</p>
 
-<p>The first thing you'll want to do is go to
-	the <a href="/pages/edit/">Edit page</a> for the root node and add
-	some modules, child sections and content.</p>
+            <div class="pull-right"><a class="btn btn-default"><span class="glyphicon glyphicon-print"></span> Print</a></div>
 
-<p> If you don't want to use
-	Pagetree, you should remove it from your requirements.txt and
-	INSTALLED_APPS and clear the views out of your main/views.py</p>
-
-
-{% endif %}
-</div>
+            <div class="visualclear"></div>
+            <br /><br />
+            <table id="sessions" class="tablesorter tablesorter-bootstrap table table-bordered table-striped">
+                <thead>
+                    <tr class="tab">
+                        <td>Session Id</td>
+                        <td>Start</td>
+                        <td>End</td>
+                        <td>% Complete</td>
+                        <td>Actions</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>00000000</td>
+                        <td>11/1/2011 12:34 PM</td>
+                        <td>11/1/2011 1:00 PM</td>
+                        <td>100%</td>
+                        <td><a href="#" class="btn btn-default"><span class="glyphicon glyphicon-repeat"></span> Relaunch Session</a></td>
+                    </tr>
+                    <tr>
+                        <td>00000001</td>
+                        <td>11/2/2011 12:34 PM</td>
+                        <td>11/2/2011 1:00 PM</td>
+                        <td>100%</td>
+                        <td><a href="#" class="btn btn-default"><span class="glyphicon glyphicon-repeat"></span> Relaunch Session</a></td>
+                    </tr>
+                    <tr>
+                        <td>00000002</td>
+                        <td>11/4/2011 1:34 PM</td>
+                        <td>11/4/2011 2:34 PM</td>
+                        <td>100%</td>
+                        <td><a href="#" class="btn btn-default"><span class="glyphicon glyphicon-repeat"></span> Relaunch Session</a></td>
+                    </tr>
+                    <tr>
+                        <td>00000003</td>
+                        <td>11/4/2011 12:34 PM</td>
+                        <td>11/4/2011 1:34 PM</td>
+                        <td>100%</td>
+                        <td><a href="#" class="btn btn-default"><span class="glyphicon glyphicon-repeat"></span> Relaunch Session</a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        
+        
+    {% endif %}{% endif %}
 {% endblock %}

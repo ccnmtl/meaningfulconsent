@@ -27,7 +27,6 @@ urlpatterns = patterns(
     '',
     auth_urls,
     logout_page,
-    (r'^registration/', include('registration.backends.default.urls')),
     (r'^$', views.IndexView.as_view()),
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
@@ -37,15 +36,22 @@ urlpatterns = patterns(
      'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
     (r'^pagetree/', include('pagetree.urls')),
     (r'^quizblock/', include('quizblock.urls')),
-    (r'^pages/edit/(?P<path>.*)$', login_required(EditView.as_view(
-        hierarchy_name="main",
-        hierarchy_base="/pages/")),
+
+    # English
+    (r'^pages/en/edit/(?P<path>.*)$', login_required(EditView.as_view(
+        hierarchy_name="en",
+        hierarchy_base="/pages/en/")),
      {}, 'edit-page'),
-    (r'^pages/instructor/(?P<path>.*)$',
-        login_required(InstructorView.as_view(
-            hierarchy_name="main",
-            hierarchy_base="/pages/"))),
-    (r'^pages/(?P<path>.*)$', PageView.as_view(
-        hierarchy_name="main",
-        hierarchy_base="/pages/")),
+    (r'^pages/en/(?P<path>.*)$', PageView.as_view(
+        hierarchy_name="en",
+        hierarchy_base="/pages/en/")),
+
+    # Spanish
+    (r'^pages/es/edit/(?P<path>.*)$', login_required(EditView.as_view(
+        hierarchy_name="es",
+        hierarchy_base="/pages/es/")),
+     {}, 'edit-page'),
+    (r'^pages/es/(?P<path>.*)$', PageView.as_view(
+        hierarchy_name="es",
+        hierarchy_base="/pages/es/")),
 )

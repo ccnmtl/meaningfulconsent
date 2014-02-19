@@ -122,7 +122,6 @@ INSTALLED_APPS = [
     'smoketest',
     'django_extensions',
     'impersonate',
-    'registration',
     'pagetree',
     'pageblocks',
     'quizblock',
@@ -199,6 +198,7 @@ SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 SESSION_COOKIE_HTTPONLY = True
 SESSION_SERIALIZER = 'django.contrib.sessions.serializers.JSONSerializer'
 LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
@@ -206,5 +206,3 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
 }
-
-ACCOUNT_ACTIVATION_DAYS = 7

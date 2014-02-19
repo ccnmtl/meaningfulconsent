@@ -10,7 +10,7 @@ body {
 body > .container {
   background-color: #fff;
   min-height: 100%;
-  padding-top: 75px;
+  padding-top: 25px;
 }
 
 #content {
@@ -156,4 +156,113 @@ body > .container {
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;
     line-height: 140%;
+}
+
+/* NAV BAR NEAR TOP PAGE BANNER */
+
+.navbar-pl {
+  border: 0;
+  border-radius: 0;
+  margin-bottom: 0;
+  min-height: 20px;
+}
+
+.navbar-pl a {
+  
+}
+
+.navbar-pl a:hover {
+  
+}
+
+.navbar-pl a:hover .glyphicon-home {
+  
+}
+
+.navbar-pl .navbar-toggle {
+  border: 0;
+  color: #000;
+}
+
+.navbar-pl .navbar-toggle:hover {  
+  border: 0;
+}
+
+.navbar-pl .navbar-toggle:hover .icon-bar {
+}
+
+.navbar-nav-pl {
+  margin: 0;
+  padding: 0;
+}
+
+.navbar-nav-pl>li>a {
+  font-size: 13px;
+  font-weight: 200;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+
+.navbar-nav-pl>li>a.btn-log-in {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  border: 0;
+  font-weight: 500;
+}
+
+.navbar-nav-pl>li>a.btn-log-in:hover {
+  color: #c33 !important;
+}
+
+li.logged-in-greeting {
+  padding-top: 10px;
+  padding-bottom: 10px;
+  padding-right: 15px;
+}
+
+li.logged-in-greeting span {
+    color: #999;
+}
+
+li.logged-in-greeting a {
+  margin: 0;
+  padding: 0;
+  display: inline;
+}
+
+li.logged-in-greeting a span div {
+  white-space: nowrap !important;
+}
+
+/* footer */
+footer {
+  margin: 0 auto 0 auto;
+  padding: 0;
+  border: 0;
+  text-align: center;
+}
+
+footer a {
+  margin: 0;
+  border: 0;
+  outline: 0;
+}
+
+footer img {
+  margin: 20px 0 0 0;
+  border: 0;
+  outline: 0;
+  width: 150px;
+}
+
+
+/* index.html Landing page */
+iframe {
+    border: 0;
+}
+
+div.intro-video {
+    text-align: center;
 }
