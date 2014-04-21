@@ -1,14 +1,12 @@
+from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
-from django.conf import settings
 from django.views.generic import TemplateView
-from pagetree.generic.views import PageView, EditView
 from meaningfulconsent.main import views
-import os.path
+from pagetree.generic.views import PageView, EditView
 admin.autodiscover()
 
-site_media_root = os.path.join(os.path.dirname(__file__), "../media")
 
 redirect_after_logout = getattr(settings, 'LOGOUT_REDIRECT_URL', None)
 auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))

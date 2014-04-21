@@ -183,18 +183,18 @@
 </div> <!-- /.container-pl -->
 
     {% block footer %}
-<footer class="footer">
-  <a href="http://ccnmtl.columbia.edu" target="_blank" title="Columbia Center for New Media Teaching and Learning"><img src="{{STATIC_URL}}img/logo_ccnmtl.png" /></a>
-</footer>
-{% endblock %}
+        <footer class="footer">
+            <a href="http://ccnmtl.columbia.edu" target="_blank" title="Columbia Center for New Media Teaching and Learning"><img src="{{STATIC_URL}}img/logo_ccnmtl.png" /></a>
+        </footer>
+    {% endblock %}
 
-<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+    <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
 
-{% compress js %}
-    <script src="{{STATIC_URL}}bootstrap/js/bootstrap.js"></script>
+    {% compress js %}
+        <script src="{{STATIC_URL}}bootstrap/js/bootstrap.js"></script>    
+    {% endcompress %}
+    
     {% block js %}{% endblock %}
-{% endcompress %}
-
 
 {% if STAGING_ENV %}
     <div class="alert alert-danger alert-dismissable" style="position: fixed; bottom: 0px;">
