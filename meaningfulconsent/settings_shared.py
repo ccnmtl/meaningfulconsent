@@ -1,4 +1,4 @@
-# Django settings for pipseq project.
+# Django settings for meaningfulconsent project.
 import os.path
 import sys
 
@@ -12,7 +12,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pipseq',
+        'NAME': 'meaningfulconsent',
         'HOST': '',
         'PORT': 5432,
         'USER': '',
@@ -37,7 +37,7 @@ SOUTH_TESTS_MIGRATE = False
 
 NOSE_ARGS = [
     '--with-coverage',
-    '--cover-package=pipseq',
+    '--cover-package=meaningfulconsent',
 ]
 
 JENKINS_TASKS = (
@@ -47,7 +47,7 @@ JENKINS_TASKS = (
     'django_jenkins.tasks.run_pyflakes',
 )
 PROJECT_APPS = [
-    'pipseq.main',
+    'meaningfulconsent.main',
 ]
 
 ALLOWED_HOSTS = ['localhost', '.ccnmtl.columbia.edu']
@@ -57,7 +57,7 @@ TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = False
-MEDIA_ROOT = "/var/www/pipseq/uploads/"
+MEDIA_ROOT = "/var/www/meaningfulconsent/uploads/"
 MEDIA_URL = '/uploads/'
 STATIC_URL = '/media/'
 SECRET_KEY = ')ng#)ef_u@_^zvvu@dxm7ql-yb^_!a6%v3v^j3b(mp+)l+5%@h'
@@ -88,10 +88,10 @@ MIDDLEWARE_CLASSES = [
     'waffle.middleware.WaffleMiddleware',
 ]
 
-ROOT_URLCONF = 'pipseq.urls'
+ROOT_URLCONF = 'meaningfulconsent.urls'
 
 TEMPLATE_DIRS = (
-    "/var/www/pipseq/templates/",
+    "/var/www/meaningfulconsent/templates/",
     os.path.join(os.path.dirname(__file__), "templates"),
 )
 
@@ -121,7 +121,7 @@ INSTALLED_APPS = [
     'pagetree',
     'pageblocks',
     'quizblock',
-    'pipseq.main',
+    'meaningfulconsent.main',
     'registration',
 ]
 
@@ -135,10 +135,12 @@ PAGEBLOCKS = ['pageblocks.TextBlock',
 
 
 LETTUCE_APPS = (
-    'pipseq.main',
+    'meaningfulconsent.main',
 )
 
 INTERNAL_IPS = ('127.0.0.1', )
+
+DEBUG_TOOLBAR_PATCH_SETTINGS = False
 
 DEBUG_TOOLBAR_PANELS = [
     'debug_toolbar.panels.versions.VersionsPanel',
@@ -156,9 +158,9 @@ DEBUG_TOOLBAR_PANELS = [
 ]
 
 THUMBNAIL_SUBDIR = "thumbs"
-EMAIL_SUBJECT_PREFIX = "[pipseq] "
+EMAIL_SUBJECT_PREFIX = "[meaningfulconsent] "
 EMAIL_HOST = 'localhost'
-SERVER_EMAIL = "pipseq@ccnmtl.columbia.edu"
+SERVER_EMAIL = "meaningfulconsent@ccnmtl.columbia.edu"
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
 
 STATIC_ROOT = os.path.join(os.path.dirname(__file__), "../media")

@@ -3,8 +3,8 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.views.generic import TemplateView
-from pagetree.generic.views import PageView, EditView, InstructorView
-from pipseq.main import views
+from pagetree.generic.views import PageView, EditView
+from meaningfulconsent.main import views
 import os.path
 admin.autodiscover()
 

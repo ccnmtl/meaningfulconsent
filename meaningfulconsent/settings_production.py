@@ -2,19 +2,19 @@
 from settings_shared import *
 
 TEMPLATE_DIRS = (
-    "/var/www/pipseq/pipseq/pipseq/templates",
+    "/var/www/meaningfulconsent/meaningfulconsent/meaningfulconsent/templates",
 )
 
-MEDIA_ROOT = '/var/www/pipseq/uploads/'
+MEDIA_ROOT = '/var/www/meaningfulconsent/uploads/'
 # put any static media here to override app served static media
 STATICMEDIA_MOUNTS = (
-    ('/sitemedia', '/var/www/pipseq/pipseq/sitemedia'),
+    ('/sitemedia', '/var/www/meaningfulconsent/meaningfulconsent/sitemedia'),
 )
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pipseq',
+        'NAME': 'meaningfulconsent',
         'HOST': '',
         'PORT': 6432,
         'USER': '',
@@ -22,12 +22,12 @@ DATABASES = {
     }
 }
 
-COMPRESS_ROOT = "/var/www/pipseq/pipseq/media/"
+COMPRESS_ROOT = "/var/www/meaningfulconsent/meaningfulconsent/media/"
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 STATSD_CLIENT = 'statsd.client'
-STATSD_PREFIX = 'pipseq'
+STATSD_PREFIX = 'meaningfulconsent'
 STATSD_HOST = '127.0.0.1'
 STATSD_PORT = 8125
 STATSD_PATCHES = ['django_statsd.patches.db', ]

@@ -2,19 +2,19 @@
 from settings_shared import *
 
 TEMPLATE_DIRS = (
-    "/var/www/pipseq/pipseq/pipseq/templates",
+    "/var/www/meaningfulconsent/meaningfulconsent/meaningfulconsent/templates",
 )
 
-MEDIA_ROOT = '/var/www/pipseq/uploads/'
+MEDIA_ROOT = '/var/www/meaningfulconsent/uploads/'
 # put any static media here to override app served static media
 STATICMEDIA_MOUNTS = (
-    ('/sitemedia', '/var/www/pipseq/pipseq/sitemedia'),
+    ('/sitemedia', '/var/www/meaningfulconsent/meaningfulconsent/sitemedia'),
 )
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'pipseq',
+        'NAME': 'meaningfulconsent',
         'HOST': '',
         'PORT': 6432,
         'USER': '',
@@ -22,13 +22,13 @@ DATABASES = {
     }
 }
 
-COMPRESS_ROOT = "/var/www/pipseq/pipseq/media/"
+COMPRESS_ROOT = "/var/www/meaningfulconsent/meaningfulconsent/media/"
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 STAGING_ENV = True
 
-STATSD_PREFIX = 'pipseq-staging'
-SENTRY_SITE = 'pipseq-staging'
+STATSD_PREFIX = 'meaningfulconsent-staging'
+SENTRY_SITE = 'meaningfulconsent-staging'
 SENTRY_SERVERS = ['http://sentry.ccnmtl.columbia.edu/sentry/store/']
 
 if 'migrate' not in sys.argv:
