@@ -53,5 +53,11 @@ urlpatterns = patterns(
      {}, 'edit-page'),
     (r'^pages/es/(?P<path>.*)$', PageView.as_view(
         hierarchy_name="es",
-        hierarchy_base="/pages/es/")),
+        hierarchy_base="/pages/es/"))
 )
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns += patterns('',
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+    )

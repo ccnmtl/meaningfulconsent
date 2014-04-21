@@ -43,7 +43,6 @@ NOSE_ARGS = [
 JENKINS_TASKS = (
     'django_jenkins.tasks.run_pylint',
     'django_jenkins.tasks.with_coverage',
-    'django_jenkins.tasks.django_tests',
     'django_jenkins.tasks.run_pep8',
     'django_jenkins.tasks.run_pyflakes',
 )
@@ -77,9 +76,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.static',
 )
 
-MIDDLEWARE_CLASSES = (
-    'django_statsd.middleware.GraphiteRequestTimingMiddleware',
-    'django_statsd.middleware.GraphiteMiddleware',
+MIDDLEWARE_CLASSES = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -89,7 +86,7 @@ MIDDLEWARE_CLASSES = (
     'impersonate.middleware.ImpersonateMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'waffle.middleware.WaffleMiddleware',
-)
+]
 
 ROOT_URLCONF = 'pipseq.urls'
 
@@ -114,7 +111,6 @@ INSTALLED_APPS = [
     'south',
     'django_nose',
     'compressor',
-    'django_statsd',
     'bootstrapform',
     'debug_toolbar',
     'waffle',
@@ -126,6 +122,7 @@ INSTALLED_APPS = [
     'pageblocks',
     'quizblock',
     'pipseq.main',
+    'registration',
 ]
 
 PAGEBLOCKS = ['pageblocks.TextBlock',
@@ -142,23 +139,21 @@ LETTUCE_APPS = (
 )
 
 INTERNAL_IPS = ('127.0.0.1', )
-DEBUG_TOOLBAR_PANELS = (
-    'debug_toolbar.panels.version.VersionDebugPanel',
-    'debug_toolbar.panels.timer.TimerDebugPanel',
-    'debug_toolbar.panels.settings_vars.SettingsVarsDebugPanel',
-    'debug_toolbar.panels.headers.HeaderDebugPanel',
-    'debug_toolbar.panels.request_vars.RequestVarsDebugPanel',
-    'debug_toolbar.panels.template.TemplateDebugPanel',
-    'debug_toolbar.panels.sql.SQLDebugPanel',
-    'debug_toolbar.panels.signals.SignalDebugPanel',
-    'debug_toolbar.panels.logger.LoggingPanel',
-)
 
-STATSD_CLIENT = 'statsd.client'
-STATSD_PREFIX = 'pipseq'
-STATSD_HOST = '127.0.0.1'
-STATSD_PORT = 8125
-STATSD_PATCHES = ['django_statsd.patches.db', ]
+DEBUG_TOOLBAR_PANELS = [
+    'debug_toolbar.panels.versions.VersionsPanel',
+    'debug_toolbar.panels.timer.TimerPanel',
+    'debug_toolbar.panels.settings.SettingsPanel',
+    'debug_toolbar.panels.headers.HeadersPanel',
+    'debug_toolbar.panels.request.RequestPanel',
+    'debug_toolbar.panels.sql.SQLPanel',
+    'debug_toolbar.panels.staticfiles.StaticFilesPanel',
+    'debug_toolbar.panels.templates.TemplatesPanel',
+    'debug_toolbar.panels.cache.CachePanel',
+    'debug_toolbar.panels.signals.SignalsPanel',
+    'debug_toolbar.panels.logging.LoggingPanel',
+    'debug_toolbar.panels.redirects.RedirectsPanel',
+]
 
 THUMBNAIL_SUBDIR = "thumbs"
 EMAIL_SUBJECT_PREFIX = "[pipseq] "
