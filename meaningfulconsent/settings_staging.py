@@ -27,22 +27,21 @@ DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 STAGING_ENV = True
 
-STATSD_PREFIX = 'meaningfulconsent-staging'
-SENTRY_SITE = 'meaningfulconsent-staging'
-SENTRY_SERVERS = ['http://sentry.ccnmtl.columbia.edu/sentry/store/']
+STATSD_CLIENT = 'statsd.client'
+STATSD_PREFIX = 'meaningfulconsent'
+STATSD_HOST = '127.0.0.1'
+STATSD_PORT = 8125
+STATSD_PATCHES = ['django_statsd.patches.db', ]
+
 
 if 'migrate' not in sys.argv:
-    INSTALLED_APPS.append('raven.contrib.django')
+    INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 
-    import logging
-    from raven.contrib.django.handlers import SentryHandler
-    logger = logging.getLogger()
-    # ensure we havent already registered the handler
-    if SentryHandler not in map(type, logger.handlers):
-        logger.addHandler(SentryHandler())
-        logger = logging.getLogger('sentry.errors')
-        logger.propagate = False
-        logger.addHandler(logging.StreamHandler())
+    MIDDLEWARE_CLASSES.append(
+        'django_statsd.middleware.GraphiteRequestTimingMiddleware')
+    MIDDLEWARE_CLASSES.append(
+        'django_statsd.middleware.GraphiteMiddleware')
+
 
 try:
     from local_settings import *
