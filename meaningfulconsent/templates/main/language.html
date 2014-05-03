@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block js %}
+    <script type="text/javascript">
+        jQuery(document).ready(function () {
+
+            jQuery("form").submit(function() {
+                var valid = true;
+
+                var children = jQuery(this).find("input,textarea,select");
+                jQuery.each(children, function() {
+                    if (valid && jQuery(this).is(":visible")) {
+                        if (this.type === 'radio') {
+                            // one in the group needs to be checked
+                            var selector = 'input[name=' + jQuery(this).attr("name") + ']';
+                            valid = jQuery(selector).is(":checked");
+                        }
+                    }
+                });
+
+                if (!valid) {
+                    alert("Please select a language before continuing.");
+                }
+
+                return valid;
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+{% endblock %}
+
+{% block bodyclass %}{% endblock %}
+
+{% block bodyid %}{% endblock %}
+
+{% block title %}Choose language{% endblock %}
+
+{% block pagetitle %}<h1>Welcome!</h1>{% endblock %}
+
+{% block moduletabs %}{% endblock %}
+
+{% block participantnav %}{% endblock %}
+
+{% block content %}
+    Participant: {{request.user.username}}
+    <form action="/participant/language/" method="post">
+        <h3>Choose language...</h3>
+        <div class="radio">
+          <label>
+            <input type="radio" name="language" value="en" />
+                English
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" name="language" value="es" />
+                Spanish
+          </label>
+        </div>
+        <input type="submit" class="btn btn-primary" />
+    </form>
+{% endblock %}
+
+{% block content-nav %}
+{% endblock %}

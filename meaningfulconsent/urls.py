@@ -2,9 +2,13 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
 from meaningfulconsent.main import views
-from pagetree.generic.views import PageView, EditView
+from meaningfulconsent.main.views import CreateParticipantView, \
+    LoginParticipantView, LanguageParticipantView, RestrictedEditView, \
+    ClearParticipantView
+from pagetree.generic.views import PageView
 admin.autodiscover()
 
 
@@ -25,7 +29,7 @@ urlpatterns = patterns(
     '',
     auth_urls,
     logout_page,
-    (r'^$', views.IndexView.as_view()),
+    (r'^$', ensure_csrf_cookie(views.IndexView.as_view())),
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),
@@ -35,24 +39,30 @@ urlpatterns = patterns(
     (r'^pagetree/', include('pagetree.urls')),
     (r'^quizblock/', include('quizblock.urls')),
 
+    (r'^participant/create/$', CreateParticipantView.as_view()),
+    (r'^participant/login/$', LoginParticipantView.as_view()),
+    (r'^participant/language/$', LanguageParticipantView.as_view()),
+    (r'^participant/clear/$', ClearParticipantView.as_view()),
+
     # English
-    (r'^pages/en/edit/(?P<path>.*)$', login_required(EditView.as_view(
-        hierarchy_name="en",
-        hierarchy_base="/pages/en/")),
-     {}, 'edit-page'),
-    (r'^pages/en/(?P<path>.*)$', PageView.as_view(
-        hierarchy_name="en",
-        hierarchy_base="/pages/en/")),
+    (r'^pages/en/edit/(?P<path>.*)$', RestrictedEditView.as_view(
+        hierarchy_name="en", hierarchy_base="/pages/en/",
+        template_name="main/edit_page.html")),
+    (r'^pages/en/(?P<path>.*)$', login_required(PageView.as_view(
+        hierarchy_name="en", hierarchy_base="/pages/en/",
+        gated=True, template_name="main/page.html")),
+        {}, 'view-english-page'),
 
     # Spanish
-    (r'^pages/es/edit/(?P<path>.*)$', login_required(EditView.as_view(
-        hierarchy_name="es",
-        hierarchy_base="/pages/es/")),
-     {}, 'edit-page'),
-    (r'^pages/es/(?P<path>.*)$', PageView.as_view(
-        hierarchy_name="es",
-        hierarchy_base="/pages/es/"))
+    (r'^pages/es/edit/(?P<path>.*)$', RestrictedEditView.as_view(
+        hierarchy_name="es", hierarchy_base="/pages/es/",
+        template_name="main/edit_page.html")),
+    (r'^pages/es/(?P<path>.*)$', login_required(PageView.as_view(
+        hierarchy_name="es", hierarchy_base="/pages/es/",
+        gated=True, template_name="main/page.html")),
+     {}, 'view-spanish-page')
 )
+
 
 if settings.DEBUG:
     import debug_toolbar

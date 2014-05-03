@@ -33,6 +33,8 @@ STATSD_HOST = '127.0.0.1'
 STATSD_PORT = 8125
 STATSD_PATCHES = ['django_statsd.patches.db', ]
 
+STATICFILES_DIRS = ()
+STATIC_ROOT = "/var/www/meaningfulconsent/meaningfulconsent/media/"
 
 if 'migrate' not in sys.argv:
     INSTALLED_APPS.append('raven.contrib.django.raven_compat')
@@ -41,7 +43,6 @@ if 'migrate' not in sys.argv:
         'django_statsd.middleware.GraphiteRequestTimingMiddleware')
     MIDDLEWARE_CLASSES.append(
         'django_statsd.middleware.GraphiteMiddleware')
-
 
 try:
     from local_settings import *

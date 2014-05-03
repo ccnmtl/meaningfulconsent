@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load render accessible %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
+    <script src="{{STATIC_URL}}js/backbone-min.js"></script>
+    <script src="{{STATIC_URL}}js/app/participant.js"></script>
+
+    {% for block in section.pageblock_set.all %}
+        {% renderjs block %}
+    {% endfor %}
+   
+    <script type="text/javascript"> 
+        jQuery(document).ready(function() {
+            jQuery(".nav li.disabled a").click(function() {
+                return false;
+            });
+            
+            var participantView = new ParticipantView({
+                el: jQuery("body")[0]
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    {% for block in section.pageblock_set.all %}
+        {% rendercss block %}
+    {% endfor %}
+{% endblock %}
+
+{% block bodyclass %}module-{{module.slug}}{% endblock %}
+
+{% block bodyid %}section-{{section.id}}{% endblock %}
+
+{% block title %}{{section.label}}{% endblock %}
+
+{% block pagetitle %}<h1>{{section.label}}</h1>{% endblock %}
+
+{% block usernav %}
+
+    {% if request.user.profile.is_participant %}
+        <li class="pause-session">
+            <a href="/participant/pause/"><span title="Pause">Pause Session</span></a>
+        </li>
+    {% endif %}
+    
+    <li class="language">
+        <form action="/participant/language/" method="post">            
+            {% if section.hierarchy.name == 'en' %}
+                <input type="hidden" name="language" value="es" />
+                <button type="submit">Espanol</button>
+            {% else %}
+                <input type="hidden" name="language" value="en" />
+                <button type="submit">English</button>
+            {% endif %}
+        </form> 
+    </li>
+{% endblock %}
+
+{% block primarynav %}
+    <ul class="nav nav-pills">
+        {% for section in modules %}
+              {% ifaccessible section %}
+                  <li {% ifequal section.id module.id %}class="active"{% endifequal %}>
+              {% else %}
+                  <li class="disabled">
+              {% endifaccessible %}
+                  <a href="{{section.get_absolute_url}}">{{section.label}}</a>
+              </li>
+        {% endfor %}
+          
+        {% if request.user.is_superuser %}
+            <li class="pull-right"><a href="/participant/clear/">Clear State</a></li>      
+            <li class="pull-right"><a href="{{section.get_edit_url}}">Edit Page</a></li>
+        {% endif %}
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <div id="content">
+        {% if needs_submit %}
+            {% if is_submitted %}
+            {% else %}
+                <form action="." method="post">
+            {% endif %}
+        {% endif %}
+
+        {% for block in section.pageblock_set.all %}
+            <div class="pageblock{% if block.css_extra %} {{block.css_extra}}{% endif %}">
+                {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
+                {% render block %}
+            </div>
+        {% endfor %}
+    
+        {% if needs_submit %}
+            {% if request.user.is_anonymous %}
+            {% else %}
+                {% if is_submitted %}
+                    {% if allow_redo %}
+                    <form action="." method="post">
+                    <input type="hidden" name="action" value="reset" />
+                    <input type="submit" value="clear your answers and try again" class="btn" />
+                    </form>
+                    {% endif %}
+                {% else %}
+                    <input type="submit" value="Submit" class="btn btn-primary" />
+                    </form>
+                {% endif %}
+            {% endif %}
+        {% endif %}
+
+    </div>
+    
+    <div class="modal pause-session-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body text-center">
+                    <h3>Session Paused</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-toggle="modal"
+                        data-target="#facilitator-login-modal" data-dismiss="modal">
+                            Facilitator Log In
+                     </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Resume</button>          
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal" id="facilitator-login-modal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="/accounts/login/" class="form-horizontal" role="form">
+                    {% csrf_token %}        
+                    <div class="modal-header">
+                        <h4 class="modal-title">Facilitator Login</h4>
+                    </div>                
+                    <div class="modal-body">
+                        <div class="login-local-form">
+                            <div class="form-group">
+                              <label for="id_username" class="col-sm-4 control-label">User Name</label>
+                              <div class="col-sm-8">
+                                <input id="id_username" maxlength="254" name="username" type="text" class="form-control">
+                              </div>
+                            </div>                    
+                            <div class="form-group">
+                              <label for="id_password" class="col-sm-4 control-label">Password</label>
+                              <div class="col-sm-8">
+                                <input id="id_password" name="password" type="password" class="form-control">
+                              </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" name="next" value="/" />
+                        <input class="btn btn-default login-local-form" type="submit" value="Log In" />                        
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>    
+{% endblock %}
+
+{% block content-nav %}
+    {% with previous=section.get_previous next_section=section.get_next %}
+        <ul class="pager">
+            {% if previous %}
+                <li class="previous">
+                    <a href="{{previous.get_absolute_url}}">&larr; {{previous.label}}</a>
+                </li>
+            {% endif %}
+    
+            {% if next_section %}
+                <li class="next"><a href="{{next_section.get_absolute_url}}">{{next_section.label}} &rarr;</a></li>
+            {% endif %}
+        </ul>
+    {% endwith %}
+{% endblock %}
+
+{% block footer %}{% endblock %}

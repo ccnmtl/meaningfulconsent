@@ -8,15 +8,9 @@
   <meta name="description" content="Precision in Pediatric Sequencing">
   <meta name="author" content="CCNMTL">
   
-  <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!--[if lt IE 9]>
-  <script src="../assets/js/html5shiv.js"></script>
-  <script src="../assets/js/respond.min.js"></script>
-  <![endif]-->
-  
   <!-- Bootstrap CSS: -->
   <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet">
-  
+
   {% compress css %}
       <link href="{{STATIC_URL}}bootstrap/css/bootstrap-glyphicons.css" rel="stylesheet">
       <!-- Application CSS: -->
@@ -41,13 +35,14 @@
                         class="icon-bar"></span> <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/"><span
-                    class="glyphicon glyphicon-home"></span>&nbsp;
-                    {% if request.user.is_anonymous %} 
-                        Home 
+                <a class="navbar-brand" href="/">
+                    {% if request.user.is_anonymous %}
+                        <span class="glyphicon glyphicon-home"></span>&nbsp;Home 
+                    {% else %}{% if request.user.profile.is_participant %}
+                        
                     {% else %}
-                        Dashboard 
-                    {% endif %}
+                        <span class="glyphicon glyphicon-home"></span>&nbsp;Dashboard 
+                    {% endif %}{% endif %}
                 </a>
             </div>
 
@@ -57,18 +52,22 @@
                     {% block usernav %}
                         {% if request.user.is_anonymous %}
                             <li><a href="#" data-toggle="modal"
-                                data-target="#myModal"
+                                data-target="#login-modal"
                                 class="btn-log-in btn btn-sm">Log in</a>
-                            </li> {% else %}
+                            </li>
+                            <li><a href="/about/">About</a></li>
+                            <li><a href="/help/">Help &amp; Contact</a></li>
+                        {% else %}{% if not request.user.profile.is_participant %}
                             <li class="logged-in-greeting">
                                 <span>Hello, {% if user.first_name %}{{user.get_short_name}}{% else %}{{user.username}}{% endif %}</span>
-                                <a href="/accounts/logout/?next=/"><span title="Log out">(log out)</span>
-                            </a>
+                                <a href="/accounts/logout/?next=/"><span title="Log out">(log out)</span></a>
                             </li>
-                        {% endif %}
+                            <li><a href="/about/">About</a></li>
+                            <li><a href="/credits/">Credits</a></li>
+                            <li><a href="/contact/">Contact</a></li>
+                            <li><a href="/help/">Help</a></li>
+                        {% endif %}{% endif %}
                     {% endblock %}
-                    <li><a href="#about">About</a></li>
-                    <li><a href="#contact">Help &amp; Contact</a></li>
                 </ul>
             </div>
             <!--/.nav-collapse -->
@@ -79,12 +78,12 @@
 
 
 <!-- Login Modal -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="myModalLabel">Log In</h4>
+        <h4 class="modal-title" id="loginLabel">Log In</h4>
       </div><!-- /.modal-header -->
       <div class="modal-body">
         <p>Select an account.</p>
@@ -113,7 +112,7 @@
               {% csrf_token %}
               <div class="login-local-form" {% if not login_form.errors %}style="display: none"{% endif %}>
                 
-                <h3>Guest Account</h3>
+                <h3>Facilitator Account</h3>
                 
                 <div class="form-group">
                   <label for="id_username" class="col-sm-4 control-label">User Name</label>
@@ -162,7 +161,7 @@
     <div class="banner-pl-bg">
       <div class="logo-pl">
         {% comment %}
-            <a href="/"><span>Precision in Pediatric Sequencing</span></a>
+            <a href="/"><span>Meaningful Consent</span></a>
         {% endcomment %}
       </div>
     </div><!--/ .banner-pl-bg -->
@@ -177,24 +176,27 @@
             <div class="col-md-12">
                 {% block content %}
                 {% endblock %}
+              
+                {% block content-nav %}
+                {% endblock %}                
             </div>
         </div> <!-- /.row -->
     </div> <!-- /.content -->
 </div> <!-- /.container-pl -->
 
-    {% block footer %}
-        <footer class="footer">
-            <a href="http://ccnmtl.columbia.edu" target="_blank" title="Columbia Center for New Media Teaching and Learning"><img src="{{STATIC_URL}}img/logo_ccnmtl.png" /></a>
-        </footer>
-    {% endblock %}
+{% block footer %}
+    <footer class="footer">
+        <a href="http://ccnmtl.columbia.edu" target="_blank" title="Columbia Center for New Media Teaching and Learning"><img src="{{STATIC_URL}}img/logo_ccnmtl.png" /></a>
+    </footer>
+{% endblock %}
 
-    <script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
+<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
 
-    {% compress js %}
-        <script src="{{STATIC_URL}}bootstrap/js/bootstrap.js"></script>    
-    {% endcompress %}
-    
-    {% block js %}{% endblock %}
+{% compress js %}
+    <script src="{{STATIC_URL}}bootstrap/js/bootstrap.js"></script>    
+{% endcompress %}
+
+{% block js %}{% endblock %}
 
 {% if STAGING_ENV %}
     <div class="alert alert-danger alert-dismissable" style="position: fixed; bottom: 0px;">

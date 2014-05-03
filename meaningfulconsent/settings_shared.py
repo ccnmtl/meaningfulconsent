@@ -74,6 +74,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'gacontext.ga_processor',
     'djangowind.context.context_processor',
     'django.core.context_processors.static',
+    'django.core.context_processors.csrf',
 )
 
 MIDDLEWARE_CLASSES = [
@@ -179,7 +180,9 @@ COMPRESS_ROOT = "media/"
 # WIND settings
 
 AUTHENTICATION_BACKENDS = ('djangowind.auth.WindAuthBackend',
-                           'django.contrib.auth.backends.ModelBackend', )
+                           'django.contrib.auth.backends.ModelBackend',
+                           'meaningfulconsent.main.auth.ParticipantBackend')
+
 WIND_BASE = "https://wind.columbia.edu/"
 WIND_SERVICE = "cnmtl_full_np"
 WIND_PROFILE_HANDLERS = ['djangowind.auth.CDAPProfileHandler']
