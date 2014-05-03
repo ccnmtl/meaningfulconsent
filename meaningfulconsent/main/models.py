@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.fields import CharField
 from django.db.models.fields.related import OneToOneField
-from pagetree.models import Hierarchy, UserLocation, UserPageVisit
+from pagetree.models import Hierarchy, UserPageVisit
 
 
 LANGUAGE_CHOICES = (

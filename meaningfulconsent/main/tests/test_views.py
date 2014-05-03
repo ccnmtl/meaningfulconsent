@@ -1,7 +1,8 @@
+from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import Client
+from meaningfulconsent.main.models import Clinic, UserProfile
 from pagetree.helpers import get_hierarchy
-from django.contrib.auth.models import User
 
 
 class BasicTest(TestCase):
@@ -33,7 +34,7 @@ class PagetreeViewTestsLoggedOut(TestCase):
 
     def test_page(self):
         r = self.c.get("/pages/en/section-1/")
-        self.assertEqual(r.status_code, 200)
+        self.assertEqual(r.status_code, 302)
 
     def test_edit_page(self):
         r = self.c.get("/pages/en/edit/section-1/")
@@ -55,12 +56,26 @@ class PagetreeViewTestsLoggedIn(TestCase):
         self.u = User.objects.create(username="testuser")
         self.u.set_password("test")
         self.u.save()
+
         self.c.login(username="testuser", password="test")
+        self.su = User.objects.create(username="superuser", is_superuser=True)
+        self.su.set_password("test")
+        self.su.save()
+
+        clinic = Clinic.objects.create(name="pilot")
+        UserProfile.objects.create(user=self.u, clinic=clinic)
+        UserProfile.objects.create(user=self.su,
+                                   is_participant=False, clinic=clinic)
 
     def test_page(self):
         r = self.c.get("/pages/en/section-1/")
         self.assertEqual(r.status_code, 200)
 
     def test_edit_page(self):
+        # you must be a superuser to edit pages
+        r = self.c.get("/pages/en/edit/section-1/")
+        self.assertEqual(r.status_code, 302)
+
+        self.c.login(username="superuser", password="test")
         r = self.c.get("/pages/en/edit/section-1/")
         self.assertEqual(r.status_code, 200)

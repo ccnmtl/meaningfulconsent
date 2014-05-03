@@ -1,3 +1,4 @@
+# flake8: noqa
 # -*- coding: utf-8 -*-
 from lettuce.django import django_url
 from lettuce import before, after, world, step
