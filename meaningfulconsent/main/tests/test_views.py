@@ -2,7 +2,10 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import Client
 from meaningfulconsent.main.models import Clinic, UserProfile
+from meaningfulconsent.main.tests.factories import UserFactory, \
+    UserProfileFactory
 from pagetree.helpers import get_hierarchy
+import simplejson
 
 
 class BasicTest(TestCase):
@@ -72,6 +75,8 @@ class PagetreeViewTestsLoggedIn(TestCase):
         self.assertEqual(r.status_code, 200)
 
     def test_edit_page(self):
+        self.assertTrue(self.u.is_authenticated())
+
         # you must be a superuser to edit pages
         r = self.c.get("/pages/en/edit/section-1/")
         self.assertEqual(r.status_code, 302)
@@ -79,3 +84,104 @@ class PagetreeViewTestsLoggedIn(TestCase):
         self.c.login(username="superuser", password="test")
         r = self.c.get("/pages/en/edit/section-1/")
         self.assertEqual(r.status_code, 200)
+
+
+class IndexViewTest(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        UserProfileFactory(user=self.user, language='en', is_participant=False)
+
+        self.participant = UserFactory()
+        UserProfileFactory(user=self.participant, language='en')
+
+        self.c = Client()
+
+    def test_anonymous_user(self):
+        response = self.c.get('/')
+        self.assertTrue('Log in' in response.content)
+        self.assertFalse('log out' in response.content)
+        self.assertEquals(response.template_name[0], "main/index.html")
+        self.assertEquals(response.status_code, 200)
+
+    def test_facilitator(self):
+        self.assertTrue(self.c.login(
+            username=self.user.username, password="test"))
+        response = self.c.get('/')
+        self.assertEquals(response.template_name[0], "main/index.html")
+        self.assertEquals(response.status_code, 200)
+        self.assertFalse('Log in' in response.content)
+        self.assertTrue('log out' in response.content)
+        self.assertTrue('Dashboard' in response.content)
+
+    def test_participant(self):
+        self.assertTrue(self.c.login(
+            username=self.participant.username, password="test"))
+        response = self.c.get('/')
+        self.assertEquals(response.template_name[0], "main/index.html")
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue('Return to tutorial' in response.content)
+        self.assertFalse('Log in' in response.content)
+        self.assertFalse('log out' in response.content)
+
+
+class LogoutTest(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        UserProfileFactory(user=self.user, language='en', is_participant=False)
+
+        self.participant = UserFactory()
+        UserProfileFactory(user=self.participant, language='en')
+
+        self.c = Client()
+
+    def test_logout_user(self):
+        self.c.login(username=self.user.username, password="test")
+
+        response = self.c.get('/accounts/logout/?next=/', follow=True)
+        self.assertEquals(response.template_name[0], "main/index.html")
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue('Log in' in response.content)
+        self.assertFalse('log out' in response.content)
+
+    def test_logout_particpant(self):
+        self.c.login(username=self.participant.username, password="test")
+
+        response = self.c.get('/accounts/logout/?next=/', follow=True)
+        self.assertEquals(response.template_name[0], "main/index.html")
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue('Return to tutorial' in response.content)
+        self.assertFalse('Log in' in response.content)
+        self.assertFalse('log out' in response.content)
+
+
+class CreateParticipantViewTest(TestCase):
+
+    def setUp(self):
+        self.user = UserFactory()
+        UserProfileFactory(user=self.user, language='en', is_participant=False)
+
+        self.participant = UserFactory(username='MC1234567')
+        UserProfileFactory(user=self.participant, language='en')
+
+        self.c = Client()
+
+    def test_post_as_anonymous_user(self):
+        response = self.c.post('/participant/create/')
+        self.assertEquals(response.status_code, 403)
+
+    def test_post_as_participant(self):
+        self.c.login(username=self.participant.username, password="test")
+        response = self.c.post('/participant/create/')
+        self.assertEquals(response.status_code, 403)
+
+    def test_post_as_facilitator(self):
+        self.c.login(username=self.user.username, password="test")
+
+        response = self.c.post('/participant/create/')
+        self.assertEquals(response.status_code, 200)
+
+        the_json = simplejson.loads(response.content)
+        user = User.objects.get(username=the_json['user']['username'])
+        self.assertTrue(user.profile.is_participant)

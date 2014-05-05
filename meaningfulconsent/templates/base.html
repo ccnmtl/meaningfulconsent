@@ -36,13 +36,13 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="/">
-                    {% if request.user.is_anonymous %}
-                        <span class="glyphicon glyphicon-home"></span>&nbsp;Home 
-                    {% else %}{% if request.user.profile.is_participant %}
-                        
-                    {% else %}
-                        <span class="glyphicon glyphicon-home"></span>&nbsp;Dashboard 
-                    {% endif %}{% endif %}
+                    {% block usernav_title %}
+                        {% if request.user.is_anonymous or request.user.profile.is_participant %}
+                            Meaningful Consent
+                        {% else %}
+                            <span class="glyphicon glyphicon-home"></span>&nbsp;Dashboard 
+                        {% endif %}
+                    {% endblock %}
                 </a>
             </div>
 

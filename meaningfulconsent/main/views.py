@@ -4,23 +4,24 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.models import User
 from django.contrib.auth.views import logout as auth_logout_view
-from django.http.response import HttpResponse, HttpResponseRedirect
+from django.http.response import HttpResponse, HttpResponseRedirect, \
+    HttpResponseForbidden
 from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView, View
+from djangowind.views import logout as wind_logout_view
 from meaningfulconsent.main.auth import generate_random_username, \
     generate_password
 from meaningfulconsent.main.models import UserProfile, Clinic
 from pagetree.generic.views import EditView
 from pagetree.models import UserLocation, UserPageVisit
-import djangowind
 import json
 
 
 def logout(request):
     if request.user.profile.is_participant:
-        return  # don't do anything
+        return HttpResponseRedirect("/")
     elif hasattr(settings, 'WIND_BASE'):
-        return djangowind.views.logout(request)
+        return wind_logout_view(request)
     else:
         return auth_logout_view(request, "/")
 
@@ -55,8 +56,10 @@ class LoggedInMixin(object):
 
 
 class LoggedInFacilitatorMixin(object):
-    @method_decorator(user_passes_test(lambda u: not u.profile.is_participant))
     def dispatch(self, *args, **kwargs):
+        if (self.request.user.is_anonymous() or
+                self.request.user.profile.is_participant):
+            return HttpResponseForbidden()
         return super(LoggedInFacilitatorMixin, self).dispatch(*args, **kwargs)
 
 
@@ -166,4 +169,3 @@ class ClearParticipantView(LoggedInMixinSuperuser, View):
 
         url = request.user.profile.default_location().get_absolute_url()
         return HttpResponseRedirect(url)
-

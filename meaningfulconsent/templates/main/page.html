@@ -37,6 +37,10 @@
 
 {% block pagetitle %}<h1>{{section.label}}</h1>{% endblock %}
 
+{% block usernav_title %}
+    Meaningful Consent
+{% endblock %}
+
 {% block usernav %}
 
     {% if request.user.profile.is_participant %}
@@ -70,7 +74,7 @@
               </li>
         {% endfor %}
           
-        {% if request.user.is_superuser %}
+        {% if not request.user.profile.is_participant %}
             <li class="pull-right"><a href="/participant/clear/">Clear State</a></li>      
             <li class="pull-right"><a href="{{section.get_edit_url}}">Edit Page</a></li>
         {% endif %}

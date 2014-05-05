@@ -12,23 +12,14 @@ from pagetree.generic.views import PageView
 admin.autodiscover()
 
 
-redirect_after_logout = getattr(settings, 'LOGOUT_REDIRECT_URL', None)
 auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))
-logout_page = (
-    r'^accounts/logout/$',
-    'django.contrib.auth.views.logout',
-    {'next_page': redirect_after_logout})
 if hasattr(settings, 'WIND_BASE'):
     auth_urls = (r'^accounts/', include('djangowind.urls'))
-    logout_page = (
-        r'^accounts/logout/$',
-        'djangowind.views.logout',
-        {'next_page': redirect_after_logout})
 
 urlpatterns = patterns(
     '',
+    (r'^accounts/logout/$', 'meaningfulconsent.main.views.logout'),
     auth_urls,
-    logout_page,
     (r'^$', ensure_csrf_cookie(views.IndexView.as_view())),
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
