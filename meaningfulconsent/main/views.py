@@ -1,7 +1,9 @@
 from django import http
+from django.conf import settings
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import user_passes_test, login_required
 from django.contrib.auth.models import User
+from django.contrib.auth.views import logout as auth_logout_view
 from django.http.response import HttpResponse, HttpResponseRedirect
 from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView, View
@@ -10,7 +12,17 @@ from meaningfulconsent.main.auth import generate_random_username, \
 from meaningfulconsent.main.models import UserProfile, Clinic
 from pagetree.generic.views import EditView
 from pagetree.models import UserLocation, UserPageVisit
+import djangowind
 import json
+
+
+def logout(request):
+    if request.user.profile.is_participant:
+        return  # don't do anything
+    elif hasattr(settings, 'WIND_BASE'):
+        return djangowind.views.logout(request)
+    else:
+        return auth_logout_view(request, "/")
 
 
 class JSONResponseMixin(object):
@@ -154,3 +166,4 @@ class ClearParticipantView(LoggedInMixinSuperuser, View):
 
         url = request.user.profile.default_location().get_absolute_url()
         return HttpResponseRedirect(url)
+
