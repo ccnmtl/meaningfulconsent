@@ -32,10 +32,11 @@ class UserProfile(models.Model):
         return hierarchy.get_root()
 
     def last_location(self):
+        hierarchy = Hierarchy.get_hierarchy(self.language)
         upv = UserPageVisit.objects.filter(
-            user=self.user).order_by("-last_visit")
+            user=self.user, section__hierarchy=hierarchy).order_by(
+            "-last_visit")
         if len(upv) < 1:
-            hierarchy = Hierarchy.get_hierarchy(self.language)
             return hierarchy.get_root()
         else:
             return upv[0].section
