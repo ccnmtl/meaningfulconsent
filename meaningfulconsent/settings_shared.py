@@ -177,6 +177,8 @@ STATICFILES_FINDERS = (
 COMPRESS_URL = "/media/"
 COMPRESS_ROOT = "media/"
 
+PARTICIPANT_SECRET = "something secret"  # obviously changed in staging/prod
+
 # WIND settings
 
 AUTHENTICATION_BACKENDS = ('djangowind.auth.WindAuthBackend',
