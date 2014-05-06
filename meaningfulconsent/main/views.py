@@ -1,7 +1,7 @@
 from django import http
 from django.conf import settings
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.decorators import user_passes_test, login_required
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.models import User
 from django.contrib.auth.views import logout as auth_logout_view
 from django.http.response import HttpResponse, HttpResponseRedirect, \
@@ -15,15 +15,6 @@ from meaningfulconsent.main.models import UserProfile, Clinic
 from pagetree.generic.views import EditView
 from pagetree.models import UserLocation, UserPageVisit
 import json
-
-
-def logout(request):
-    if request.user.profile.is_participant:
-        return HttpResponseRedirect("/")
-    elif hasattr(settings, 'WIND_BASE'):
-        return wind_logout_view(request)
-    else:
-        return auth_logout_view(request, "/")
 
 
 class JSONResponseMixin(object):
@@ -50,8 +41,10 @@ class JSONResponseMixin(object):
 
 
 class LoggedInMixin(object):
-    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
+        if self.request.user.is_anonymous():
+            return HttpResponseForbidden()
+
         return super(LoggedInMixin, self).dispatch(*args, **kwargs)
 
 
@@ -67,6 +60,19 @@ class LoggedInMixinSuperuser(object):
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, *args, **kwargs):
         return super(LoggedInMixinSuperuser, self).dispatch(*args, **kwargs)
+
+
+def logout(request):
+    if request.user.profile.is_participant:
+        return HttpResponseRedirect("/")
+    elif hasattr(settings, 'WIND_BASE'):
+        return wind_logout_view(request)
+    else:
+        return auth_logout_view(request, "/")
+
+
+class RestrictedEditView(LoggedInMixinSuperuser, EditView):
+    template_name = "pagetree/edit_page.html"
 
 
 class IndexView(TemplateView):
@@ -152,11 +158,7 @@ class LanguageParticipantView(LoggedInMixin, TemplateView):
         return HttpResponseRedirect(url)
 
 
-class RestrictedEditView(LoggedInMixinSuperuser, EditView):
-    template_name = "pagetree/edit_page.html"
-
-
-class ClearParticipantView(LoggedInMixinSuperuser, View):
+class ClearParticipantView(LoggedInFacilitatorMixin, View):
 
     def get(self, request):
         # clear visits & saved locations

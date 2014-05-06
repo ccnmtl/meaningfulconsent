@@ -38,6 +38,9 @@
 {% block pagetitle %}<h1>{{section.label}}</h1>{% endblock %}
 
 {% block usernav_title %}
+    {% if not request.user.profile.is_participant %}
+        <span class="glyphicon glyphicon-home"></span>&nbsp;
+    {% endif %}
     Meaningful Consent
 {% endblock %}
 
