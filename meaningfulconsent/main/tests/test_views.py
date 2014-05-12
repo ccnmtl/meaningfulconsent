@@ -161,7 +161,7 @@ class LoginTest(TestCase):
         response = self.client.post('/accounts/login/',
                                     {'username': self.user.username,
                                      'password': 'test'},
-                               HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = json.loads(response.content)
         self.assertTrue(the_json['next'], "/")
@@ -265,8 +265,8 @@ class LoginParticipantViewTest(TestCase):
         self.client.login(username=self.user.username, password="test")
 
         response = self.client.post('/participant/login/',
-                               {'username': self.participant.username},
-                               follow=True)
+                                    {'username': self.participant.username},
+                                    follow=True)
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.template_name[0], "main/language.html")
 
@@ -282,8 +282,8 @@ class LoginParticipantViewTest(TestCase):
                                      status="complete")
 
         response = self.client.post('/participant/login/',
-                               {'username': self.participant.username},
-                               follow=True)
+                                    {'username': self.participant.username},
+                                    follow=True)
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.templates[0].name, "main/page.html")
         self.assertEquals(response.redirect_chain[0],
@@ -315,8 +315,8 @@ class LanguageParticipantViewTest(TestCase):
         self.assertEquals(self.user.profile.language, 'en')
 
         response = self.client.post('/participant/language/',
-                               {'language': 'es'},
-                               follow=True)
+                                    {'language': 'es'},
+                                    follow=True)
         self.assertEquals(response.redirect_chain[0],
                           ('http://testserver/pages/es//', 302))
 
@@ -328,8 +328,8 @@ class LanguageParticipantViewTest(TestCase):
                                      section=sections[1],
                                      status="complete")
         response = self.client.post('/participant/language/',
-                               {'language': 'en'},
-                               follow=True)
+                                    {'language': 'en'},
+                                    follow=True)
         self.assertEquals(response.redirect_chain[0],
                           ('http://testserver/pages/en/one/introduction/',
                            302))
