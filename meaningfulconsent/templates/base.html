@@ -78,83 +78,62 @@
 {% endblock %}
 
 
-<!-- Login Modal -->
-<div class="modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="loginLabel">Log In</h4>
-      </div><!-- /.modal-header -->
-      <div class="modal-body">
-        <p>Select an account.</p>
-        {% block loginbox %}
-          {% if request.user.is_anonymous %}
-  
-            {% if WIND_BASE %}
-            <form method="get" action="{{ WIND_BASE }}login">
-              {% csrf_token %}
-              <input type="hidden" name="service" value="{{ WIND_SERVICE }}" />
-              <input type="hidden" name="destination" value="http://{{ request.get_host }}/accounts/windlogin/?next={{ request.get_full_path|urlencode }}" />
-              <input class="btn btn-primary btn-lg btn-block" type="submit" value="Columbia University Network ID (UNI)" />
-            </form>
-            {% endif %}<!-- WIND -->
-            
-            <p style="text-align: center;">or</p>
-            
-            {% if login_form.errors %}
-            <p class="errornote">
-            <span><b>Oops!</b> Invalid username or password.</span>
-            Please try again. Note that both username and password are case-sensitive.
-            </p>
-            {% endif %}<!-- login_form errors -->
-            
-            <form id="login-local" name="login_local" method="post" action="/accounts/login/" class="form-horizontal" role="form">
-              {% csrf_token %}
-              <div class="login-local-form" {% if not login_form.errors %}style="display: none"{% endif %}>
-                
-                <h3>Facilitator Account</h3>
-                
-                <div class="form-group">
-                  <label for="id_username" class="col-sm-4 control-label">User Name</label>
-                  <div class="col-sm-8">
-                    {{ login_form.username }}
-                  </div>
-                </div>
-                
-                <div class="form-group">
-                  <label for="id_password" class="col-sm-4 control-label">Password</label>
-                  <div class="col-sm-8">
-                    {{ login_form.password }}
-                  </div>
-                </div>
-                
-                <div class="form-group">
-                  <div class="col-sm-offset-4 col-sm-8">
-                    <input class="btn btn-default login-local-form" type="submit" value="Log In" {% if not login_form.errors %}style="display: none;"{% endif %} />                        
-                    <input type="hidden" name="next" value="{{ request.get_full_path }}" />
-                  </div>
-                </div>
-                
-              </div><!--/ .login-local-form -->
-              
-              <input class="btn btn-default btn-lg btn-block" type="button" value="Guest Account" {% if login_form.errors %}style="display: none"{% endif %}
-              onclick="jQuery('.login-local-form').show(); jQuery(this).hide(); return false;"/>
-              
-            </form>
-            
-            {% comment %}
-            Do we want to allow non-CU self registration?
-            Are we going to have non-CU accounts at all?
-            <p class="smalltxt"><a href="/registration/register/" title="Create your new project account">Need a new account?</a></p>
-            {% endcomment %}
-            
-          {% endif %}<!-- request.user.is_anonymous -->
-        {% endblock %}<!-- loginbox -->
-      </div><!-- /.modal-body -->
-    </div><!-- /.modal-content -->
-  </div><!-- /.modal-dialog -->
-</div><!-- /.modal -->
+{% if request.user.is_anonymous or request.user.profile.is_participant %}
+    <!-- Login Modal -->
+    <div class="modal" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="loginLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="loginLabel">Facilitator Log In</h4>
+            </div><!-- /.modal-header -->
+            <div class="modal-body">
+                <form id="login-local" name="login_local" method="post" action="/accounts/login/" class="form-horizontal" role="form">
+                    {% csrf_token %}
+                    <div class="login-local-form">
+                        <div class="local-login-errors alert alert-danger" style="display: none;">
+                            <span><b>Invalid username or password.</b></span>
+                            Please try again. Note that both username and password are case-sensitive.
+                        </div>
+                    
+                        <div class="form-group">
+                          <label for="id_username" class="col-sm-4 control-label">User Name</label>
+                          <div class="col-sm-8">
+                            {{ login_form.username }}
+                          </div>
+                        </div>
+                    
+                        <div class="form-group">
+                          <label for="id_password" class="col-sm-4 control-label">Password</label>
+                          <div class="col-sm-8">
+                            {{ login_form.password }}
+                          </div>
+                        </div>
+                        
+                        <div class="form-group">
+                          <div class="col-sm-offset-4 col-sm-8">
+                            <input class="btn btn-primary login-local-form" type="submit" value="Log In"  />                        
+                            <input type="hidden" name="next" value="/" />
+                          </div>
+                        </div>
+                    
+                    </div><!--/ .login-local-form -->
+                </form>
+                  
+                {% if WIND_BASE %}
+                    <form method="get" action="{{ WIND_BASE }}login">
+                        {% csrf_token %}
+                        <input type="hidden" name="service" value="{{ WIND_SERVICE }}" />
+                        <input type="hidden" name="destination" value="http://{{ request.get_host }}/accounts/windlogin/?next=/" />
+                        <input class="btn btn-default btn-small login-uni-form" type="submit" value="Columbia University Network ID (UNI)" />
+                        <div style="clear: both;"></div>
+                    </form>
+                {% endif %}<!-- WIND -->
+          </div><!-- /.modal-body -->
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+{% endif %}<!-- request.user.is_anonymous -->
 
 
 <div class="banner-pl">
@@ -191,10 +170,20 @@
     </footer>
 {% endblock %}
 
-<script type="text/javascript" src="//platform.twitter.com/widgets.js"></script>
-
 {% compress js %}
-    <script src="{{STATIC_URL}}bootstrap/js/bootstrap.js"></script>    
+    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
+    <script src="{{STATIC_URL}}js/backbone-min.js"></script>
+    <script src="{{STATIC_URL}}js/app/login.js"></script>
+    <script src="{{STATIC_URL}}bootstrap/js/bootstrap.js"></script>
+    
+    <script type="text/javascript"> 
+        jQuery(document).ready(function() {
+            var loginView = new LocalLoginView({
+                el: jQuery("div#login-modal") 
+            });
+        });
+    </script>
+    
 {% endcompress %}
 
 {% block js %}{% endblock %}

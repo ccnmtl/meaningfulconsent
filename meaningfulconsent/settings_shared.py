@@ -75,6 +75,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'djangowind.context.context_processor',
     'django.core.context_processors.static',
     'django.core.context_processors.csrf',
+    'meaningfulconsent.main.views.context_processor'
 )
 
 MIDDLEWARE_CLASSES = [
@@ -87,6 +88,7 @@ MIDDLEWARE_CLASSES = [
     'impersonate.middleware.ImpersonateMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'waffle.middleware.WaffleMiddleware',
+    'meaningfulconsent.main.middleware.HttpResponseNotAllowedMiddleware'
 ]
 
 ROOT_URLCONF = 'meaningfulconsent.urls'

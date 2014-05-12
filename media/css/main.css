@@ -280,3 +280,13 @@ li.language button {
     margin: 0;
     line-height: normal;
 }
+
+input.login-uni-form {
+    font-size: 13px;
+    font-weight: 200;
+    color: #999;
+    border: none;
+    background: none;
+    line-height: normal;
+    float: right;    
+}

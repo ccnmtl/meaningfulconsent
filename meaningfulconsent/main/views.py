@@ -2,10 +2,11 @@ from django import http
 from django.conf import settings
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.decorators import user_passes_test
+from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.views import logout as auth_logout_view
 from django.http.response import HttpResponse, HttpResponseRedirect, \
-    HttpResponseForbidden
+    HttpResponseForbidden, HttpResponseNotAllowed
 from django.utils.decorators import method_decorator
 from django.views.generic.base import TemplateView, View
 from djangowind.views import logout as wind_logout_view
@@ -15,6 +16,14 @@ from meaningfulconsent.main.models import UserProfile, Clinic
 from pagetree.generic.views import EditView
 from pagetree.models import UserLocation, UserPageVisit
 import json
+
+
+def context_processor(request):
+    ctx = {}
+    if request.user.is_authenticated() and request.user.profile.is_participant:
+        # djangowind delivers the form in un-authenticated situations
+        ctx['login_form'] = AuthenticationForm(request)
+    return ctx
 
 
 class JSONResponseMixin(object):
@@ -62,13 +71,35 @@ class LoggedInMixinSuperuser(object):
         return super(LoggedInMixinSuperuser, self).dispatch(*args, **kwargs)
 
 
-def logout(request):
-    if request.user.profile.is_participant:
-        return HttpResponseRedirect("/")
-    elif hasattr(settings, 'WIND_BASE'):
-        return wind_logout_view(request)
-    else:
-        return auth_logout_view(request, "/")
+class LoginView(JSONResponseMixin, View):
+
+    def dispatch(self, *args, **kwargs):
+        if not self.request.is_ajax():
+            return HttpResponseNotAllowed("")
+        else:
+            return super(LoginView, self).dispatch(*args, **kwargs)
+
+    def post(self, request):
+        request.session.set_test_cookie()
+        login_form = AuthenticationForm(request, request.POST)
+        if login_form.is_valid():
+            login(request, login_form.get_user())
+            if request.user is not None:
+                next_url = request.POST.get('next', '/')
+                return self.render_to_json_response({'next': next_url})
+        else:
+            return self.render_to_json_response({'error': True})
+
+
+class LogoutView(LoggedInMixin, View):
+
+    def get(self, request):
+        if request.user.profile.is_participant:
+            return HttpResponseRedirect("/")
+        elif hasattr(settings, 'WIND_BASE'):
+            return wind_logout_view(request, next_page="/")
+        else:
+            return auth_logout_view(request, "/")
 
 
 class RestrictedEditView(LoggedInMixinSuperuser, EditView):

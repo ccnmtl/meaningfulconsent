@@ -36,8 +36,8 @@ class RootSectionFactory(factory.DjangoModelFactory):
 
 class ModuleFactory(object):
     def __init__(self, hname, base_url):
-        h = HierarchyFactory(name=hname, base_url=base_url)
-        root = h.get_root()
+        hierarchy = HierarchyFactory(name=hname, base_url=base_url)
+        root = hierarchy.get_root()
         root.add_child_section_from_dict(
             {'label': "One", 'slug': "one",
              'children': [{'label': "Three", 'slug': "introduction"}]})

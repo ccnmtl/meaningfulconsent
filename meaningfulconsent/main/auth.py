@@ -28,22 +28,28 @@ def generate_password(username):
 
 class ParticipantBackend(object):
 
-    def authenticate(self, username=None):
+    def match(self, username):
         pattern = 'MC\d{7}'
         prog = re.compile(pattern)
         result = prog.match(username)
 
-        if (result is None or
-                result.start() != 0 and result.end() != USERNAME_LENGTH):
-            return None
+        return (result is not None and
+                result.start() == 0 and
+                result.end() == USERNAME_LENGTH and
+                len(username) == USERNAME_LENGTH)
 
+    def authenticate(self, username=None):
         try:
-            user = User.objects.get(username=username)
-            password = generate_password(username)
-            if user.check_password(password):
-                return user
+            if self.match(username):
+                user = User.objects.get(username=username)
+                if not user.is_active:
+                    password = generate_password(username)
+                    if user.check_password(password):
+                        return user
         except User.DoesNotExist:
-            return None
+            pass  # just return None below
+
+        return None
 
     def get_user(self, user_id):
         try:

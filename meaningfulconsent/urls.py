@@ -4,10 +4,9 @@ from django.contrib import admin
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
-from meaningfulconsent.main import views
 from meaningfulconsent.main.views import CreateParticipantView, \
     LoginParticipantView, LanguageParticipantView, RestrictedEditView, \
-    ClearParticipantView
+    ClearParticipantView, IndexView, LoginView, LogoutView
 from pagetree.generic.views import PageView
 admin.autodiscover()
 
@@ -18,9 +17,10 @@ if hasattr(settings, 'WIND_BASE'):
 
 urlpatterns = patterns(
     '',
-    (r'^accounts/logout/$', 'meaningfulconsent.main.views.logout'),
+    (r'^accounts/login/$', LoginView.as_view()),
+    (r'^accounts/logout/$', LogoutView.as_view()),
     auth_urls,
-    (r'^$', ensure_csrf_cookie(views.IndexView.as_view())),
+    (r'^$', ensure_csrf_cookie(IndexView.as_view())),
     (r'^admin/', include(admin.site.urls)),
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),
