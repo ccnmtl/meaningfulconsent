@@ -32,7 +32,8 @@ urlpatterns = patterns(
 
     (r'^participant/create/$', CreateParticipantView.as_view()),
     (r'^participant/login/$', LoginParticipantView.as_view()),
-    (r'^participant/language/$', LanguageParticipantView.as_view()),
+    url(r'^participant/language/$', LanguageParticipantView.as_view(),
+        name='participant-language'),
     (r'^participant/clear/$', ClearParticipantView.as_view()),
 
     # English

@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import Client
-from meaningfulconsent.main.models import Clinic, UserProfile
+from meaningfulconsent.main.auth import generate_password
+from meaningfulconsent.main.models import Clinic
 from meaningfulconsent.main.tests.factories import UserFactory, \
-    UserProfileFactory, ModuleFactory
+    ModuleFactory, ParticipantFactory
 from pagetree.helpers import get_hierarchy
 from pagetree.models import Hierarchy, UserPageVisit
 import json
@@ -49,6 +50,8 @@ class PagetreeViewTestsLoggedOut(TestCase):
 class PagetreeViewTestsLoggedIn(TestCase):
     def setUp(self):
         self.client = Client()
+        Clinic.objects.create(name="pilot")
+
         self.hierarchy = get_hierarchy("en", "/pages/en/")
         self.root = self.hierarchy.get_root()
         self.root.add_child_section_from_dict(
@@ -67,11 +70,6 @@ class PagetreeViewTestsLoggedIn(TestCase):
             username="superuser", is_superuser=True)
         self.superuser.set_password("test")
         self.superuser.save()
-
-        clinic = Clinic.objects.create(name="pilot")
-        UserProfile.objects.create(user=self.user, clinic=clinic)
-        UserProfile.objects.create(user=self.superuser,
-                                   is_participant=False, clinic=clinic)
 
     def test_page(self):
         r = self.client.get("/pages/en/section-1/")
@@ -92,13 +90,12 @@ class PagetreeViewTestsLoggedIn(TestCase):
 class IndexViewTest(TestCase):
 
     def setUp(self):
+        Clinic.objects.create(name="pilot")
         self.user = UserFactory()
-        UserProfileFactory(user=self.user, language='en', is_participant=False)
-
-        self.participant = UserFactory()
-        UserProfileFactory(user=self.participant, language='en')
-
         self.client = Client()
+
+        ModuleFactory("en", "/pages/en/")
+        ModuleFactory("es", "/pages/es/")
 
     def test_anonymous_user(self):
         response = self.client.get('/')
@@ -118,25 +115,34 @@ class IndexViewTest(TestCase):
         self.assertTrue('Dashboard' in response.content)
 
     def test_participant(self):
+        self.participant = ParticipantFactory()
+
         self.assertTrue(self.client.login(
-            username=self.participant.username, password="test"))
-        response = self.client.get('/')
-        self.assertEquals(response.template_name[0], "main/index.html")
+            username=self.user.username, password="test"))
+
+        response = self.client.post('/participant/login/',
+                                    {'username': self.participant.username},
+                                    follow=True)
         self.assertEquals(response.status_code, 200)
-        self.assertTrue('Return to tutorial' in response.content)
-        self.assertFalse('Log in' in response.content)
-        self.assertFalse('log out' in response.content)
+
+        response = self.client.get('/', follow=True)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.template_name[0], "main/language.html")
+
+        self.participant.profile.language = 'en'
+        self.participant.profile.save()
+        response = self.client.get('/', follow=True)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.redirect_chain,
+                          [('http://testserver/participant/language/', 302)])
 
 
 class LoginTest(TestCase):
 
     def setUp(self):
+        Clinic.objects.create(name="pilot")
         self.user = UserFactory()
-        UserProfileFactory(user=self.user, language='en', is_participant=False)
-
-        self.participant = UserFactory()
-        UserProfileFactory(user=self.participant, language='en')
-
+        self.participant = ParticipantFactory()
         self.client = Client()
 
     def test_login_get(self):
@@ -167,15 +173,25 @@ class LoginTest(TestCase):
         self.assertTrue(the_json['next'], "/")
         self.assertTrue('error' not in the_json)
 
+    def test_login_participant(self):
+        # participants cannot login through the /accounts/login mechanism
+        # as the backend authenticators kick out inactive Users
+        pwd = generate_password('MC1234567')
+        response = self.client.post('/accounts/login/',
+                                    {'username': self.participant.username,
+                                     'password': pwd},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = json.loads(response.content)
+        self.assertTrue(the_json['error'], True)
+
 
 class LogoutTest(TestCase):
 
     def setUp(self):
+        Clinic.objects.create(name="pilot")
         self.user = UserFactory()
-        UserProfileFactory(user=self.user, language='en', is_participant=False)
-
-        self.participant = UserFactory()
-        UserProfileFactory(user=self.participant, language='en')
+        self.participant = ParticipantFactory()
 
         self.client = Client()
 
@@ -188,59 +204,67 @@ class LogoutTest(TestCase):
         self.assertTrue('Log in' in response.content)
         self.assertFalse('log out' in response.content)
 
-    def test_logout_particpant(self):
-        self.client.login(username=self.participant.username, password="test")
+    def test_logout_participant(self):
+        self.client.login(username=self.user.username, password="test")
+
+        response = self.client.post('/participant/login/',
+                                    {'username': self.participant.username},
+                                    follow=True)
+        self.assertEquals(response.status_code, 200)
+        self.assertEquals(response.template_name[0], "main/language.html")
 
         response = self.client.get('/accounts/logout/?next=/', follow=True)
-        self.assertEquals(response.template_name[0], "main/index.html")
+        self.assertEquals(response.template_name[0], "main/language.html")
         self.assertEquals(response.status_code, 200)
-        self.assertTrue('Return to tutorial' in response.content)
-        self.assertFalse('Log in' in response.content)
-        self.assertFalse('log out' in response.content)
 
 
 class CreateParticipantViewTest(TestCase):
 
     def setUp(self):
+        Clinic.objects.create(name="pilot")
         self.user = UserFactory()
-        UserProfileFactory(user=self.user, language='en', is_participant=False)
-
-        self.participant = UserFactory(username='MC1234567')
-        UserProfileFactory(user=self.participant, language='en')
-
+        self.participant = ParticipantFactory()
         self.client = Client()
 
     def test_post_as_anonymous_user(self):
-        response = self.client.post('/participant/create/')
-        self.assertEquals(response.status_code, 403)
+        response = self.client.post('/participant/create/',
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 405)
 
     def test_post_as_participant(self):
         self.client.login(username=self.participant.username, password="test")
-        response = self.client.post('/participant/create/')
-        self.assertEquals(response.status_code, 403)
+        response = self.client.post('/participant/create/',
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 405)
 
     def test_post_as_facilitator(self):
         self.client.login(username=self.user.username, password="test")
 
+        # non-ajax
         response = self.client.post('/participant/create/')
+        self.assertEquals(response.status_code, 405)
+
+        response = self.client.post('/participant/create/',
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
 
         the_json = simplejson.loads(response.content)
         user = User.objects.get(username=the_json['user']['username'])
-        self.assertTrue(user.profile.is_participant)
+        self.assertTrue(user.profile.is_participant())
 
 
 class LoginParticipantViewTest(TestCase):
 
     def setUp(self):
+        Clinic.objects.create(name="pilot")
         self.user = UserFactory()
-        UserProfileFactory(user=self.user, language='en', is_participant=False)
 
         self.client = Client()
 
         # create a "real" participant to work with
         self.client.login(username=self.user.username, password="test")
-        response = self.client.post('/participant/create/')
+        response = self.client.post('/participant/create/',
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         the_json = simplejson.loads(response.content)
         self.participant = User.objects.get(
             username=the_json['user']['username'])
@@ -254,24 +278,27 @@ class LoginParticipantViewTest(TestCase):
 
     def test_post_as_anonymous_user(self):
         response = self.client.post('/participant/login/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEquals(response.status_code, 405)
 
     def test_post_as_participant(self):
         self.client.login(username=self.participant.username, password="test")
         response = self.client.post('/participant/login/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEquals(response.status_code, 405)
 
     def test_post_as_facilitator_first(self):
         self.client.login(username=self.user.username, password="test")
 
         response = self.client.post('/participant/login/',
                                     {'username': self.participant.username},
-                                    follow=True)
+                                    follow=True,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.template_name[0], "main/language.html")
 
     def test_post_as_facilitator_second(self):
         self.client.login(username=self.user.username, password="test")
+        self.participant.profile.language = 'en'
+        self.participant.profile.save()
 
         sections = self.hierarchy_en.get_root().get_descendants()
         UserPageVisit.objects.create(user=self.participant,
@@ -283,7 +310,8 @@ class LoginParticipantViewTest(TestCase):
 
         response = self.client.post('/participant/login/',
                                     {'username': self.participant.username},
-                                    follow=True)
+                                    follow=True,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.templates[0].name, "main/page.html")
         self.assertEquals(response.redirect_chain[0],
@@ -294,9 +322,8 @@ class LoginParticipantViewTest(TestCase):
 class LanguageParticipantViewTest(TestCase):
 
     def setUp(self):
+        Clinic.objects.create(name="pilot")
         self.user = UserFactory()
-        UserProfileFactory(user=self.user, language='en', is_participant=False)
-
         self.client = Client()
 
         ModuleFactory("en", "/pages/en/")
@@ -307,7 +334,7 @@ class LanguageParticipantViewTest(TestCase):
 
     def test_post_as_anonymous_user(self):
         response = self.client.post('/participant/login/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEquals(response.status_code, 405)
 
     def test_post_as_user(self):
         self.client.login(username=self.user.username, password="test")
@@ -338,11 +365,9 @@ class LanguageParticipantViewTest(TestCase):
 class ClearParticipantViewTest(TestCase):
 
     def setUp(self):
+        Clinic.objects.create(name="pilot")
         self.user = UserFactory()
-        UserProfileFactory(user=self.user, language='en', is_participant=False)
-
-        self.participant = UserFactory(username='MC1234567')
-        UserProfileFactory(user=self.participant, language='en')
+        self.participant = ParticipantFactory()
 
         self.client = Client()
         ModuleFactory("en", "/pages/en/")
@@ -353,14 +378,17 @@ class ClearParticipantViewTest(TestCase):
 
     def test_get_as_anonymous_user(self):
         response = self.client.get('/participant/clear/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEquals(response.status_code, 405)
 
     def test_get_as_participant(self):
         self.client.login(username=self.participant.username, password="test")
         response = self.client.get('/participant/clear/')
-        self.assertEquals(response.status_code, 403)
+        self.assertEquals(response.status_code, 405)
 
     def test_get_as_facilitator(self):
+        self.user.profile.language = 'en'
+        self.user.profile.save()
+
         self.client.login(username=self.user.username, password="test")
 
         sections = self.hierarchy_en.get_root().get_descendants()

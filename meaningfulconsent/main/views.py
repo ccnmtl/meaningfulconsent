@@ -1,83 +1,37 @@
 from django import http
 from django.conf import settings
 from django.contrib.auth import login, authenticate
-from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.views import logout as auth_logout_view
-from django.http.response import HttpResponse, HttpResponseRedirect, \
-    HttpResponseForbidden, HttpResponseNotAllowed
-from django.utils.decorators import method_decorator
+from django.http.response import HttpResponseRedirect
 from django.views.generic.base import TemplateView, View
 from djangowind.views import logout as wind_logout_view
 from meaningfulconsent.main.auth import generate_random_username, \
-    generate_password
-from meaningfulconsent.main.models import UserProfile, Clinic
+    generate_password, USERNAME_PREFIX
+from meaningfulconsent.main.mixins import JSONResponseMixin, LoggedInMixin, \
+    LoggedInMixinSuperuser, LoggedInFacilitatorMixin
 from pagetree.generic.views import EditView
 from pagetree.models import UserLocation, UserPageVisit
-import json
+
+
+def user_is_participant(user):
+    return not user.is_anonymous() and user.profile.is_participant()
+
+
+def user_is_facilitator(user):
+    return not user.is_anonymous() and not user.profile.is_participant()
 
 
 def context_processor(request):
     ctx = {}
-    if request.user.is_authenticated() and request.user.profile.is_participant:
+    if user_is_participant(request.user):
         # djangowind delivers the form in un-authenticated situations
         ctx['login_form'] = AuthenticationForm(request)
     return ctx
 
 
-class JSONResponseMixin(object):
-    """
-    A mixin that can be used to render a JSON response.
-    """
-    def render_to_json_response(self, context, **response_kwargs):
-        """
-        Returns a JSON response, transforming 'context' to make the payload.
-        """
-        return HttpResponse(
-            self.convert_context_to_json(context),
-            content_type='application/json',
-            **response_kwargs
-        )
-
-    def convert_context_to_json(self, context):
-        "Convert the context dictionary into a JSON object"
-        # Note: This is *EXTREMELY* naive; in reality, you'll need
-        # to do much more complex handling to ensure that arbitrary
-        # objects -- such as Django model instances or querysets
-        # -- can be serialized as JSON.
-        return json.dumps(context)
-
-
-class LoggedInMixin(object):
-    def dispatch(self, *args, **kwargs):
-        if self.request.user.is_anonymous():
-            return HttpResponseForbidden()
-
-        return super(LoggedInMixin, self).dispatch(*args, **kwargs)
-
-
-class LoggedInFacilitatorMixin(object):
-    def dispatch(self, *args, **kwargs):
-        if (self.request.user.is_anonymous() or
-                self.request.user.profile.is_participant):
-            return HttpResponseForbidden()
-        return super(LoggedInFacilitatorMixin, self).dispatch(*args, **kwargs)
-
-
-class LoggedInMixinSuperuser(object):
-    @method_decorator(user_passes_test(lambda u: u.is_superuser))
-    def dispatch(self, *args, **kwargs):
-        return super(LoggedInMixinSuperuser, self).dispatch(*args, **kwargs)
-
-
 class LoginView(JSONResponseMixin, View):
-
-    def dispatch(self, *args, **kwargs):
-        if not self.request.is_ajax():
-            return HttpResponseNotAllowed("")
-        else:
-            return super(LoginView, self).dispatch(*args, **kwargs)
 
     def post(self, request):
         request.session.set_test_cookie()
@@ -94,8 +48,9 @@ class LoginView(JSONResponseMixin, View):
 class LogoutView(LoggedInMixin, View):
 
     def get(self, request):
-        if request.user.profile.is_participant:
-            return HttpResponseRedirect("/")
+        if request.user.profile.is_participant():
+            url = request.user.profile.last_location_url()
+            return HttpResponseRedirect(url)
         elif hasattr(settings, 'WIND_BASE'):
             return wind_logout_view(request, next_page="/")
         else:
@@ -110,23 +65,19 @@ class IndexView(TemplateView):
     template_name = "main/index.html"
 
     def dispatch(self, *args, **kwargs):
-        if (not self.request.user.is_anonymous and
-                self.user.profile.is_participant):
-            if self.user.profile.language is None:
-                return HttpResponseRedirect('/participant/language')
-            else:
-                url = self.user.profile.last_location().get_absolute_url()
-                return HttpResponseRedirect(url)
+        user = self.request.user
+        if user_is_participant(user):
+            return HttpResponseRedirect(user.profile.last_location_url())
         else:
             return super(IndexView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
 
-        user = self.request.user
-        if not user.is_anonymous() and not user.profile.is_participant:
+        if user_is_facilitator(self.request.user):
             context['participants'] = User.objects.filter(
-                profile__is_participant=True)
+                is_active=False,
+                username__startswith=USERNAME_PREFIX)
 
         return context
 
@@ -137,39 +88,28 @@ class CreateParticipantView(LoggedInFacilitatorMixin, JSONResponseMixin, View):
         username = generate_random_username()
         password = generate_password(username)
 
-        user = User(username=username)
+        user = User(username=username, is_active=False)
         user.set_password(password)
-        user.is_active = False  # regular login does not allow inactive users
         user.save()
-
-        # @todo - when more than one clinic exists, create a profile
-        # page for participants. for the moment, just pick the first one
-        clinic = Clinic.objects.all()[0]
-        profile = UserProfile(user=user, is_participant=True, clinic=clinic)
-        profile.save()
 
         context = {'user': {'username': user.username}}
         return self.render_to_json_response(context)
 
 
-class LoginParticipantView(LoggedInFacilitatorMixin, JSONResponseMixin, View):
+class LoginParticipantView(LoggedInFacilitatorMixin, View):
 
     def post(self, request):
         """
         Log in a special user as a participant
         """
         username = request.POST.get('username')
+        password = generate_password(username)
 
-        user = authenticate(username=username)
+        user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
             if user.is_authenticated():
-                last_location = user.profile.last_location()
-                if last_location == user.profile.default_location():
-                    return HttpResponseRedirect("/participant/language/")
-                else:
-                    url = last_location.get_absolute_url()
-                    return HttpResponseRedirect(url)
+                return HttpResponseRedirect(user.profile.last_location_url())
 
         raise http.Http404
 
@@ -179,14 +119,15 @@ class LanguageParticipantView(LoggedInMixin, TemplateView):
 
     def post(self, request):
         """
-        Log in a user as a participant without requiring credentials
+        Change the user's language. Redirect to alternate hierarchy
         """
         language = request.POST.get('language', 'en')
         request.user.profile.language = language
         request.user.profile.save()
 
-        url = request.user.profile.last_location().get_absolute_url()
-        return HttpResponseRedirect(url)
+        loc = request.user.profile.last_location()
+
+        return HttpResponseRedirect(loc.get_absolute_url())
 
 
 class ClearParticipantView(LoggedInFacilitatorMixin, View):

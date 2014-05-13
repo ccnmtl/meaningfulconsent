@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
-from meaningfulconsent.main.models import UserProfile, Clinic
+from meaningfulconsent.main.auth import generate_password
+from meaningfulconsent.main.models import Clinic
 from pagetree.models import Hierarchy, Section
 import factory
 
@@ -15,10 +16,12 @@ class UserFactory(factory.DjangoModelFactory):
     password = factory.PostGenerationMethodCall('set_password', 'test')
 
 
-class UserProfileFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = UserProfile
-    user = factory.SubFactory(UserFactory)
-    clinic = factory.SubFactory(ClinicFactory)
+class ParticipantFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = User
+    username = 'MC1234567'
+    is_active = False
+    password = factory.PostGenerationMethodCall('set_password',
+                                                generate_password('MC1234567'))
 
 
 class HierarchyFactory(factory.DjangoModelFactory):

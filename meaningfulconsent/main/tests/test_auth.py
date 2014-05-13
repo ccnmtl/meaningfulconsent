@@ -2,11 +2,13 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from meaningfulconsent.main.auth import ParticipantBackend, \
     generate_random_username, generate_password
+from meaningfulconsent.main.models import Clinic
 
 
 class ParticipantAuthTest(TestCase):
 
     def setUp(self):
+        Clinic.objects.create(name="pilot")
         self.backend = ParticipantBackend()
 
     def test_match(self):
@@ -36,10 +38,12 @@ class ParticipantAuthTest(TestCase):
 
     def test_authenticate_user_invalid_password(self):
         user = User.objects.create(username='MC1234567', is_active=False)
-        user.set_password('test')
+        user.set_password(generate_password(user.username))
         user.save()
 
-        self.assertEquals(self.backend.authenticate("MC1234567"), None)
+        self.assertEquals(
+            self.backend.authenticate(username="MC1234567", password="test"),
+            None)
 
     def test_authenticate_user_success(self):
         unm = generate_random_username()
@@ -49,7 +53,8 @@ class ParticipantAuthTest(TestCase):
         user.set_password(pwd)
         user.save()
 
-        self.assertEquals(self.backend.authenticate(username=unm), user)
+        self.assertEquals(
+            self.backend.authenticate(username=unm, password=pwd), user)
 
     def test_get_user(self):
         unm = generate_random_username()

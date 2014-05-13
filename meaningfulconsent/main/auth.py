@@ -1,12 +1,10 @@
-from django.contrib.auth.models import User
-import re
-import hmac
-import hashlib
-import base64
 from django.conf import settings
-
-USERNAME_LENGTH = 9
-USERNAME_PREFIX = 'MC'
+from django.contrib.auth.models import User
+from meaningfulconsent.main.models import USERNAME_PREFIX, USERNAME_LENGTH
+import base64
+import hashlib
+import hmac
+import re
 
 
 def generate_random_username():
@@ -38,12 +36,11 @@ class ParticipantBackend(object):
                 result.end() == USERNAME_LENGTH and
                 len(username) == USERNAME_LENGTH)
 
-    def authenticate(self, username=None):
+    def authenticate(self, username=None, password=None):
         try:
             if self.match(username):
                 user = User.objects.get(username=username)
                 if not user.is_active:
-                    password = generate_password(username)
                     if user.check_password(password):
                         return user
         except User.DoesNotExist:

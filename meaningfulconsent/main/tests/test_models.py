@@ -1,22 +1,27 @@
 from django.test import TestCase
+from meaningfulconsent.main.models import Clinic
 from meaningfulconsent.main.tests.factories import UserFactory, \
-    UserProfileFactory, ModuleFactory
+    ModuleFactory, ParticipantFactory
 from pagetree.models import Hierarchy, UserPageVisit
 
 
 class UserProfileTest(TestCase):
 
     def setUp(self):
+        Clinic.objects.create(name='Test Clinic')
         self.user = UserFactory()
-        UserProfileFactory(user=self.user,
-                           language='en',
-                           is_participant=False)
+        self.participant = ParticipantFactory()
 
         ModuleFactory("en", "/pages/en/")
         ModuleFactory("es", "/pages/es/")
 
         self.hierarchy_en = Hierarchy.objects.get(name='en')
         self.hierarchy_es = Hierarchy.objects.get(name='es')
+
+    def test_auto_profile_create(self):
+        self.assertFalse(self.user.profile.is_participant())
+        self.assertFalse(self.participant.is_active)
+        self.assertTrue(self.participant.profile.is_participant())
 
     def test_default_location(self):
         self.assertEquals(self.user.profile.default_location(),
@@ -28,6 +33,13 @@ class UserProfileTest(TestCase):
                           self.hierarchy_es.get_root())
 
     def test_last_location_no_visits(self):
+        # no language
+        self.assertEquals(self.user.profile.last_location(),
+                          self.hierarchy_en.get_root())
+
+        self.user.profile.language = "en"
+        self.user.profile.save()
+
         self.assertEquals(self.user.profile.last_location().get_absolute_url(),
                           "/pages/en//")
 
@@ -37,6 +49,9 @@ class UserProfileTest(TestCase):
                           "/pages/es//")
 
     def test_last_location_with_visits(self):
+        self.user.profile.language = 'en'
+        self.user.profile.save()
+
         sections = self.hierarchy_en.get_root().get_descendants()
         UserPageVisit.objects.create(user=self.user,
                                      section=sections[0],
@@ -53,6 +68,10 @@ class UserProfileTest(TestCase):
                           "/pages/es//")
 
     def test_percent_complete(self):
+        self.assertEquals(self.user.profile.percent_complete(), 0)
+
+        self.user.profile.language = 'en'
+        self.user.profile.save()
         self.assertEquals(self.user.profile.percent_complete(), 0)
 
         sections = self.hierarchy_en.get_root().get_descendants()
