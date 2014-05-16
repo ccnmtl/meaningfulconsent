@@ -158,6 +158,47 @@ body > .container {
     line-height: 140%;
 }
 
+/** password change **/
+div.password-reset ul.errorlist {
+    list-style: none;
+    margin: 0;
+    display: block;
+    color: red;
+    padding: 0;
+    margin-bottom: 9px;    
+}
+
+div.password-change ul.errorlist {
+    list-style: none;
+    margin: 0;
+    display: block;
+    color: red;
+    padding: 0;    
+    margin-left: 50px;
+}
+
+div.password-reset input[type='text'],
+div.password-change input[type='text'],
+div.password-reset input[type='password'],
+div.password-change input[type='password'] {
+    display: block;
+    width: 300px;
+    height: 34px;
+    padding: 6px 12px;
+    font-size: 14px;
+    line-height: 1.428571429;
+    color: #555;
+    vertical-align: middle;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+
 /* NAV BAR NEAR TOP PAGE BANNER */
 
 .navbar-pl {
@@ -288,5 +329,6 @@ input.login-uni-form {
     border: none;
     background: none;
     line-height: normal;
-    float: right;    
+    float: right;
+    margin-right: -14px;
 }

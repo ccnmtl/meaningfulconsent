@@ -63,6 +63,9 @@
                                 <span>Hello, {% if user.first_name %}{{user.get_short_name}}{% else %}{{user.username}}{% endif %}</span>
                                 <a href="/accounts/logout/?next=/"><span title="Log out">(log out)</span></a>
                             </li>
+                            {% if user.has_usable_password %}
+                                <li><a href="/accounts/password_change/">Change Password</a></li>
+                            {% endif %}
                             <li><a href="/about/">About</a></li>
                             <li><a href="/credits/">Credits</a></li>
                             <li><a href="/contact/">Contact</a></li>
@@ -116,10 +119,15 @@
                             <input type="hidden" name="next" value="/" />
                           </div>
                         </div>
-                    
                     </div><!--/ .login-local-form -->
                 </form>
-                  
+
+                {% if request.user.is_anonymous %}
+                    <div class="pull-right">
+                        <a href="/accounts/password_reset/">Forgot Password?</a>
+                    </div>
+                    <div style="clear: both"></div>
+                {% endif %}                  
                 {% if WIND_BASE %}
                     <form method="get" action="{{ WIND_BASE }}login">
                         {% csrf_token %}

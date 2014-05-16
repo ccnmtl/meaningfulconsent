@@ -2,12 +2,15 @@ from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.views import password_change, password_change_done
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
+from meaningfulconsent.main.mixins import is_facilitator
 from meaningfulconsent.main.views import CreateParticipantView, \
     LoginParticipantView, LanguageParticipantView, RestrictedEditView, \
     ClearParticipantView, IndexView, LoginView, LogoutView
 from pagetree.generic.views import PageView
+import debug_toolbar
 admin.autodiscover()
 
 
@@ -15,13 +18,38 @@ auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))
 if hasattr(settings, 'WIND_BASE'):
     auth_urls = (r'^accounts/', include('djangowind.urls'))
 
+
 urlpatterns = patterns(
     '',
-    (r'^accounts/login/$', LoginView.as_view()),
-    (r'^accounts/logout/$', LogoutView.as_view()),
-    auth_urls,
     (r'^$', ensure_csrf_cookie(IndexView.as_view())),
     (r'^admin/', include(admin.site.urls)),
+    (r'^accounts/login/$', LoginView.as_view()),
+    (r'^accounts/logout/$', LogoutView.as_view()),
+
+    # password change & reset
+    # the djangowind urls need an update
+    url(r'^accounts/password_change/$',
+        is_facilitator(password_change),
+        name='password_change'),
+    url(r'^accounts/password_change/done/$',
+        is_facilitator(password_change_done),
+        name='password_change_done'),
+    url(r'^accounts/password_reset/$',
+        'django.contrib.auth.views.password_reset',
+        name='password_reset'),
+    url(r'^accounts/password_reset/done/$',
+        'django.contrib.auth.views.password_reset_done',
+        name='password_reset_done'),
+    url(r'^accounts/reset/(?P<uidb64>[0-9A-Za-z_\-]+)/'
+        '(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
+        'django.contrib.auth.views.password_reset_confirm',
+        name='password_reset_confirm'),
+    url(r'^accounts/reset/done/$',
+        'django.contrib.auth.views.password_reset_complete',
+        name='password_reset_complete'),
+
+    auth_urls,
+
     url(r'^_impersonate/', include('impersonate.urls')),
     (r'^stats/$', TemplateView.as_view(template_name="stats.html")),
     (r'smoketest/', include('smoketest.urls')),
@@ -57,6 +85,5 @@ urlpatterns = patterns(
 
 
 if settings.DEBUG:
-    import debug_toolbar
     urlpatterns += patterns('',
                             url(r'^__debug__/', include(debug_toolbar.urls)))

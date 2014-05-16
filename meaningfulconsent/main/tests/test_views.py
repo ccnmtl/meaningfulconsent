@@ -87,6 +87,38 @@ class PagetreeViewTestsLoggedIn(TestCase):
         self.assertEqual(r.status_code, 200)
 
 
+class ChangePasswordTests(TestCase):
+
+    def setUp(self):
+        Clinic.objects.create(name="pilot")
+        self.user = UserFactory()
+        self.participant = ParticipantFactory()
+        self.client = Client()
+
+    def test_logged_out(self):
+        response = self.client.get('/accounts/password_change/')
+        self.assertEquals(response.status_code, 405)
+
+    def test_facilitator(self):
+        self.assertTrue(self.client.login(
+            username=self.user.username, password="test"))
+        response = self.client.get('/accounts/password_change/')
+        self.assertEquals(response.status_code, 200)
+
+    def test_participant(self):
+        # login participant
+        self.assertTrue(self.client.login(
+            username=self.user.username, password="test"))
+
+        response = self.client.post('/participant/login/',
+                                    {'username': self.participant.username},
+                                    follow=True)
+        self.assertEquals(response.status_code, 200)
+
+        response = self.client.get('/accounts/password_change/')
+        self.assertEquals(response.status_code, 405)
+
+
 class IndexViewTest(TestCase):
 
     def setUp(self):
