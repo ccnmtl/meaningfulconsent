@@ -332,3 +332,8 @@ input.login-uni-form {
     float: right;
     margin-right: -14px;
 }
+
+/* page styling */
+a[disabled] {
+    color: #999;
+}

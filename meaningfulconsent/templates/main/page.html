@@ -10,10 +10,6 @@
    
     <script type="text/javascript"> 
         jQuery(document).ready(function() {
-            jQuery(".nav li.disabled a").click(function() {
-                return false;
-            });
-            
             var participantView = new ParticipantView({
                 el: jQuery("body")[0]
             });
@@ -76,8 +72,14 @@
         {% endfor %}
           
         {% if not request.user.profile.is_participant %}
-            <li class="pull-right"><a href="/participant/clear/">Clear State</a></li>      
-            <li class="pull-right"><a href="{{section.get_edit_url}}">Edit Page</a></li>
+            <li class="pull-right">
+                <a href="/participant/clear/">Clear State</a>
+            </li>
+            {% if request.user.is_superuser %}      
+                <li class="pull-right">
+                    <a href="{{section.get_edit_url}}">Edit Page</a>
+                </li>
+            {% endif %}
         {% endif %}
     </ul>
 {% endblock %}
@@ -145,7 +147,7 @@
             {% endif %}
     
             {% if next_section %}
-                <li class="next"><a href="{{next_section.get_absolute_url}}">{{next_section.label}} &rarr;</a></li>
+                <li class="next"><a href="{{next_section.get_absolute_url}}" disabled="disabled" class="btn btn-next">{{next_section.label}} &rarr;</a></li>
             {% endif %}
         </ul>
     {% endwith %}

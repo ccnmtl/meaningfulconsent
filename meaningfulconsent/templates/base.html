@@ -178,11 +178,14 @@
     </footer>
 {% endblock %}
 
+<script src="{{STATIC_URL}}js/underscore-min.js"></script>
+<script src="{{STATIC_URL}}js/backbone-min.js"></script>
+
+{% block js %}{% endblock %}
+
 {% compress js %}
-    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
-    <script src="{{STATIC_URL}}js/backbone-min.js"></script>
-    <script src="{{STATIC_URL}}js/app/login.js"></script>
     <script src="{{STATIC_URL}}bootstrap/js/bootstrap.js"></script>
+    <script src="{{STATIC_URL}}js/app/login.js"></script>
     
     <script type="text/javascript"> 
         jQuery(document).ready(function() {
@@ -191,10 +194,7 @@
             });
         });
     </script>
-    
 {% endcompress %}
-
-{% block js %}{% endblock %}
 
 {% if STAGING_ENV %}
     <div class="alert alert-danger alert-dismissable" style="position: fixed; bottom: 0px;">

@@ -128,14 +128,13 @@ INSTALLED_APPS = [
     'registration',
 ]
 
-PAGEBLOCKS = ['pageblocks.TextBlock',
-              'pageblocks.HTMLBlock',
-              'pageblocks.PullQuoteBlock',
-              'pageblocks.ImageBlock',
-              'pageblocks.ImagePullQuoteBlock',
-              'quizblock.Quiz',
-              ]
-
+PAGEBLOCKS = [
+    'pageblocks.TextBlock',
+    'pageblocks.HTMLBlock',
+    'pageblocks.PullQuoteBlock',
+    'pageblocks.ImageBlock',
+    'pageblocks.ImagePullQuoteBlock',
+    'quizblock.Quiz']
 
 LETTUCE_APPS = (
     'meaningfulconsent.main',
