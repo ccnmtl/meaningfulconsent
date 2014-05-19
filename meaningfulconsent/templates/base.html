@@ -17,9 +17,10 @@
       <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
       {% block css %}{% endblock %}
   {% endcompress %}
-  <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" />  
-  <script src="{{STATIC_URL}}js/jquery-1.10.1.min.js"></script>
   
+  <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" />  
+  <script src="{{STATIC_URL}}jquery/js/jquery-1.10.1.min.js"></script>
+  {% block extrahead %}{% endblock %}
   {% block feeds %}{% endblock %}
 </head>
 <body class="{% block bodyclass %}{% endblock %}" id="{% block bodyid %}{% endblock %}">

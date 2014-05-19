@@ -9,14 +9,22 @@
         #content { width: 96%; float: none; };
         .draghandle {float: left;}
         #children-order-list {list-style-type: none; margin: 0; padding: 0;}
-        #children li { margin: 0 3px 3px 3px; padding: 0.4em;
-        padding-left: 1.5em; 
-              background-color: #ddd;
+        
+        #children-order-list li span.glyphicon,
+        div.block-dragger span.glyphicon {
+            cursor: pointer;
         }
+        
+        #children li { margin: 0 3px 3px 3px; padding: 0.4em;
+            padding-left: 1.5em; background-color: #ddd; }
         #children li span { position: absolute; margin-left: -1.3em; }
         .dragging {background-color: #fee;}
     </style>
-    <link href="{{STATIC_URL}}css/jquery-ui-1.10.1.css" rel="stylesheet">    
+{% endblock %}
+    
+{% block extrahead %}
+    <link href="{{STATIC_URL}}jquery/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+    <script src="{{STATIC_URL}}jquery/js/jquery-ui-1.10.4.min.js"></script>
 {% endblock %}
 
 {% block bodyclass %}edit module-{{module.slug}}{% endblock %}
@@ -26,7 +34,6 @@
 
 {% block primarynav %}
     <ul class="nav nav-pills">
-    
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
               Hierarchies <span class="caret"></span>
@@ -39,18 +46,12 @@
                     <a href="/pages/es/edit/">Spanish</a>
                 </li>                    
             </ul>
-          </li>    
-        
-              
+          </li>
         <li class="pull-right"><a href="{{section.get_absolute_url}}">View Page</a></li>
-        
-        
     </ul>
 {% endblock %}
 
 {% block js %}
-    <script src="{{STATIC_URL}}js/jquery-ui-1.10.3.min.js"></script>
-
     {% compress js %}
         <script type="text/javascript">
             var saveOrderOfChildren = function() {
@@ -86,24 +87,20 @@
         
             jQuery(document).ready(function() {
                 jQuery("#children-order-list").sortable({
-                    containment : 'parent'
-                    ,axis : 'y'
-                    ,tolerance: 'pointer'
-                    ,activeClass: 'dragging'
-                    ,handle: '.draghandle'
-                    ,stop: function (event,ui) { saveOrderOfChildren();}
+                    containment : 'parent',
+                    axis : 'y',
+                    tolerance: 'pointer',
+                    stop: function (event,ui) { saveOrderOfChildren();}
                 });
                 
                 jQuery("#children-order-list").disableSelection();
                 
                 jQuery("#edit-blocks-tab").sortable({
-                    items : 'div.block-dragger'
-                    ,axis: 'y'
-                    ,containment: 'parent'
-                    ,handle: '.draghandle'
-                    ,activeClass: 'dragging'
-                    ,tolerance: 'pointer'
-                    ,stop: function (event,ui) { saveOrderOfPageBlocks();}
+                    containment: 'parent',
+                    axis: 'y',
+                    tolerance: 'pointer',
+                    items : 'div.block-dragger',
+                    stop: function (event,ui) { saveOrderOfPageBlocks();}
                   });
             
                 jQuery("#edit-blocks-tab").disableSelection();
@@ -159,24 +156,24 @@
 
     <div id="edit-blocks-tab" class="tab-pane {% if not is_root %}active{% endif%}">
         {% if section.pageblock_set.count %}
-            <p>Drag the <i class="icon-resize-vertical"></i> arrows to reorder pageblocks:</p>
+            <p>Drag the <span class="glyphicon glyphicon-resize-vertical"></span> arrows to reorder pageblocks:</p>
     
             {% for block in section.pageblock_set.all %}
-                <div class="row-fluid block-dragger {% cycle 'odd' 'even' %}" id="pageblock-{{block.id}}">    
-                    <div class="span1 draghandle">
-                        <i class="icon-resize-vertical"></i>
+                <div class="row block-dragger {% cycle 'odd' 'even' %}" id="pageblock-{{block.id}}">    
+                    <div class="col-md-1 draghandle">
+                        <span class="glyphicon glyphicon-resize-vertical"></span>
                     </div>
                 
-                    <div class="span3">
+                    <div class="col-md-3">
                         <b><a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.block.display_name}}</a></b>
                     </div>
                 
-                    <div class="span5">
+                    <div class="col-md-5">
                         <a data-toggle="modal" href="#edit-pageblock-{{block.id}}">{{block.label}}</a>
                         {% rendersummary block %}
                     </div>
                 
-                    <div class="span3">
+                    <div class="col-md-3">
                         <div class="btn-group" style="float: right">
                             <a data-toggle="modal" class="btn btn-mini"
                              href="#" 
@@ -237,13 +234,13 @@
 <div id="children-tab" class="tab-pane">
 <h2>Reorder Children</h2>
 <div class="well">
-<p>Drag and drop arrows to reorder children</p>
+<p>Drag and drop <span class="glyphicon glyphicon-resize-vertical"></span> arrows to reorder children</p>
 {% with section.get_children as section_children %}
     {% if section_children|length > 0 %}
         <ul id="children-order-list">
             {% for child in section_children %}
                 <li class="draggable" id="child-{{child.id}}">
-                    <span title="drag to reorder pageblocks" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>
+                    <span  title="drag to reorder children" class="glyphicon glyphicon-resize-vertical"></span>
                     <a href="{{child.get_edit_url}}">{{child.label}}</a>
                 </li>
             {% endfor %}
