@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load bootstrap %}
+
+{% block css %}
+    <style type="text/css">
+        .draghandle {float: left;}
+        #answers {list-style-type: none; margin: 0; padding: 0;}
+        #answers li { margin: 0 3px 3px 3px; padding: 0.4em;
+        padding-left: 1.5em; 
+              background-color: #ddd;
+        }
+        #answers li span { position: absolute; margin-left: -1.3em; }
+        .dragging {border: #f60 solid 1px;}
+    </style>
+{% endblock %}
+
+{% block extrahead %}
+    <link href="{{STATIC_URL}}jquery/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+    <script src="{{STATIC_URL}}jquery/js/jquery-ui-1.10.4.min.js"></script>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        var saveOrder = function() {
+            var url = "{% url 'reorder-answer' question.id %}?";
+            var worktodo = 0;
+            jQuery("#answers li").each(function(index,element) {
+               worktodo = 1;
+               var id = jQuery(element).attr('id').split("-")[1];
+               url += "answer_" + index + "=" + id + ";";
+            });
+            if (worktodo == 1) {
+                var req = new XMLHttpRequest();
+                req.open("POST",url,true);
+                req.send(null);
+            }
+        };
+        
+        jQuery(document).ready(function () {
+            jQuery("#answers").sortable({
+                containment : 'parent'
+                ,axis : 'y'
+                ,tolerance: 'pointer'
+                ,activeClass: 'dragging'
+                ,handle: '.draghandle'
+                ,stop: function (event,ui) { saveOrder();}
+            });
+            jQuery("#answers").disableSelection();
+        });
+    </script>
+
+
+{% endblock %}
+
+{% block content %}
+
+<ul class="breadcrumb">
+<li><a href="{{question.quiz.pageblock.section.get_edit_url}}">{{question.quiz.pageblock.section.label}}</a></li>
+<li><a href="{% url 'edit-quiz' question.quiz.id %}">Edit Quiz</a></li>
+<li>Edit Question</li>
+</ul>
+
+<h2>Question {{question.display_number}}: {{ question.text }}</h2>
+
+<form action="." method="post" class="well form-horizontal" >
+<table width="100%">
+{{ question.edit_form|bootstrap }}
+</table>
+<input type="submit" value="save" class="btn btn-primary" />
+</form>
+
+{% if question.answer_set.count %}
+<h2>Answers</h2>
+<ul class="dragparent" id="answers">
+{% for answer in question.answer_set.all %}
+<li class="draggable" id="answer-{{answer.id}}">
+<span title="drag to reorder answers" class="draghandle ui-icon ui-icon-arrowthick-2-n-s"></span>[<a href="{% url 'delete-answer' answer.id %}">delete</a>] 
+Answer {{ answer.display_number }}: 
+<a href="{% url 'edit-answer' answer.id %}">{{answer.label}}</a>
+{% if answer.correct %}<i class="icon-ok"></i>{% endif %}
+</li>
+{% endfor %}
+</ul>
+{% endif %}
+
+{% if question.answerable %}
+<h3>Add Answer</h3>
+<form action="{% url 'add-answer-to-question' question.id %}" method="post" class="well form-horizontal">
+<table width="100%">
+{{ answer_form|bootstrap}}
+</table>
+<input type="submit" value="add answer" class="btn btn-primary" />
+</form>
+{% endif %}
+
+{% endblock %}

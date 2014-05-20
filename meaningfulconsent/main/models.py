@@ -76,3 +76,17 @@ def create_user_profile(sender, instance, created, **kwargs):
         UserProfile.objects.get_or_create(user=instance, clinic=clinic)
 
 post_save.connect(create_user_profile, sender=User)
+
+
+class UserVideoView(models.Model):
+    user = models.ForeignKey(User)
+    video_url = models.CharField(max_length=512)
+    video_duration = models.IntegerField(default=0)
+    seconds_viewed = models.IntegerField(default=0)
+
+    def percent_viewed(self):
+        rv = float(self.seconds_viewed) / self.video_duration * 100
+        return rv
+
+    class Meta:
+        unique_together = (('user', 'video_url'),)

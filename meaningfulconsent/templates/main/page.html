@@ -10,8 +10,10 @@
    
     <script type="text/javascript"> 
         jQuery(document).ready(function() {
-            var participantView = new ParticipantView({
-                el: jQuery("body")[0]
+            var view = new ParticipantPageView({
+                el: jQuery("body")[0],
+                participant_id: {{request.user.id}},
+                section_id: {{section.id}}
             });
         });
     </script>
@@ -39,7 +41,6 @@
 {% endblock %}
 
 {% block usernav %}
-
     {% if request.user.profile.is_participant %}
         <li class="pause-session">
             <a href="/participant/pause/"><span title="Pause">Pause Session</span></a>
@@ -61,14 +62,16 @@
 
 {% block primarynav %}
     <ul class="nav nav-pills">
-        {% for section in modules %}
-              {% ifaccessible section %}
-                  <li {% ifequal section.id module.id %}class="active"{% endifequal %}>
-              {% else %}
-                  <li class="disabled">
-              {% endifaccessible %}
-                  <a href="{{section.get_absolute_url}}">{{section.label}}</a>
-              </li>
+        {% for module in modules %}
+            {% ifequal section.id module.id %}
+                <li class="active">
+            {% else %}{% ifaccessible module %}
+                <li>
+            {% else %}
+                <li class="disabled">
+            {% endifaccessible %}{% endifequal %}
+                <a href="{{module.get_absolute_url}}">{{module.label}}</a>
+            </li>
         {% endfor %}
           
         {% if not request.user.profile.is_participant %}
@@ -85,39 +88,39 @@
 {% endblock %}
 
 {% block content %}
-    <div id="content">
-        {% if needs_submit %}
-            {% if is_submitted %}
-            {% else %}
-                <form action="." method="post">
-            {% endif %}
-        {% endif %}
-
-        {% for block in section.pageblock_set.all %}
-            <div class="pageblock{% if block.css_extra %} {{block.css_extra}}{% endif %}">
-                {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
-                {% render block %}
-            </div>
-        {% endfor %}
+    <form action="." method="post" id="submit-page">
+        <div id="content">
+            {% for block in section.pageblock_set.all %}
+                <div class="pageblock{% if block.css_extra %} {{block.css_extra}}{% endif %}">
+                    {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
+                    {% render block %}
+                </div>
+            {% endfor %}
+        </div>
     
-        {% if needs_submit %}
-            {% if request.user.is_anonymous %}
-            {% else %}
-                {% if is_submitted %}
-                    {% if allow_redo %}
-                    <form action="." method="post">
-                    <input type="hidden" name="action" value="reset" />
-                    <input type="submit" value="clear your answers and try again" class="btn" />
-                    </form>
-                    {% endif %}
-                {% else %}
-                    <input type="submit" value="Submit" class="btn btn-primary" />
-                    </form>
+        {% with previous=section.get_previous next_section=section.get_next %}
+            <ul class="pager">
+                {% if previous %}
+                    <li class="previous">
+                        <a href="{{previous.get_absolute_url}}" class="btn btn-default">&larr; {{previous.label}}</a>
+                    </li>
                 {% endif %}
-            {% endif %}
-        {% endif %}
-
-    </div>
+                
+                {% if allow_redo or not is_submitted %}
+                    <div>
+                        <input type="hidden" name="next" value="{{next_section.get_absolute_url}}" />
+                        <input id="submit-page-button" type="submit" value="Continue &rarr;" class="btn btn-primary pull-right" 
+                            data-loading-text="Saving..." />
+                        <span style="display: none" class="error-inline alert alert-danger">An error occurred. Please see your facilitator.</span>           
+                    </div>
+                {% else %}
+                    <li id="next" class="next">
+                        <a href="{{next_section.get_absolute_url}}" class="btn btn-next">Continue &rarr;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        {% endwith %}
+    </form>
     
     <div class="modal pause-session-modal">
         <div class="modal-dialog">
@@ -138,19 +141,7 @@
 {% endblock %}
 
 {% block content-nav %}
-    {% with previous=section.get_previous next_section=section.get_next %}
-        <ul class="pager">
-            {% if previous %}
-                <li class="previous">
-                    <a href="{{previous.get_absolute_url}}">&larr; {{previous.label}}</a>
-                </li>
-            {% endif %}
-    
-            {% if next_section %}
-                <li class="next"><a href="{{next_section.get_absolute_url}}" disabled="disabled" class="btn btn-next">{{next_section.label}} &rarr;</a></li>
-            {% endif %}
-        </ul>
-    {% endwith %}
+
 {% endblock %}
 
 {% block footer %}{% endblock %}

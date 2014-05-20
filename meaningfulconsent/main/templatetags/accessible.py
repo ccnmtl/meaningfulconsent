@@ -4,20 +4,19 @@ register = template.Library()
 
 
 class AccessibleNode(template.Node):
-    def __init__(self, section, nodelist_true, nodelist_false=None):
+    def __init__(self, module, nodelist_true, nodelist_false=None):
         self.nodelist_true = nodelist_true
         self.nodelist_false = nodelist_false
-        self.section = section
+        self.module = module
 
     def render(self, context):
-        s = context[self.section]
-
+        m = context[self.module]
         if 'request' in context:
             r = context['request']
             u = r.user
 
-            visited, last_section = s.gate_check(u)
-            if visited:
+            visited, last_section = m.gate_check(u)
+            if visited and m.submitted(u):
                 return self.nodelist_true.render(context)
 
         return self.nodelist_false.render(context)
@@ -25,7 +24,7 @@ class AccessibleNode(template.Node):
 
 @register.tag('ifaccessible')
 def accessible(parser, token):
-    section = token.split_contents()[1:][0]
+    module = token.split_contents()[1:][0]
     nodelist_true = parser.parse(('else', 'endifaccessible'))
     token = parser.next_token()
     if token.contents == 'else':
@@ -33,4 +32,4 @@ def accessible(parser, token):
         parser.delete_first_token()
     else:
         nodelist_false = None
-    return AccessibleNode(section, nodelist_true, nodelist_false)
+    return AccessibleNode(module, nodelist_true, nodelist_false)

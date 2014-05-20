@@ -337,3 +337,33 @@ input.login-uni-form {
 a[disabled] {
     color: #999;
 }
+
+#submit-page-button {
+    display: inline-block;
+    padding: 5px 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    float: right;
+    color: #333;
+    border-color: #ccc;    
+}
+
+#submit-page-button:hover {
+    text-decoration: none;
+    background-color: #eeeeee;
+}
+
+/* participant input */
+div.pageblock.participant-concerns div.cases {
+    margin-top: 50px;
+}
+
+div.pageblock.participant-concerns div.cases div.casetitle {
+    display: none;
+}
+
+div.pageblock.participant-concerns div.casequestion ol {
+    list-style-type: none;
+    padding-left: 2px;
+}

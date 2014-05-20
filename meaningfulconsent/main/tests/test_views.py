@@ -2,7 +2,7 @@ from django.contrib.auth.models import User
 from django.test import TestCase
 from django.test.client import Client
 from meaningfulconsent.main.auth import generate_password
-from meaningfulconsent.main.models import Clinic
+from meaningfulconsent.main.models import Clinic, UserVideoView
 from meaningfulconsent.main.tests.factories import UserFactory, \
     ModuleFactory, ParticipantFactory
 from pagetree.helpers import get_hierarchy
@@ -440,3 +440,116 @@ class ClearParticipantViewTest(TestCase):
 
         visits = UserPageVisit.objects.filter(user=self.user)
         self.assertEquals(len(visits), 1)
+
+
+class TrackParticipantViewTest(TestCase):
+
+    def setUp(self):
+        Clinic.objects.create(name="pilot")
+        self.user = UserFactory()
+        self.participant = ParticipantFactory()
+        self.client = Client()
+
+    def test_post_as_anonymous_user(self):
+        response = self.client.post('/participant/track/',
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 302)
+
+    def test_post_non_ajax(self):
+        self.client.login(username=self.user.username, password="test")
+        response = self.client.post('/participant/track/',
+                                    {})
+        self.assertEquals(response.status_code, 405)
+
+    def test_post_invalid_parameters(self):
+        self.client.login(username=self.user.username, password="test")
+
+        response = self.client.post('/participant/track/',
+                                    {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = simplejson.loads(response.content)
+        self.assertFalse(the_json['success'])
+        self.assertEquals(the_json['msg'], "Invalid video url")
+
+        response = self.client.post('/participant/track/',
+                                    {'video_url': 'http://www.youtube.com'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = simplejson.loads(response.content)
+        self.assertFalse(the_json['success'])
+        self.assertEquals(the_json['msg'], "Invalid video duration")
+
+        ctx = {
+            'video_url': 'http://www.youtube.com',
+            'video_duration': -100
+        }
+        response = self.client.post('/participant/track/', ctx,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = simplejson.loads(response.content)
+        self.assertFalse(the_json['success'])
+        self.assertEquals(the_json['msg'], "Invalid video duration")
+
+        ctx['video_duration'] = 0
+        response = self.client.post('/participant/track/', ctx,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = simplejson.loads(response.content)
+        self.assertFalse(the_json['success'])
+        self.assertEquals(the_json['msg'], "Invalid video duration")
+
+    def test_post_success(self):
+        self.client.login(username=self.user.username, password="test")
+
+        # created
+        response = self.client.post('/participant/track/',
+                                    {'video_url': 'http://www.youtube.com',
+                                     'video_duration': 100},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = simplejson.loads(response.content)
+        self.assertTrue(the_json['success'])
+
+        uvv = UserVideoView.objects.get(user=self.user)
+        self.assertEquals(uvv.video_url, 'http://www.youtube.com')
+        self.assertEquals(uvv.video_duration, 100)
+        self.assertEquals(uvv.seconds_viewed, 0)
+
+        # updated
+        response = self.client.post('/participant/track/',
+                                    {'video_url': 'http://www.youtube.com',
+                                     'video_duration': 100,
+                                     'seconds_viewed': 50},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = simplejson.loads(response.content)
+        self.assertTrue(the_json['success'])
+
+        uvv = UserVideoView.objects.get(user=self.user)
+        self.assertEquals(uvv.video_url, 'http://www.youtube.com')
+        self.assertEquals(uvv.video_duration, 100)
+        self.assertEquals(uvv.seconds_viewed, 50)
+
+    def test_post_success_as_participant(self):
+        self.client.login(username=self.user.username, password="test")
+
+        response = self.client.post('/participant/login/',
+                                    {'username': self.participant.username},
+                                    follow=True,
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+
+        response = self.client.post('/participant/track/',
+                                    {'video_url': 'http://www.youtube.com/1/',
+                                     'video_duration': 200,
+                                     'seconds_viewed': 200},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+        the_json = simplejson.loads(response.content)
+        self.assertTrue(the_json['success'])
+
+        uvv = UserVideoView.objects.get(user=self.participant)
+        self.assertEquals(uvv.video_url, 'http://www.youtube.com/1/')
+        self.assertEquals(uvv.video_duration, 200)
+        self.assertEquals(uvv.seconds_viewed, 200)

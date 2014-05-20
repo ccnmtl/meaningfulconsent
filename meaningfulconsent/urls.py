@@ -8,7 +8,8 @@ from django.views.generic import TemplateView
 from meaningfulconsent.main.mixins import is_facilitator
 from meaningfulconsent.main.views import CreateParticipantView, \
     LoginParticipantView, LanguageParticipantView, RestrictedEditView, \
-    ClearParticipantView, IndexView, LoginView, LogoutView
+    ClearParticipantView, IndexView, LoginView, LogoutView, \
+    TrackParticipantView
 from pagetree.generic.views import PageView
 import debug_toolbar
 admin.autodiscover()
@@ -63,6 +64,7 @@ urlpatterns = patterns(
     url(r'^participant/language/$', LanguageParticipantView.as_view(),
         name='participant-language'),
     (r'^participant/clear/$', ClearParticipantView.as_view()),
+    (r'^participant/track/$', TrackParticipantView.as_view()),
 
     # English
     (r'^pages/en/edit/(?P<path>.*)$', RestrictedEditView.as_view(

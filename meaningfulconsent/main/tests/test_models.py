@@ -1,5 +1,5 @@
 from django.test import TestCase
-from meaningfulconsent.main.models import Clinic
+from meaningfulconsent.main.models import Clinic, UserVideoView
 from meaningfulconsent.main.tests.factories import UserFactory, \
     ModuleFactory, ParticipantFactory
 from pagetree.models import Hierarchy, UserPageVisit
@@ -87,3 +87,23 @@ class UserProfileTest(TestCase):
         self.user.profile.language = "es"
         self.user.profile.save()
         self.assertEquals(self.user.profile.percent_complete(), 0)
+
+
+class UserVideoViewTest(TestCase):
+
+    def setUp(self):
+        Clinic.objects.create(name='Test Clinic')
+        self.user = UserFactory()
+
+    def test_percent_viewed(self):
+        uvv = UserVideoView(user=self.user,
+                            video_url='http://www.youtube.com',
+                            video_duration=100)
+
+        self.assertEquals(uvv.percent_viewed(), 0)
+
+        uvv.seconds_viewed = 50
+        self.assertEquals(uvv.percent_viewed(), 50.0)
+
+        uvv.seconds_viewed = 200
+        self.assertEquals(uvv.percent_viewed(), 200.0)

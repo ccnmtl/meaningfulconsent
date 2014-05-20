@@ -11,6 +11,7 @@ from meaningfulconsent.main.auth import generate_random_username, \
     generate_password, USERNAME_PREFIX
 from meaningfulconsent.main.mixins import JSONResponseMixin, LoggedInMixin, \
     LoggedInMixinSuperuser, LoggedInFacilitatorMixin
+from meaningfulconsent.main.models import UserVideoView
 from pagetree.generic.views import EditView
 from pagetree.models import UserLocation, UserPageVisit
 
@@ -143,3 +144,26 @@ class ClearParticipantView(LoggedInFacilitatorMixin, View):
 
         url = request.user.profile.default_location().get_absolute_url()
         return HttpResponseRedirect(url)
+
+
+class TrackParticipantView(LoggedInMixin, JSONResponseMixin, View):
+
+    def post(self, request):
+        video_url = request.POST.get('video_url', '')
+        video_duration = int(request.POST.get('video_duration', 0))
+        seconds_viewed = int(request.POST.get('seconds_viewed', 0))
+
+        if video_url == '':
+            context = {'success': False, 'msg': 'Invalid video url'}
+        elif video_duration < 1:
+            context = {'success': False, 'msg': 'Invalid video duration'}
+        else:
+            uvv = UserVideoView.objects.get_or_create(user=request.user,
+                                                      video_url=video_url)
+            uvv[0].video_duration = video_duration
+            uvv[0].seconds_viewed += seconds_viewed
+            uvv[0].save()
+
+            context = {'success': True}
+
+        return self.render_to_json_response(context)
