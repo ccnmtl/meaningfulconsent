@@ -1,8 +1,11 @@
 from django.contrib.auth.models import User
+from django.test.client import Client
+from django.test.testcases import TestCase
 from meaningfulconsent.main.auth import generate_password
 from meaningfulconsent.main.models import Clinic
 from pagetree.models import Hierarchy, Section
 import factory
+import simplejson
 
 
 class ClinicFactory(factory.DjangoModelFactory):
@@ -46,3 +49,37 @@ class ModuleFactory(object):
              'children': [{'label': "Three", 'slug': "introduction"}]})
         root.add_child_section_from_dict({'label': "Two", 'slug': "two"})
         self.root = root
+
+
+class ParticipantTestCase(TestCase):
+    def setUp(self):
+        Clinic.objects.create(name="pilot")
+        self.user = UserFactory()
+
+        self.client = Client()
+
+        # create a "real" participant to work with
+        self.client.login(username=self.user.username, password="test")
+        response = self.client.post('/participant/create/',
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        the_json = simplejson.loads(response.content)
+        self.participant = User.objects.get(
+            username=the_json['user']['username'])
+        self.client.logout()
+
+        ModuleFactory("en", "/pages/en/")
+        ModuleFactory("es", "/pages/es/")
+
+        self.hierarchy_en = Hierarchy.objects.get(name='en')
+        self.hierarchy_es = Hierarchy.objects.get(name='es')
+
+    def login_participant(self):
+        # login as facilitator
+        self.assertTrue(self.client.login(
+            username=self.user.username, password="test"))
+
+        # manually login client
+        response = self.client.post('/participant/login/',
+                                    {'username': self.participant.username},
+                                    follow=True)
+        self.assertEquals(response.status_code, 200)

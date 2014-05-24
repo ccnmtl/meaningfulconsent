@@ -3,12 +3,10 @@ from django.test import TestCase
 from django.test.client import Client
 from meaningfulconsent.main.auth import generate_password
 from meaningfulconsent.main.models import Clinic, UserVideoView
-from meaningfulconsent.main.tests.factories import UserFactory, \
-    ModuleFactory, ParticipantFactory
+from meaningfulconsent.main.tests.factories import ParticipantTestCase
 from pagetree.helpers import get_hierarchy
-from pagetree.models import Hierarchy, UserPageVisit
+from pagetree.models import UserPageVisit
 import json
-import simplejson
 
 
 class BasicTest(TestCase):
@@ -87,13 +85,7 @@ class PagetreeViewTestsLoggedIn(TestCase):
         self.assertEqual(r.status_code, 200)
 
 
-class ChangePasswordTests(TestCase):
-
-    def setUp(self):
-        Clinic.objects.create(name="pilot")
-        self.user = UserFactory()
-        self.participant = ParticipantFactory()
-        self.client = Client()
+class ChangePasswordTests(ParticipantTestCase):
 
     def test_logged_out(self):
         response = self.client.get('/accounts/password_change/')
@@ -106,56 +98,32 @@ class ChangePasswordTests(TestCase):
         self.assertEquals(response.status_code, 200)
 
     def test_participant(self):
-        # login participant
-        self.assertTrue(self.client.login(
-            username=self.user.username, password="test"))
-
-        response = self.client.post('/participant/login/',
-                                    {'username': self.participant.username},
-                                    follow=True)
-        self.assertEquals(response.status_code, 200)
-
+        self.login_participant()
         response = self.client.get('/accounts/password_change/')
         self.assertEquals(response.status_code, 405)
 
 
-class IndexViewTest(TestCase):
-
-    def setUp(self):
-        Clinic.objects.create(name="pilot")
-        self.user = UserFactory()
-        self.client = Client()
-
-        ModuleFactory("en", "/pages/en/")
-        ModuleFactory("es", "/pages/es/")
+class IndexViewTest(ParticipantTestCase):
 
     def test_anonymous_user(self):
         response = self.client.get('/')
         self.assertTrue('Log in' in response.content)
         self.assertFalse('log out' in response.content)
-        self.assertEquals(response.template_name[0], "main/index.html")
+        self.assertEquals(response.template_name[0], "main/splash.html")
         self.assertEquals(response.status_code, 200)
 
     def test_facilitator(self):
         self.assertTrue(self.client.login(
             username=self.user.username, password="test"))
         response = self.client.get('/')
-        self.assertEquals(response.template_name[0], "main/index.html")
+        self.assertEquals(response.template_name[0], "main/facilitator.html")
         self.assertEquals(response.status_code, 200)
         self.assertFalse('Log in' in response.content)
         self.assertTrue('log out' in response.content)
         self.assertTrue('Dashboard' in response.content)
 
     def test_participant(self):
-        self.participant = ParticipantFactory()
-
-        self.assertTrue(self.client.login(
-            username=self.user.username, password="test"))
-
-        response = self.client.post('/participant/login/',
-                                    {'username': self.participant.username},
-                                    follow=True)
-        self.assertEquals(response.status_code, 200)
+        self.login_participant()
 
         response = self.client.get('/', follow=True)
         self.assertEquals(response.status_code, 200)
@@ -169,13 +137,7 @@ class IndexViewTest(TestCase):
                           [('http://testserver/participant/language/', 302)])
 
 
-class LoginTest(TestCase):
-
-    def setUp(self):
-        Clinic.objects.create(name="pilot")
-        self.user = UserFactory()
-        self.participant = ParticipantFactory()
-        self.client = Client()
+class LoginTest(ParticipantTestCase):
 
     def test_login_get(self):
         response = self.client.get('/accounts/login/')
@@ -208,7 +170,7 @@ class LoginTest(TestCase):
     def test_login_participant(self):
         # participants cannot login through the /accounts/login mechanism
         # as the backend authenticators kick out inactive Users
-        pwd = generate_password('MC1234567')
+        pwd = generate_password(self.participant.username)
         response = self.client.post('/accounts/login/',
                                     {'username': self.participant.username,
                                      'password': pwd},
@@ -218,20 +180,13 @@ class LoginTest(TestCase):
         self.assertTrue(the_json['error'], True)
 
 
-class LogoutTest(TestCase):
-
-    def setUp(self):
-        Clinic.objects.create(name="pilot")
-        self.user = UserFactory()
-        self.participant = ParticipantFactory()
-
-        self.client = Client()
+class LogoutTest(ParticipantTestCase):
 
     def test_logout_user(self):
         self.client.login(username=self.user.username, password="test")
 
         response = self.client.get('/accounts/logout/?next=/', follow=True)
-        self.assertEquals(response.template_name[0], "main/index.html")
+        self.assertEquals(response.template_name[0], "main/splash.html")
         self.assertEquals(response.status_code, 200)
         self.assertTrue('Log in' in response.content)
         self.assertFalse('log out' in response.content)
@@ -250,13 +205,7 @@ class LogoutTest(TestCase):
         self.assertEquals(response.status_code, 200)
 
 
-class CreateParticipantViewTest(TestCase):
-
-    def setUp(self):
-        Clinic.objects.create(name="pilot")
-        self.user = UserFactory()
-        self.participant = ParticipantFactory()
-        self.client = Client()
+class CreateParticipantViewTest(ParticipantTestCase):
 
     def test_post_as_anonymous_user(self):
         response = self.client.post('/participant/create/',
@@ -280,33 +229,12 @@ class CreateParticipantViewTest(TestCase):
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
 
-        the_json = simplejson.loads(response.content)
+        the_json = json.loads(response.content)
         user = User.objects.get(username=the_json['user']['username'])
         self.assertTrue(user.profile.is_participant())
 
 
-class LoginParticipantViewTest(TestCase):
-
-    def setUp(self):
-        Clinic.objects.create(name="pilot")
-        self.user = UserFactory()
-
-        self.client = Client()
-
-        # create a "real" participant to work with
-        self.client.login(username=self.user.username, password="test")
-        response = self.client.post('/participant/create/',
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        the_json = simplejson.loads(response.content)
-        self.participant = User.objects.get(
-            username=the_json['user']['username'])
-        self.client.logout()
-
-        ModuleFactory("en", "/pages/en/")
-        ModuleFactory("es", "/pages/es/")
-
-        self.hierarchy_en = Hierarchy.objects.get(name='en')
-        self.hierarchy_es = Hierarchy.objects.get(name='es')
+class LoginParticipantViewTest(ParticipantTestCase):
 
     def test_post_as_anonymous_user(self):
         response = self.client.post('/participant/login/')
@@ -351,18 +279,7 @@ class LoginParticipantViewTest(TestCase):
                            302))
 
 
-class LanguageParticipantViewTest(TestCase):
-
-    def setUp(self):
-        Clinic.objects.create(name="pilot")
-        self.user = UserFactory()
-        self.client = Client()
-
-        ModuleFactory("en", "/pages/en/")
-        ModuleFactory("es", "/pages/es/")
-
-        self.hierarchy_en = Hierarchy.objects.get(name='en')
-        self.hierarchy_es = Hierarchy.objects.get(name='es')
+class LanguageParticipantViewTest(ParticipantTestCase):
 
     def test_post_as_anonymous_user(self):
         response = self.client.post('/participant/login/')
@@ -394,19 +311,7 @@ class LanguageParticipantViewTest(TestCase):
                            302))
 
 
-class ClearParticipantViewTest(TestCase):
-
-    def setUp(self):
-        Clinic.objects.create(name="pilot")
-        self.user = UserFactory()
-        self.participant = ParticipantFactory()
-
-        self.client = Client()
-        ModuleFactory("en", "/pages/en/")
-        ModuleFactory("es", "/pages/es/")
-
-        self.hierarchy_en = Hierarchy.objects.get(name='en')
-        self.hierarchy_es = Hierarchy.objects.get(name='es')
+class ClearParticipantViewTest(ParticipantTestCase):
 
     def test_get_as_anonymous_user(self):
         response = self.client.get('/participant/clear/')
@@ -442,13 +347,7 @@ class ClearParticipantViewTest(TestCase):
         self.assertEquals(len(visits), 1)
 
 
-class TrackParticipantViewTest(TestCase):
-
-    def setUp(self):
-        Clinic.objects.create(name="pilot")
-        self.user = UserFactory()
-        self.participant = ParticipantFactory()
-        self.client = Client()
+class TrackParticipantViewTest(ParticipantTestCase):
 
     def test_post_as_anonymous_user(self):
         response = self.client.post('/participant/track/',
@@ -468,7 +367,7 @@ class TrackParticipantViewTest(TestCase):
                                     {},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = simplejson.loads(response.content)
+        the_json = json.loads(response.content)
         self.assertFalse(the_json['success'])
         self.assertEquals(the_json['msg'], "Invalid video url")
 
@@ -476,7 +375,7 @@ class TrackParticipantViewTest(TestCase):
                                     {'video_url': 'http://www.youtube.com'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = simplejson.loads(response.content)
+        the_json = json.loads(response.content)
         self.assertFalse(the_json['success'])
         self.assertEquals(the_json['msg'], "Invalid video duration")
 
@@ -487,7 +386,7 @@ class TrackParticipantViewTest(TestCase):
         response = self.client.post('/participant/track/', ctx,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = simplejson.loads(response.content)
+        the_json = json.loads(response.content)
         self.assertFalse(the_json['success'])
         self.assertEquals(the_json['msg'], "Invalid video duration")
 
@@ -495,7 +394,7 @@ class TrackParticipantViewTest(TestCase):
         response = self.client.post('/participant/track/', ctx,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = simplejson.loads(response.content)
+        the_json = json.loads(response.content)
         self.assertFalse(the_json['success'])
         self.assertEquals(the_json['msg'], "Invalid video duration")
 
@@ -508,7 +407,7 @@ class TrackParticipantViewTest(TestCase):
                                      'video_duration': 100},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = simplejson.loads(response.content)
+        the_json = json.loads(response.content)
         self.assertTrue(the_json['success'])
 
         uvv = UserVideoView.objects.get(user=self.user)
@@ -523,7 +422,7 @@ class TrackParticipantViewTest(TestCase):
                                      'seconds_viewed': 50},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = simplejson.loads(response.content)
+        the_json = json.loads(response.content)
         self.assertTrue(the_json['success'])
 
         uvv = UserVideoView.objects.get(user=self.user)
@@ -546,10 +445,97 @@ class TrackParticipantViewTest(TestCase):
                                      'seconds_viewed': 200},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = simplejson.loads(response.content)
+        the_json = json.loads(response.content)
         self.assertTrue(the_json['success'])
 
         uvv = UserVideoView.objects.get(user=self.participant)
         self.assertEquals(uvv.video_url, 'http://www.youtube.com/1/')
         self.assertEquals(uvv.video_duration, 200)
         self.assertEquals(uvv.seconds_viewed, 200)
+
+
+class ArchiveParticipantViewTest(ParticipantTestCase):
+
+    def test_post_as_non_ajax(self):
+        self.client.login(username=self.user.username, password="test")
+        response = self.client.post('/participant/archive/')
+        self.assertEquals(response.status_code, 405)
+
+    def test_post_as_anonymous_user(self):
+        response = self.client.post('/participant/archive/', {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 405)
+
+    def test_post_as_participant(self):
+        self.login_participant()
+        response = self.client.post('/participant/archive/', {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 405)
+
+    def test_post_as_facilitator_invalidparams(self):
+        self.client.login(username=self.user.username, password="test")
+        response = self.client.post('/participant/archive/', {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 404)
+
+        response = self.client.post('/participant/archive/',
+                                    {'username': 'foo'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 404)
+
+    def test_post_as_facilitator_success(self):
+        self.assertFalse(self.participant.profile.archived)
+
+        self.client.login(username=self.user.username, password="test")
+
+        response = self.client.post('/participant/archive/',
+                                    {'username': self.participant.username},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+
+        user = User.objects.get(username=self.participant.username)
+        self.assertTrue(user.profile.archived)
+
+
+class ParticipantNoteViewTest(ParticipantTestCase):
+
+    def test_post_as_non_ajax(self):
+        self.client.login(username=self.user.username, password="test")
+        response = self.client.post('/participant/note/')
+        self.assertEquals(response.status_code, 405)
+
+    def test_post_as_anonymous_user(self):
+        response = self.client.post('/participant/note/', {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 405)
+
+    def test_post_as_participant(self):
+        self.login_participant()
+        response = self.client.post('/participant/note/', {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 405)
+
+    def test_post_as_facilitator_invalidparams(self):
+        self.client.login(username=self.user.username, password="test")
+        response = self.client.post('/participant/note/', {},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 404)
+
+        response = self.client.post('/participant/note/',
+                                    {'username': 'foo'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 404)
+
+    def test_post_as_facilitator_success(self):
+        self.assertFalse(self.participant.profile.archived)
+
+        self.client.login(username=self.user.username, password="test")
+
+        response = self.client.post('/participant/note/',
+                                    {'username': self.participant.username,
+                                     'notes': 'foo bar baz'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEquals(response.status_code, 200)
+
+        user = User.objects.get(username=self.participant.username)
+        self.assertEquals(user.profile.notes, 'foo bar baz')

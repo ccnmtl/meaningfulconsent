@@ -36,16 +36,12 @@
                         class="icon-bar"></span> <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand"
-                 href="{% if not request.user.profile.is_participant %}/{% else%}#{% endif %}">
-                    {% block usernav_title %}
-                        {% if request.user.is_anonymous or request.user.profile.is_participant %}
-                            Meaningful Consent
-                        {% else %}
-                            <span class="glyphicon glyphicon-home"></span>&nbsp;Dashboard 
-                        {% endif %}
-                    {% endblock %}
-                </a>
+                
+                {% if request.user.is_anonymous or not request.user.profile.is_participant %}
+                    <a class="navbar-brand" href="/">Meaningful Consent</a>
+                {% else %}
+                    <span class="navbar-logo">Meaningful Consent</span>
+                {% endif %}
             </div>
 
             <!--/.navbar-header -->
@@ -58,7 +54,9 @@
                                 class="btn-log-in btn btn-sm">Log in</a>
                             </li>
                             <li><a href="/about/">About</a></li>
-                            <li><a href="/help/">Help &amp; Contact</a></li>
+                            <li><a href="/credits/">Credits</a></li>
+                            <li><a href="/contact/">Contact</a></li>
+                            <li><a href="/help/">Help</a></li>
                         {% else %}{% if not request.user.profile.is_participant %}
                             <li class="logged-in-greeting">
                                 <span>Hello, {% if user.first_name %}{{user.get_short_name}}{% else %}{{user.username}}{% endif %}</span>
@@ -162,7 +160,7 @@
         {% block primarynav %}{% endblock %}
         {% block pagemode %}{% endblock %}
         <div class="row">
-            <div class="col-md-12">
+            <div class="col-md-12">                
                 {% block content %}
                 {% endblock %}
               
@@ -181,13 +179,11 @@
 
 <script src="{{STATIC_URL}}js/underscore-min.js"></script>
 <script src="{{STATIC_URL}}js/backbone-min.js"></script>
+<script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
 
-{% block js %}{% endblock %}
-
-{% compress js %}
-    <script src="{{STATIC_URL}}bootstrap/js/bootstrap.js"></script>
+{% if request.user.is_anonymous or request.user.profile.is_participant %}
     <script src="{{STATIC_URL}}js/app/login.js"></script>
-    
+
     <script type="text/javascript"> 
         jQuery(document).ready(function() {
             var loginView = new LocalLoginView({
@@ -195,7 +191,9 @@
             });
         });
     </script>
-{% endcompress %}
+{% endif %}
+
+{% block js %}{% endblock %}
 
 {% if STAGING_ENV %}
     <div class="alert alert-danger alert-dismissable" style="position: fixed; bottom: 0px;">

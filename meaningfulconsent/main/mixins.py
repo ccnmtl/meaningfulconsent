@@ -1,6 +1,7 @@
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.http.response import HttpResponseNotAllowed, HttpResponse
 from django.utils.decorators import method_decorator
+from rest_framework.permissions import BasePermission
 import json
 
 
@@ -67,3 +68,11 @@ class LoggedInMixinSuperuser(object):
     @method_decorator(user_passes_test(lambda u: u.is_superuser))
     def dispatch(self, *args, **kwargs):
         return super(LoggedInMixinSuperuser, self).dispatch(*args, **kwargs)
+
+
+class FacilitatorRestPermission(BasePermission):
+
+    def has_permission(self, request, view):
+        return request.is_ajax() and not (
+            request.user.is_anonymous() or
+            request.user.profile.is_participant())

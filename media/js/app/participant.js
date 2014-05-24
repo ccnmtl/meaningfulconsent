@@ -8,7 +8,7 @@
             'click li.pause-session a': 'onPauseSession',
             'click a.disabled': 'onClickDisabledElement',
             'click .nav li.disabled a': 'onClickDisabledElement',
-            'submit form#submit-page': 'onSubmitPage'
+            'submit #submit-page': 'onSubmitPage'
         },
         isFormComplete: function(form) {
             var complete = true;
@@ -108,7 +108,7 @@
                 jQuery.when(this.onSubmitQuiz(form),
                             this.onSubmitVideoData())
                     .done(function(first_call, second_call) {
-                        var url = jQuery("input[type='hidden'][name='next']").val();
+                        var url = jQuery("input[type='hidden'][name='next-section']").val();
                         window.location = url;
                     })
                     .fail(function() {

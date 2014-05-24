@@ -31,15 +31,6 @@
 
 {% block title %}{{section.label}}{% endblock %}
 
-{% block pagetitle %}<h1>{{section.label}}</h1>{% endblock %}
-
-{% block usernav_title %}
-    {% if not request.user.profile.is_participant %}
-        <span class="glyphicon glyphicon-home"></span>&nbsp;
-    {% endif %}
-    Meaningful Consent
-{% endblock %}
-
 {% block usernav %}
     {% if request.user.profile.is_participant %}
         <li class="pause-session">
@@ -88,6 +79,7 @@
 {% endblock %}
 
 {% block content %}
+    <br /><br />
     <form action="." method="post" id="submit-page">
         <div id="content">
             {% for block in section.pageblock_set.all %}
@@ -108,7 +100,7 @@
                 
                 {% if allow_redo or not is_submitted %}
                     <div>
-                        <input type="hidden" name="next" value="{{next_section.get_absolute_url}}" />
+                        <input type="hidden" name="next-section" value="{{next_section.get_absolute_url}}" />
                         <input id="submit-page-button" type="submit" value="Continue &rarr;" class="btn btn-primary pull-right" 
                             data-loading-text="Saving..." />
                         <span style="display: none" class="error-inline alert alert-danger">An error occurred. Please see your facilitator.</span>           
@@ -140,8 +132,6 @@
     </div>  
 {% endblock %}
 
-{% block content-nav %}
-
-{% endblock %}
+{% block content-nav %}{% endblock %}
 
 {% block footer %}{% endblock %}

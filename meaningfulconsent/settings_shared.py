@@ -125,7 +125,7 @@ INSTALLED_APPS = [
     'pageblocks',
     'quizblock',
     'meaningfulconsent.main',
-    'registration',
+    'rest_framework'
 ]
 
 PAGEBLOCKS = [
@@ -208,4 +208,11 @@ SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'meaningfulconsent.main.mixins.FacilitatorRestPermission',),
+    'PAGINATE_BY': 20,
+    'PAGINATE_BY_PARAM': 'page_size'
 }

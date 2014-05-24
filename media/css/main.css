@@ -17,6 +17,21 @@ body > .container {
   min-height: 100%;
 }
 
+/* Logo */
+
+.navbar-logo {
+    margin-left: -15px;
+    color: #999;
+    float: left;
+    padding: 15px 15px;
+    font-size: 18px;
+    line-height: 20px;
+}
+
+html.busy, html.busy * {  
+  cursor: wait;
+}
+
 /* LOGIN PAGE */
 .login-description {
     margin: 30px 30px 15px 30px;
@@ -352,6 +367,49 @@ a[disabled] {
 #submit-page-button:hover {
     text-decoration: none;
     background-color: #eeeeee;
+}
+
+/* facilitator dashboard */
+div.progress {
+    position: relative;
+    height: 20px;
+    margin-bottom: 20px;
+    background-color: gray;
+    border-radius: 4px;
+    -webkit-box-shadow: inset 0 1px 2px rgba(0,0,0,.1);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,.1);    
+}
+
+div.bar {
+    background-color: #5cb85c;
+    height: 20px;
+    color: white;
+}
+
+div.progress span {
+    position: absolute;
+    top: 0px;
+    z-index: 2;
+    color: white;
+    text-align: center;
+    width: 100%;
+}
+
+.btn-print {
+    margin-right: 3px;
+}
+
+.btn-archive {
+    margin-left: 3px;
+}
+
+#notes-modal textarea.notes {
+    height: 200px;
+}
+
+#notes-modal .alert-danger {
+    margin-top: 25px;
+    margin-bottom: 0px;
 }
 
 /* participant input */

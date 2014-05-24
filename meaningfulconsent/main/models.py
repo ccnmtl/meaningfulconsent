@@ -5,6 +5,7 @@ from django.db.models.fields import CharField
 from django.db.models.fields.related import OneToOneField
 from django.db.models.signals import post_save
 from pagetree.models import Hierarchy, UserPageVisit
+from rest_framework import serializers, viewsets, pagination
 
 USERNAME_LENGTH = 9
 USERNAME_PREFIX = 'MC'
@@ -28,6 +29,8 @@ class UserProfile(models.Model):
     language = models.CharField(max_length=2, default="en", choices=LANGUAGES)
     creator = models.ForeignKey(User, null=True, blank=True,
                                 related_name='creator')
+    archived = models.BooleanField(default=False)
+    notes = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
     modified = models.DateTimeField(auto_now=True, editable=False)
 
@@ -38,6 +41,16 @@ class UserProfile(models.Model):
     def default_location(self):
         hierarchy = Hierarchy.get_hierarchy(self.language)
         return hierarchy.get_root()
+
+    def last_access(self):
+        hierarchy = Hierarchy.get_hierarchy(self.language)
+        upv = UserPageVisit.objects.filter(
+            user=self.user, section__hierarchy=hierarchy).order_by(
+            "-last_visit")
+        if len(upv) < 1:
+            return self.created
+        else:
+            return upv[0].last_visit
 
     def last_location_url(self):
         if self.percent_complete() == 0:
@@ -90,3 +103,28 @@ class UserVideoView(models.Model):
 
     class Meta:
         unique_together = (('user', 'video_url'),)
+
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username',)
+
+
+class ParticipantSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer(many=False, read_only=True)
+    percent_complete = serializers.Field(source='percent_complete')
+    last_access = serializers.Field()
+
+    class Meta:
+        model = UserProfile
+        fields = ('user', 'percent_complete', 'notes', 'last_access')
+
+
+class ParticipantViewSet(viewsets.ModelViewSet):
+    queryset = UserProfile.objects.filter(
+        archived=False,
+        user__username__startswith=USERNAME_PREFIX, user__is_active=False)
+
+    model = UserProfile
+    serializer_class = ParticipantSerializer

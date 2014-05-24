@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block css %}
+    <link href="{{STATIC_URL}}css/tablesorter.css" rel="stylesheet" />
+{% endblock %}
+
+{% block extrahead %}
+    {% include "main/participant_session_list.html" %}
+{% endblock %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/underscore-min.js"></script>
+    <script src="{{STATIC_URL}}js/backbone-min.js"></script>
+    <script src="{{STATIC_URL}}js/jquery.tablesorter.js"></script>
+    <script src="{{STATIC_URL}}js/app/facilitator.js"></script>
+    
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            var facilitatorView = new FacilitatorView({
+                el: jQuery("div.facilitator-dashboard")[0],
+                el_sessions: jQuery("div.participant-sessions")[0]
+            });
+            
+            // setup some ajax progress indicator
+            jQuery("html").bind("ajaxStart", function(){  
+               jQuery(this).addClass("busy");
+            }).bind("ajaxStop", function(){  
+               jQuery(this).removeClass("busy");
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="facilitator-dashboard">
+
+        <ul class="breadcrumb">
+            <li><a href="/">{{user.get_short_name}}'s Dashboard</a></li>
+            <li>Manage Participants</li>            
+        </ul>
+
+        <h2>Manage Participants</h3>
+        <p class="lead">
+        Instructions: Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+        </p>
+    
+        <div class="administration">
+            <div class="participant-sessions-container">
+                <h4>Active Participants</h4>
+                <div>
+                    <div class="participant-sessions"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

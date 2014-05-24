@@ -5,6 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.views import logout as auth_logout_view
 from django.http.response import HttpResponseRedirect
+from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
 from djangowind.views import logout as wind_logout_view
 from meaningfulconsent.main.auth import generate_random_username, \
@@ -63,14 +64,17 @@ class RestrictedEditView(LoggedInMixinSuperuser, EditView):
 
 
 class IndexView(TemplateView):
-    template_name = "main/index.html"
-
     def dispatch(self, *args, **kwargs):
         user = self.request.user
         if user_is_participant(user):
             return HttpResponseRedirect(user.profile.last_location_url())
+
+        if user.is_anonymous():
+            self.template_name = "main/splash.html"
         else:
-            return super(IndexView, self).dispatch(*args, **kwargs)
+            self.template_name = "main/facilitator.html"
+
+        return super(IndexView, self).dispatch(*args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(IndexView, self).get_context_data(**kwargs)
@@ -83,6 +87,21 @@ class IndexView(TemplateView):
         return context
 
 
+class ClearParticipantView(LoggedInFacilitatorMixin, View):
+
+    def get(self, request):
+        # clear visits & saved locations
+        UserLocation.objects.filter(user=request.user).delete()
+        UserPageVisit.objects.filter(user=request.user).delete()
+
+        # clear quiz responses & submission
+        import quizblock
+        quizblock.models.Submission.objects.filter(user=request.user).delete()
+
+        url = request.user.profile.default_location().get_absolute_url()
+        return HttpResponseRedirect(url)
+
+
 class CreateParticipantView(LoggedInFacilitatorMixin, JSONResponseMixin, View):
 
     def post(self, request):
@@ -92,6 +111,9 @@ class CreateParticipantView(LoggedInFacilitatorMixin, JSONResponseMixin, View):
         user = User(username=username, is_active=False)
         user.set_password(password)
         user.save()
+
+        user.profile.creator = request.user
+        user.profile.save()
 
         context = {'user': {'username': user.username}}
         return self.render_to_json_response(context)
@@ -115,7 +137,7 @@ class LoginParticipantView(LoggedInFacilitatorMixin, View):
         raise http.Http404
 
 
-class LanguageParticipantView(LoggedInMixin, TemplateView):
+class ParticipantLanguageView(LoggedInMixin, TemplateView):
     template_name = "main/language.html"
 
     def post(self, request):
@@ -129,21 +151,6 @@ class LanguageParticipantView(LoggedInMixin, TemplateView):
         loc = request.user.profile.last_location()
 
         return HttpResponseRedirect(loc.get_absolute_url())
-
-
-class ClearParticipantView(LoggedInFacilitatorMixin, View):
-
-    def get(self, request):
-        # clear visits & saved locations
-        UserLocation.objects.filter(user=request.user).delete()
-        UserPageVisit.objects.filter(user=request.user).delete()
-
-        # clear quiz responses & submission
-        import quizblock
-        quizblock.models.Submission.objects.filter(user=request.user).delete()
-
-        url = request.user.profile.default_location().get_absolute_url()
-        return HttpResponseRedirect(url)
 
 
 class TrackParticipantView(LoggedInMixin, JSONResponseMixin, View):
@@ -167,3 +174,37 @@ class TrackParticipantView(LoggedInMixin, JSONResponseMixin, View):
             context = {'success': True}
 
         return self.render_to_json_response(context)
+
+
+class ArchiveParticipantView(LoggedInFacilitatorMixin,
+                             JSONResponseMixin, View):
+
+    def post(self, request):
+        username = request.POST.get('username', '')
+        participant = get_object_or_404(User.objects, username=username)
+
+        participant.profile.archived = True
+        participant.profile.save()
+
+        context = {'success': True}
+
+        return self.render_to_json_response(context)
+
+
+class ParticipantNoteView(LoggedInFacilitatorMixin,
+                          JSONResponseMixin, View):
+    def post(self, request):
+        username = request.POST.get('username', '')
+        participant = get_object_or_404(User.objects, username=username)
+
+        notes = request.POST.get('notes', '')
+        participant.profile.notes = notes
+        participant.profile.save()
+
+        context = {'success': True}
+
+        return self.render_to_json_response(context)
+
+
+class ManageParticipantsView(LoggedInFacilitatorMixin, TemplateView):
+    template_name = "main/manage_participants.html"
