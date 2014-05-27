@@ -8,14 +8,14 @@
             'click li.pause-session a': 'onPauseSession',
             'click a.disabled': 'onClickDisabledElement',
             'click .nav li.disabled a': 'onClickDisabledElement',
-            'submit #submit-page': 'onSubmitPage'
+            'submit #submit-page': 'onSubmitPage',
+            'click #next-page-button': 'onNextPage'
         },
         isFormComplete: function(form) {
             var complete = true;
             var children = jQuery(form).find("input,textarea,select");
             jQuery.each(children, function() {
-                if (complete && jQuery(this).is(":visible") &&
-                        !jQuery(this).hasClass("optional")) {
+                if (complete) {
                     
                     if (this.tagName === 'INPUT' && this.type === 'text' ||
                         this.tagName === 'TEXTAREA') {
@@ -45,6 +45,7 @@
                     'onPlayerReady',
                     'onPlayerStateChange',
                     'onYouTubeIframeAPIReady',
+                    'onNextPage',
                     'onSubmitPage',
                     'onSubmitQuiz',
                     'onSubmitVideoData',
@@ -67,6 +68,21 @@
         },
         onClickDisabledElement: function(evt) {
             evt.preventDefault();
+            return false;
+        },
+        onNextPage: function(evt) {
+            var elts = jQuery("input[type='hidden'][name='next-section']");
+            if (elts.length < 1) {
+                jQuery(this.el).find('.end-session-modal').modal({
+                    'show': true,
+                    'backdrop': 'static',
+                    'keyboard': false
+                });            
+                return false;
+            } else {
+                var url = jQuery(elts[0]).val();
+                window.location = url;
+            }
             return false;
         },
         onPlayerReady: function(event) {
@@ -93,6 +109,8 @@
             return false;
         },
         onSubmitPage: function(evt) {
+            var self = this;
+
             evt.preventDefault();
             jQuery(".alert").hide();
 
@@ -108,13 +126,10 @@
                 jQuery.when(this.onSubmitQuiz(form),
                             this.onSubmitVideoData())
                     .done(function(first_call, second_call) {
-                        var url = jQuery("input[type='hidden'][name='next-section']").val();
-                        window.location = url;
+                        self.onNextPage();
                     })
                     .fail(function() {
                         jQuery(".error-inline").fadeIn();
-                    })
-                    .always(function() {
                         jQuery("#submit-page-button").button('reset');
                     });
             } else {

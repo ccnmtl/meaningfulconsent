@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+{% load render accessible %}
+
+{% block js %}
+    <script src="{{STATIC_URL}}js/app/participant.js"></script>
+
+    {% for block in section.pageblock_set.all %}
+        {% renderjs block %}
+    {% endfor %}
+   
+    <script type="text/javascript"> 
+        jQuery(document).ready(function() {
+            var view = new ParticipantPageView({
+                el: jQuery("body")[0],
+                participant_id: {{request.user.id}},
+                section_id: {{section.id}}
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block css %}
+    {% for block in section.pageblock_set.all %}
+        {% rendercss block %}
+    {% endfor %}
+{% endblock %}
+
+{% block bodyclass %}module-{{module.slug}}{% endblock %}
+
+{% block bodyid %}section-{{section.id}}{% endblock %}
+
+{% block title %}{{section.label}}{% endblock %}
+
+{% block usernav %}
+    {% if request.user.profile.is_participant %}
+        <li class="pause-session">
+            <a href="/participant/pause/"><span title="Pause">Pause Session</span></a>
+        </li>
+    {% endif %}
+    
+    <li class="language">
+        <form action="/participant/language/" method="post">            
+            {% if section.hierarchy.name == 'en' %}
+                <input type="hidden" name="language" value="es" />
+                <button type="submit">Espanol</button>
+            {% else %}
+                <input type="hidden" name="language" value="en" />
+                <button type="submit">English</button>
+            {% endif %}
+        </form> 
+    </li>
+{% endblock %}
+
+{% block primarynav %}
+    <ul class="nav nav-pills">
+        {% for module in modules %}
+            {% ifequal section.get_module module %}
+                <li class="active">
+            {% else %}{% ifaccessible module %}
+                <li>
+            {% else %}
+                <li class="disabled">
+            {% endifaccessible %}{% endifequal %}
+                <a href="{{module.get_absolute_url}}">{{module.label}}</a>
+            </li>
+        {% endfor %}
+          
+        {% if not request.user.profile.is_participant %}
+            <li class="pull-right">
+                <a href="/participant/clear/">Clear State</a>
+            </li>
+            {% if request.user.is_superuser %}      
+                <li class="pull-right">
+                    <a href="{{section.get_edit_url}}">Edit Page</a>
+                </li>
+            {% endif %}
+        {% endif %}
+    </ul>
+{% endblock %}
+
+{% block content %}
+    <form action="." method="post" id="submit-page">
+        <div class="row">
+            <div class="{% if section.show_toc %}col-md-10{% else %}col-md-12{% endif %}">
+                <br /><br />
+            
+                <div id="content">
+                    {% for block in section.pageblock_set.all %}
+                        <div class="pageblock{% if block.css_extra %} {{block.css_extra}}{% endif %}">
+                            {% if block.label %}<h3>{{block.label}}</h3>{% endif %}
+                            {% render block %}
+                        </div>
+                    {% endfor %}
+                </div>
+            
+                <div class="modal pause-session-modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body text-center">
+                                <h3>Session Paused</h3>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-toggle="modal"
+                                    data-target="#login-modal" data-dismiss="modal">
+                                        Facilitator Log In
+                                 </button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Resume</button>          
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal end-session-modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                Thank you!
+                            </div>
+                            <div class="modal-body text-center">
+                                <p>You're done.</p>
+                                
+                                <p>Please return the device to the facilitator</p>
+                            </div>
+                            <div class="modal-footer">
+                                {% if request.user.profile.is_participant %}
+                                    <button type="button" class="btn btn-default" data-toggle="modal"
+                                        data-target="#login-modal" data-dismiss="modal">
+                                            Facilitator Log In
+                                     </button>
+                                {% else %}
+                                    <a href="/" class="btn btn-default">Facilitator Dashboard</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            {% if section.show_toc %}
+                <div class="col-md-2 table-of-contents">
+                    <h5>
+                        <a href="{{module.get_absolute_url}}">{{module.label}}</a>
+                        {% ifequal section module %}<span class="glyphicon glyphicon-hand-left"></span>{% endifequal %}                    
+                    </h5>
+                
+                    <ul class="toc">
+                        {% for child in module.get_children %}
+                            {% ifaccessible child %}
+                                <li>
+                                    <a href="{{child.get_absolute_url}}">{{child.label}}</a>
+                                    {% ifequal child section %}<span class="glyphicon glyphicon-hand-left"></span>{% endifequal %}
+                                </li>
+                            {% else %}
+                                <li><a href="{{child.get_absolute_url}}" disabled="disabled">{{child.label}}</a></li>                        
+                            {% endifaccessible %}
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+        </div>
+        
+        {% with previous=section.get_previous next_section=section.get_next %}
+        <div class="row">
+            <div class="col-md-12">
+                <ul class="pager">
+                    {% if previous %}
+                        <li class="previous">
+                            <a href="{{previous.get_absolute_url}}" class="btn btn-previous">
+                                <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    
+                    {% ifequal next_section.hierarchy section.hierarchy %}
+                        <input type="hidden" name="next-section" value="{{next_section.get_absolute_url}}" />
+                    {% endifequal %}
+                    
+                    {% if allow_redo or not is_submitted %}
+                        <div>
+                            <button id="submit-page-button" type="submit" class="btn btn-primary pull-right" 
+                                data-loading-text="Saving...">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </button>
+                            <span style="display: none" class="error-inline alert alert-danger">An error occurred. Please see your facilitator.</span>           
+                        </div>
+                    {% else %}
+                        <li class="next">
+                            <a id="next-page-button" href="#" class="btn btn-next">
+                                <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+        {% endwith %}    
+    </form>
+{% endblock %}
+
+{% block content-nav %}{% endblock %}
+
+{% block footer %}{% endblock %}

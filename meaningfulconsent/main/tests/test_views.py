@@ -273,7 +273,7 @@ class LoginParticipantViewTest(ParticipantTestCase):
                                     follow=True,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.templates[0].name, "main/page.html")
+        self.assertEquals(response.templates[0].name, "pagetree/page.html")
         self.assertEquals(response.redirect_chain[0],
                           ('http://testserver/pages/en/one/introduction/',
                            302))

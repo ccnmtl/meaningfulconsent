@@ -5,7 +5,7 @@ from django.db.models.fields import CharField
 from django.db.models.fields.related import OneToOneField
 from django.db.models.signals import post_save
 from pagetree.models import Hierarchy, UserPageVisit
-from rest_framework import serializers, viewsets, pagination
+from rest_framework import serializers, viewsets
 
 USERNAME_LENGTH = 9
 USERNAME_PREFIX = 'MC'

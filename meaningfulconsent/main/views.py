@@ -204,7 +204,3 @@ class ParticipantNoteView(LoggedInFacilitatorMixin,
         context = {'success': True}
 
         return self.render_to_json_response(context)
-
-
-class ManageParticipantsView(LoggedInFacilitatorMixin, TemplateView):
-    template_name = "main/manage_participants.html"

@@ -9,9 +9,8 @@ from meaningfulconsent.main.mixins import is_facilitator
 from meaningfulconsent.main.models import ParticipantViewSet
 from meaningfulconsent.main.views import ArchiveParticipantView, \
     ClearParticipantView, CreateParticipantView, IndexView, LoginView, \
-    LoginParticipantView, LogoutView, ManageParticipantsView, \
-    ParticipantLanguageView, ParticipantNoteView, RestrictedEditView, \
-    TrackParticipantView
+    LoginParticipantView, LogoutView, ParticipantLanguageView, \
+    ParticipantNoteView, RestrictedEditView, TrackParticipantView
 from pagetree.generic.views import PageView
 from rest_framework import routers
 import debug_toolbar
@@ -50,7 +49,8 @@ urlpatterns = patterns(
     (r'^pagetree/', include('pagetree.urls')),
     (r'^quizblock/', include('quizblock.urls')),
 
-    (r'^participants/manage/$', ManageParticipantsView.as_view()),
+    (r'^participants/manage/$', is_facilitator(
+        TemplateView.as_view(template_name="main/manage_participants.html"))),
 
     (r'^participant/archive/$', ArchiveParticipantView.as_view()),
     (r'^participant/clear/$', ClearParticipantView.as_view()),
@@ -65,16 +65,14 @@ urlpatterns = patterns(
     (r'^pages/en/edit/(?P<path>.*)$', RestrictedEditView.as_view(
         hierarchy_name="en", hierarchy_base="/pages/en/")),
     (r'^pages/en/(?P<path>.*)$', login_required(PageView.as_view(
-        hierarchy_name="en", hierarchy_base="/pages/en/",
-        gated=True, template_name="main/page.html")),
+        hierarchy_name="en", hierarchy_base="/pages/en/", gated=True)),
         {}, 'view-english-page'),
 
     # Spanish
     (r'^pages/es/edit/(?P<path>.*)$', RestrictedEditView.as_view(
         hierarchy_name="es", hierarchy_base="/pages/es/")),
     (r'^pages/es/(?P<path>.*)$', login_required(PageView.as_view(
-        hierarchy_name="es", hierarchy_base="/pages/es/",
-        gated=True, template_name="main/page.html")),
+        hierarchy_name="es", hierarchy_base="/pages/es/", gated=True)),
      {}, 'view-spanish-page')
 )
 

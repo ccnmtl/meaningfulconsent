@@ -7,22 +7,14 @@
         {% if block.rhetorical %}
             <input name="question{{question.id}}" value="{{answer.label}}" type="checkbox" />{{answer.label}}
         {% else %}
-            {% if response %}
-                {% ifanswerin response answer  %}
-                    <input name="question{{question.id}}" value="{{answer.label}}" type="checkbox" checked="checked" />
-                    <span class="yours {% if answer.correct %}correct correctanswer{% else %}incorrect incorrectanswer{% endif %}">
-                        {{answer.label}}
-                    </span>
-                {% else %}
-                    <input name="question{{question.id}}" value="{{answer.label}}" type="checkbox" />
-                    <span class="{% if answer.correct %}correct{% else %}incorrect{% endif %}">
-                        {{answer.label}}
-                    </span>
-                {% endifanswerin %}
-            {% else %}
-                {% comment %}no response{% endcomment %}
-                <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}" value="{{answer.value}}" type="checkbox" /> {{answer.label}}
-            {% endif %}
+            <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                value="{{answer.value}}" type="checkbox"
+                {% if response %}
+                    {% if not block.allow_redo %}disabled="disabled"{% endif %}
+                    {% ifanswerin response answer %}checked="checked"{% else %}{% endifanswerin %}
+                {% endif %}>
+                <label>{{answer.label}}</label>
+            </input>
         {% endif %}
     {% endfor %}
 </ol>

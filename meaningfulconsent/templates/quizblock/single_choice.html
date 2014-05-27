@@ -1,22 +1,32 @@
 {% load markup %}
 
 <ol type="A">
-  {% for answer in question.answer_set.all %}
-    {% if block.rhetorical %}
-      <li><input name="question{{question.id}}" value="{{answer.label}}" type="radio" /> {{answer.label}}</li>
-    {% else %}
-      <li>
-        {% if response %}
-          {% ifequal response.value answer.value %}
-            <span class="yours {% if response.is_correct %}correct{% else %}incorrect{% endif %}">{{answer.label}}</span>
-          {% else %}
-            {{answer.label}}
-          {% endifequal %}
+    {% for answer in question.answer_set.all %}
+        {% if block.rhetorical %}
+            <li><input name="question{{question.id}}" value="{{answer.label}}" type="radio" /> {{answer.label}}</li>
         {% else %}
-          <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
-	  value="{{answer.value}}" type="radio" /> {{answer.label}}
+            <li>
+            {% if response %}
+                <input id="question{{question.id}}-{{answer.value}}"
+                    name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                    value="{{answer.value}}" type="radio"
+                    {% if not block.allow_redo %}disabled="disabled"{% endif %}
+                    {% ifequal response.value answer.value %}checked="checked"{% endifequal %}>
+                    <label for="question{{question.id}}-{{answer.value}}">
+                        {{answer.label}}
+                    </label>
+                </input>
+            {% else %}
+                <input id="question{{question.id}}-{{answer.value}}"
+                    name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                    value="{{answer.value}}" type="radio">
+                    <label for="question{{question.id}}-{{answer.value}}">
+                        {{answer.label}}
+                    </label>
+                </input>
+            {% endif %}
+            </li>
         {% endif %}
-      </li>
-    {% endif %}
   {% endfor %}
 </ol>
+<div style="clear: both"></div>
