@@ -175,7 +175,7 @@ html.busy, html.busy * {
 
 /** password change **/
 div.password-reset ul.errorlist {
-    list-style: none;
+    list-style-type: none;
     margin: 0;
     display: block;
     color: red;
@@ -184,7 +184,7 @@ div.password-reset ul.errorlist {
 }
 
 div.password-change ul.errorlist {
-    list-style: none;
+    list-style-type: none;
     margin: 0;
     display: block;
     color: red;
@@ -432,6 +432,10 @@ div.pageblock.participant-concerns div.casequestion ol {
 div.pageblock.topic-rating {
     margin-bottom: 10px;
 }
+
+div.pageblock.topic-rating div.casequestionintrotext {
+    display: none;
+}
  
 div.pageblock.topic-rating div.casequestion ol {
     list-style-type: none;
@@ -491,4 +495,15 @@ div.pageblock.topic-rating input[type=radio]:checked + label {
 
 div.pageblock.survey div.cases {
     margin-bottom: 30px;
+}
+
+/** topic rating summary **/
+div.topic-rating-summary ul {
+    margin-top: 20px;
+    list-style-type: none;
+    padding-left: 0;
+}
+
+div.topic-rating-summary ul li {
+    margin-bottom: 20px;
 }

@@ -1,10 +1,12 @@
+from django import forms
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.fields import CharField
 from django.db.models.fields.related import OneToOneField
 from django.db.models.signals import post_save
-from pagetree.models import Hierarchy, UserPageVisit
+from django.contrib.contenttypes import generic
+from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from rest_framework import serializers, viewsets
 
 USERNAME_LENGTH = 9
@@ -128,3 +130,44 @@ class ParticipantViewSet(viewsets.ModelViewSet):
 
     model = UserProfile
     serializer_class = ParticipantSerializer
+
+
+class TopicRatingSummaryBlock(models.Model):
+    pageblocks = generic.GenericRelation(
+        PageBlock, related_name="topic_rating_summary")
+    template_file = "main/topic_rating_summary.html"
+    display_name = "Topic Rating Summary Block"
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    @classmethod
+    def add_form(self):
+        return TopicRatingSummaryForm()
+
+    def edit_form(self):
+        return TopicRatingSummaryForm(instance=self)
+
+    @classmethod
+    def create(self, request):
+        form = TopicRatingSummaryForm(request.POST)
+        return form.save()
+
+    def edit(self, vals, files):
+        form = TopicRatingSummaryForm(data=vals, files=files, instance=self)
+        if form.is_valid():
+            form.save()
+
+    def needs_submit(self):
+        return False
+
+    def unlocked(self, user):
+        return True
+
+
+class TopicRatingSummaryForm(forms.ModelForm):
+    class Meta:
+        model = TopicRatingSummaryBlock

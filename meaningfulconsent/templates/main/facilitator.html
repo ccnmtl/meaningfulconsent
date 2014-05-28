@@ -63,34 +63,47 @@
         <div>
             <button class="btn btn-primary create-participant">
                 Create Participant
-            </button>    
-        </div>
-        <br />
-        <div>
-            <a class="btn btn-primary" href="/participant/clear/">Demo</a>
-        </div>
-    
-        <div class="modal create-participant-modal">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-body text-center">
-                        <div class="alert alert-info">
-                            <b>Record</b> the participant id now!
+            </button>
+            
+            <div class="modal create-participant-modal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body text-center">
+                            <div class="alert alert-info">
+                                <b>Record</b> the participant id now!
+                            </div>
+                            <h3>New Participant ID: &nbsp;<span class="participant-id"></span></h3>
                         </div>
-                        <h3>New Participant ID: &nbsp;<span class="participant-id"></span></h3>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary btn-verify-record">I have recorded the Participant ID</button>
-                    </div>
-                    <div class="modal-footer" style="display: none">
-                        <form action="/participant/login/" method="post">
-                            <input class="participant-id" type="hidden" name="username" />
-                            <button type="submit" class="btn btn-primary btn-launch-session">Launch Session</a>
-                        </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary btn-verify-record">I have recorded the Participant ID</button>
+                        </div>
+                        <div class="modal-footer" style="display: none">
+                            <form action="/participant/login/" method="post">
+                                <input class="participant-id" type="hidden" name="username" />
+                                <button type="submit" class="btn btn-primary btn-launch-session">Launch Session</a>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>  
+            </div>            
+        </div>
+
+        <br />
+        <div>
+            {% if user.profile.percent_complete > 0 %}
+                <button id="launch-demo-popover" type="button" class="btn btn-primary" data-container="body"
+                    data-toggle="popover"
+                    data-html="true"
+                    data-placement="right"
+                    data-title="Select launch type"
+                    data-content="<h5><a href='/participant/clear'>New Session</a><h5>
+                                  <h5><a href='{{user.profile.last_location.get_absolute_url}}'>Existing Session</a></h5>">
+                  Launch Demo
+                </button>
+            {% else %}
+                <a href="{{user.profile.last_location.get_absolute_url}}" class="btn btn-primary">Launch Demo</a>            
+            {% endif %}
+        </div>
     
         <br />
         <div class="administration" style="display: none">

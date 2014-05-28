@@ -138,20 +138,21 @@
             {% if section.show_toc %}
                 <div class="col-md-2 table-of-contents">
                     <h5>
-                        <a href="{{module.get_absolute_url}}">{{module.label}}</a>
-                        {% ifequal section module %}<span class="glyphicon glyphicon-hand-left"></span>{% endifequal %}                    
+                        {{module.label}}
                     </h5>
                 
                     <ul class="toc">
                         {% for child in module.get_children %}
-                            {% ifaccessible child %}
-                                <li>
+                            <li>
+                                {% ifequal child section %}
                                     <a href="{{child.get_absolute_url}}">{{child.label}}</a>
                                     {% ifequal child section %}<span class="glyphicon glyphicon-hand-left"></span>{% endifequal %}
-                                </li>
-                            {% else %}
-                                <li><a href="{{child.get_absolute_url}}" disabled="disabled">{{child.label}}</a></li>                        
-                            {% endifaccessible %}
+                                {% else %}{% ifaccessible child %}
+                                    <a href="{{child.get_absolute_url}}">{{child.label}}</a>
+                                {% else %}
+                                    <li><a href="{{child.get_absolute_url}}" disabled="disabled">{{child.label}}</a></li>                        
+                                {% endifaccessible %}{% endifequal %}
+                            </li>
                         {% endfor %}
                     </ul>
                 </div>

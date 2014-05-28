@@ -54,6 +54,8 @@
             this.template = _.template(html);
             this.el_sessions = options.el_sessions;
             
+            jQuery('#launch-demo-popover').popover();            
+            
             this.max_sessions = options.max_sessions;
             
             this.participants = new ParticipantCollection();           
