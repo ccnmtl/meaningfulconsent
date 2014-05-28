@@ -33,7 +33,6 @@
             'click .btn-confirm-archive': 'onConfirmArchiveParticipant',
             'click .create-participant': 'onCreateParticipant',
             'click .btn-edit-notes': 'onEditParticipantNotes',
-            'click .btn-print': 'onPrint',
             'click .btn-save-notes': 'onSaveParticipantNotes',
             'click .btn-verify-record': 'onVerifyRecording',
             'shown.bs.modal #notes-modal': 'onShowParticipantNotes',
@@ -46,7 +45,6 @@
                       'onConfirmArchiveParticipant',
                       'onCreateParticipant',
                       'onEditParticipantNotes',
-                      'onPrint',
                       'onSaveParticipantNotes',
                       'onVerifyRecording');
             
@@ -149,9 +147,6 @@
                 'backdrop': 'static',
                 'keyboard': false
             });
-        },
-        onPrint: function(evt) {
-            alert('onPrint');
         },
         onSaveParticipantNotes: function(evt) {
             var self = this;

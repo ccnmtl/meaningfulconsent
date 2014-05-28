@@ -72,7 +72,7 @@ class UserProfile(models.Model):
 
     def percent_complete(self):
         hierarchy = Hierarchy.get_hierarchy(self.language)
-        pages = len(hierarchy.get_root().get_descendants()) + 1
+        pages = len(hierarchy.get_root().get_descendants())
         visits = UserPageVisit.objects.filter(user=self.user,
                                               section__hierarchy=hierarchy)
         if pages:
@@ -135,7 +135,7 @@ class ParticipantViewSet(viewsets.ModelViewSet):
 class TopicRatingSummaryBlock(models.Model):
     pageblocks = generic.GenericRelation(
         PageBlock, related_name="topic_rating_summary")
-    template_file = "main/topic_rating_summary.html"
+    template_file = "main/ratings_summary_block.html"
     display_name = "Topic Rating Summary Block"
 
     def pageblock(self):

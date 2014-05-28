@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block extrahead %}
-    {% include "main/participant_session_list.html" %}
+    {% include "main/participant_sessions.html" %}
 {% endblock %}
 
 {% block js %}
@@ -95,8 +95,7 @@
                     data-toggle="popover"
                     data-html="true"
                     data-placement="right"
-                    data-title="Select launch type"
-                    data-content="<h5><a href='/participant/clear'>New Session</a><h5>
+                    data-content="<h5><a href='/participant/clear/'>New Session</a><h5>
                                   <h5><a href='{{user.profile.last_location.get_absolute_url}}'>Existing Session</a></h5>">
                   Launch Demo
                 </button>

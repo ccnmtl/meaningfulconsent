@@ -10,7 +10,8 @@ from meaningfulconsent.main.models import ParticipantViewSet
 from meaningfulconsent.main.views import ArchiveParticipantView, \
     ClearParticipantView, CreateParticipantView, IndexView, LoginView, \
     LoginParticipantView, LogoutView, ParticipantLanguageView, \
-    ParticipantNoteView, RestrictedEditView, TrackParticipantView
+    ParticipantNoteView, RestrictedEditView, TrackParticipantView, \
+    ParticipantPrintView
 from pagetree.generic.views import PageView
 from rest_framework import routers
 import debug_toolbar
@@ -59,6 +60,7 @@ urlpatterns = patterns(
         name='participant-language'),
     (r'^participant/login/$', LoginParticipantView.as_view()),
     (r'^participant/note/$', ParticipantNoteView.as_view()),
+    (r'^participant/print/$', ParticipantPrintView.as_view()),
     (r'^participant/track/$', TrackParticipantView.as_view()),
 
     # English

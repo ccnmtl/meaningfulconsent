@@ -191,6 +191,18 @@ class ArchiveParticipantView(LoggedInFacilitatorMixin,
         return self.render_to_json_response(context)
 
 
+class ParticipantPrintView(LoggedInFacilitatorMixin,
+                           TemplateView):
+    template_name = "main/participant_worksheet.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super(ParticipantPrintView, self).get_context_data(**kwargs)
+
+        username = self.request.GET.get('username', '')
+        ctx['participant'] = get_object_or_404(User.objects, username=username)
+        return ctx
+
+
 class ParticipantNoteView(LoggedInFacilitatorMixin,
                           JSONResponseMixin, View):
     def post(self, request):
