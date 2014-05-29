@@ -126,7 +126,8 @@ class ParticipantSerializer(serializers.HyperlinkedModelSerializer):
 class ParticipantViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.filter(
         archived=False,
-        user__username__startswith=USERNAME_PREFIX, user__is_active=False)
+        user__username__startswith=USERNAME_PREFIX,
+        user__is_active=False).order_by('-modified')
 
     model = UserProfile
     serializer_class = ParticipantSerializer

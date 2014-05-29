@@ -1,12 +1,18 @@
 (function() {
+    var PAGE_SIZE = 20;
+    
     Participant = Backbone.Model.extend({
         url: '/api/participants/'
     });
     
     ParticipantCollection = Backbone.Collection.extend({
-        url: '/api/participants/',
+        urlRoot: '/api/participants/',
         model: Participant,
+        page: 1,
+        next: undefined,
+        prev: undefined,
         parse: function(response) {
+            this.total = response.count;            
             this.next = response.next;
             this.previous = response.previous;
             return response.results || response;
@@ -20,6 +26,19 @@
                 }
             }
         },
+        context: function () {
+            var context = {'participants': this.toJSON()};
+            
+            context.next = this.next;
+            context.previous = this.previous;
+            context.pages = Math.ceil(this.total / PAGE_SIZE);
+            context.page = this.page;
+            
+            return context;
+        },
+        url: function() {
+            return this.urlRoot + '?page=' + this.page;
+        }
     });
     
     window.formatDate = function(dateString) {
@@ -33,10 +52,11 @@
             'click .btn-confirm-archive': 'onConfirmArchiveParticipant',
             'click .create-participant': 'onCreateParticipant',
             'click .btn-edit-notes': 'onEditParticipantNotes',
+            'hidden.bs.modal #notes-modal': 'onHideParticipantNotes',
             'click .btn-save-notes': 'onSaveParticipantNotes',
-            'click .btn-verify-record': 'onVerifyRecording',
             'shown.bs.modal #notes-modal': 'onShowParticipantNotes',
-            'hidden.bs.modal #notes-modal': 'onHideParticipantNotes'      
+            'click a.page-link': 'onTurnPage',
+            'click .btn-verify-record': 'onVerifyRecording'
         },
         initialize: function(options) {
             _.bindAll(this,
@@ -46,6 +66,7 @@
                       'onCreateParticipant',
                       'onEditParticipantNotes',
                       'onSaveParticipantNotes',
+                      'onTurnPage',
                       'onVerifyRecording');
             
             var html = jQuery("#participant-sessions-template").html();
@@ -66,21 +87,15 @@
             });
         },
         render: function() {
-            var context = {'participants': this.participants.toJSON()};
-            context.next = this.participants.next;
-            context.previous = this.participants.previous;
-            jQuery(this.el_sessions).html(this.template(context));
+            var ctx = this.participants.context();
+            
+            jQuery(this.el_sessions).html(this.template(ctx));
             
             if (this.participants.length > 0) {
                 jQuery(".administration").show();
             } else {
                 jQuery(".administration").hide();
             }
-            
-            jQuery(this.el_sessions).find('table').tablesorter({
-                sortList: [[2,1]],
-                dateFormat:'mm/dd/yyyy hh:mm:ss tt'
-            });
         },
         onArchiveParticipant: function(evt) {
             var username = jQuery(evt.currentTarget).data('username');
@@ -148,6 +163,10 @@
                 'keyboard': false
             });
         },
+        onHideParticipantNotes: function() {
+            jQuery("#notes-modal").find('.btn-save-notes').data('username', '');
+            jQuery("#notes-modal").find('textarea.notes').val('');
+        },
         onSaveParticipantNotes: function(evt) {
             var self = this;
             var username = jQuery(evt.currentTarget).data('username');
@@ -171,9 +190,32 @@
         onShowParticipantNotes: function() {
             jQuery("#notes-modal").find('textarea.notes').focus();
         },
-        onHideParticipantNotes: function() {
-            jQuery("#notes-modal").find('.btn-save-notes').data('username', '');
-            jQuery("#notes-modal").find('textarea.notes').val('');
+        getParameterByName: function(name, url) {
+            name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+            var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
+                results = regex.exec(url);
+            return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+        },        
+        onTurnPage: function(evt) {
+            evt.preventDefault();
+            
+            if (jQuery(evt.currentTarget).hasClass("disabled")) {
+                return false;
+            }
+            
+            // parse the page number out of the url
+            var href = jQuery(evt.currentTarget).attr("href");
+            var page = this.getParameterByName("page", href);
+            if (page !== null) {
+                this.participants.page = parseInt(page, 10);
+                this.participants.reset();
+                this.participants.fetch({
+                    data: {page_size: self.max_sessions},
+                    processData: true,
+                    reset: true
+                });
+            }
+            return false;
         },
         onVerifyRecording: function(evt) {
             var parent = jQuery(evt.target).parents('div.modal-footer')[0]; 

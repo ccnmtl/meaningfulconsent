@@ -2,13 +2,26 @@
     <table class="tablesorter tablesorter-bootstrap table table-bordered table-striped table-condensed">
         <thead>
             <tr class="tab">
-                <td>Participant Id</td>
-                <td>Last Access</td>
-                <td>% Complete</td>
-                <td>Actions</td>
+                <th>Participant Id</th>
+                <th>Last Access</th>
+                <th>% Complete</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
+            <% if (pages > 1) { %>
+                <ul class="pagination pagination-sm pull-right">
+                    <% for (var i=1; i <= pages; i++) { %>
+                        <% if (page === i) { %>
+                            <li class="active"><a class="page-link disabled"
+                        <% } else { %>
+                            <li><a class="page-link"
+                        <% } %>
+                        href="/api/participants/?page=<%=i%>"><%=i%></a></li>
+                    <% } %>
+                </ul>
+            <% } %>
+            
             <% for (var i=0; i < participants.length; i++) { %>
                 <tr>
                     <td><%= participants[i].user.username %></td>
@@ -47,21 +60,6 @@
             <% } %>
         </tbody>
     </table>
-
-    <!--ul class="pager">
-        <% if (previous) { %>
-            <li class="previous">
-                <a href="<%= previous %>" class="btn btn-default">&larr; Previous</a>
-            </li>
-        <% } %>
-        
-        <% if (next) { %>
-            <li class="next">
-                <a href="<%= next %>" class="btn btn-default">Next &rarr;</a>
-            </li>
-        <% } %>
-    </ul-->
-
             
     <!-- Confirm Archive Modal -->
     <div class="modal" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="Confirm Archive" aria-hidden="true">

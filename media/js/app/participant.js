@@ -41,7 +41,6 @@
         initialize: function(options) {
             _.bindAll(this,
                     'onPauseSession',
-                    'onClickDisabledElement',
                     'onPlayerReady',
                     'onPlayerStateChange',
                     'onYouTubeIframeAPIReady',

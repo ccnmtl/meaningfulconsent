@@ -33,7 +33,6 @@
 
 {% block content %}
     <div class="facilitator-dashboard">
-
         <ul class="breadcrumb">
             <li><a href="/">{{user.get_short_name}}'s Dashboard</a></li>
             <li>Manage Participants</li>            
@@ -46,12 +45,11 @@
     
         <div class="administration">
             <div class="participant-sessions-container">
-                <h4>Active Participants</h4>
+                <h4 class="pull-left">Active Participants</h4>
                 <div>
                     <div class="participant-sessions"></div>
                 </div>
             </div>
         </div>
     </div>
-{% endblock %}
-
+{% endblock %}>
