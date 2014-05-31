@@ -133,11 +133,12 @@ class ParticipantViewSet(viewsets.ModelViewSet):
     serializer_class = ParticipantSerializer
 
 
-class TopicRatingSummaryBlock(models.Model):
+class QuizSummaryBlock(models.Model):
     pageblocks = generic.GenericRelation(
-        PageBlock, related_name="topic_rating_summary")
-    template_file = "main/ratings_summary_block.html"
-    display_name = "Topic Rating Summary Block"
+        PageBlock, related_name="quiz_summary")
+    template_file = "main/quiz_summary_block.html"
+    display_name = "Quiz Summary Block"
+    quiz_class = models.CharField(max_length=50)
 
     def pageblock(self):
         return self.pageblocks.all()[0]
@@ -147,18 +148,18 @@ class TopicRatingSummaryBlock(models.Model):
 
     @classmethod
     def add_form(self):
-        return TopicRatingSummaryForm()
+        return QuizSummaryForm()
 
     def edit_form(self):
-        return TopicRatingSummaryForm(instance=self)
+        return QuizSummaryForm(instance=self)
 
     @classmethod
     def create(self, request):
-        form = TopicRatingSummaryForm(request.POST)
+        form = QuizSummaryForm(request.POST)
         return form.save()
 
     def edit(self, vals, files):
-        form = TopicRatingSummaryForm(data=vals, files=files, instance=self)
+        form = QuizSummaryForm(data=vals, files=files, instance=self)
         if form.is_valid():
             form.save()
 
@@ -169,6 +170,6 @@ class TopicRatingSummaryBlock(models.Model):
         return True
 
 
-class TopicRatingSummaryForm(forms.ModelForm):
+class QuizSummaryForm(forms.ModelForm):
     class Meta:
-        model = TopicRatingSummaryBlock
+        model = QuizSummaryBlock

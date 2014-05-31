@@ -79,6 +79,9 @@
                 });            
                 return false;
             } else {
+                jQuery(".btn-next").hide();
+                jQuery("#working").show();
+                    
                 var url = jQuery(elts[0]).val();
                 window.location = url;
             }
@@ -115,8 +118,9 @@
 
             var form = evt.currentTarget;
             if (this.isFormComplete(form)) {
-                jQuery("#submit-page-button").button('loading');
-
+                jQuery(".btn-next").hide();
+                jQuery("#working").fadeIn();
+                
                 if (this.player.hasOwnProperty('stopVideo')) {
                     this.player.stopVideo();
                     this.recordSecondsViewed();
@@ -128,8 +132,11 @@
                         self.onNextPage();
                     })
                     .fail(function() {
-                        jQuery(".error-inline").fadeIn();
-                        jQuery("#submit-page-button").button('reset');
+                        jQuery(".error-inline").fadeIn(function() {
+                            jQuery(".btn-next").hide();
+                            jQuery("#working").show();
+                        });
+                        
                     });
             } else {
                 jQuery(".help-inline").fadeIn();

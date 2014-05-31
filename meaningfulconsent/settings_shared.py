@@ -135,7 +135,7 @@ PAGEBLOCKS = [
     'pageblocks.ImageBlock',
     'pageblocks.ImagePullQuoteBlock',
     'quizblock.Quiz',
-    'main.TopicRatingSummaryBlock']
+    'main.QuizSummaryBlock']
 
 LETTUCE_APPS = (
     'meaningfulconsent.main',

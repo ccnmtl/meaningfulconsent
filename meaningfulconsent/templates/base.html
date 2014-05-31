@@ -65,6 +65,15 @@
                             {% if user.has_usable_password %}
                                 <li><a href="/accounts/password_change/">Change Password</a></li>
                             {% endif %}
+                            {% if user.is_superuser %}
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Content <b class="caret"></b></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="/pages/en/edit/">English</a></li>
+                                        <li><a href="/pages/es/edit/">Spanish</a></li>
+                                    </ul>
+                                </li>                                
+                            {% endif %}
                             <li><a href="/about/">About</a></li>
                             <li><a href="/credits/">Credits</a></li>
                             <li><a href="/contact/">Contact</a></li>
@@ -193,6 +202,18 @@
     </script>
 {% endif %}
 
+<script type="text/javascript">
+    jQuery(document).ready(function() {
+        // setup some ajax progress indicator
+        jQuery("html").bind("ajaxStart", function(){  
+            jQuery(this).addClass("busy");
+        }).bind("ajaxStop", function() {  
+            jQuery(this).removeClass("busy");
+        });
+    });
+</script>
+
+
 {% block js %}{% endblock %}
 
 {% if STAGING_ENV %}
@@ -224,15 +245,5 @@ You are impersonating.<br />
 </script>
 {% endif %}
 
-<!-- tooltips -->
-<script>
-  //add tooltip
-  jQuery("span.tooltip-bottom").tooltip({
-    placement: 'bottom'
-  });
-  jQuery("span.tooltip-top").tooltip({
-  placement: 'top'
-  });
-</script>
 </body>
 </html>

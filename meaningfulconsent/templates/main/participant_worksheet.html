@@ -1,24 +1,73 @@
 {% extends 'base.html' %}
-{% load ratings %}
+{% load quizsummary %}
+
+{% block js %}
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            jQuery("#send-to-printer").click(function() {
+                window.print();
+            });
+        });
+    </script>
+{% endblock %}
 
 {% block css %}
     <link href="{{STATIC_URL}}css/tablesorter.css" rel="stylesheet" />
 {% endblock %}
 
 {% block content %}
-    {% get_topic_ratings participant as user_ratings %}
+    <div>
+        <h1 class="pull-left">Printout for {{participant.username}}</h1>
+        <a  id="send-to-printer" class="btn btn-default pull-right" href="#">
+            <span class="glyphicon glyphicon-print"></span> Send to Printer
+        </a>
+    </div>
+    <div style="clear: both"></div>    
+    
+    <div class="progress">
+        <div class="bar" style="width: {{participant.profile.percent_complete}}%"></div>
+        <span class="progress-bar-label">{{participant.profile.percent_complete}}% Complete</span>
+    </div>
 
-    <h1>Printout for {{participant.username}} (Questions and Concerns)</h1>
-    <p>Instructions</p>
-
-    <div class="well topic-rating-summary">
+    <h3>Discussion Topics</h3>
+    <div class="well quiz-summary">
         <ul>
-            {% for item in user_ratings %}
-                <li>
-                    <h4>{{item.0}}</h4>
-                    <p>{{item.1}}</p>
-                </li>
-            {% endfor %}
+            {% with cls="topic-discussion" %}
+                {% get_quiz_summary participant cls as discussions %} 
+                {% for item in discussions %}
+                    <li>
+                        <h4>{{item.0}}</h4>
+                        {% if item.1|length == 0 %}
+                            No reply recorded
+                        {% else %}
+                            {% for answer in item.1 %}
+                                {{answer}}{% if not forloop.last %},{% endif %} 
+                            {% endfor %}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% endwith %}
+        </ul>
+    </div>    
+    
+    <h3>Priorities</h3>
+    <div class="well quiz-summary">
+        <ul>
+            {% with cls="topic-rating" %}
+                {% get_quiz_summary participant cls as ratings %}            
+                {% for item in ratings %}
+                    <li>
+                        <h4>{{item.0}}</h4>
+                        {% if item.1|length == 0 %}
+                            No reply recorded
+                        {% else %}
+                            {% for answer in item.1 %}
+                                {{answer}}{% if not forloop.last %},{% endif %} 
+                            {% endfor %}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            {% endwith %}                
         </ul>
     </div>
 {% endblock %}

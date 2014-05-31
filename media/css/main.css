@@ -353,28 +353,17 @@ a[disabled] {
     color: #999;
 }
 
-#submit-page-button {
-    display: inline-block;
-    padding: 5px 14px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 15px;
-    float: right;
-    color: #333;
-    border-color: #ccc;    
-}
-
-#submit-page-button:hover {
-    text-decoration: none;
-    background-color: #eeeeee;
-}
-
 div.table-of-contents ul {
     list-style-type: none;
     padding-left: 0;     
 }
 
 /* facilitator dashboard */
+div.demo .btn,
+div.demo .progress {
+    margin-left: 20px;
+}
+
 div.progress {
     position: relative;
     height: 20px;
@@ -421,14 +410,51 @@ div.participant-sessions.recent ul.pagination {
     display: none;
 }
 
-/* participant input -- participant-concerns */
-div.pageblock.participant-concerns div.cases {
+/* participant pages */
+.btn-previous:focus,
+.btn-next:focus {
+    outline: 0;
+}
+
+#submit-page-button {
+    display: inline-block;
+    padding: 5px 14px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 15px;
+    float: right;
+    color: #428bca;
+    border-color: #ccc;    
+}
+
+#submit-page-button:hover {
+    text-decoration: none;
+    background-color: #eeeeee;
+}
+
+#working {
+    background-image: url(../img/saving.gif);
+    background-repeat: no-repeat;
+    background-position: center center;
+    width: 100px;
+    height: 20px;
+}    
+
+.saving {
+}
+
+/* participant input -- topic_discussion */
+div.pageblock.topic_discussion div.cases {
     margin-top: 50px;
 }
 
-div.pageblock.participant-concerns div.casequestion ol {
+div.pageblock.topic_discussion div.casequestion ol {
     list-style-type: none;
     padding-left: 2px;
+}
+
+div.pageblock.topic-discussion div.casequestionintrotext {
+    display: none;
 }
 
 /** participant input -- topic-rating **/
@@ -502,12 +528,20 @@ div.pageblock.survey div.cases {
 }
 
 /** topic rating summary **/
-div.topic-rating-summary ul {
+div.quiz-summary ul {
     margin-top: 20px;
     list-style-type: none;
     padding-left: 0;
 }
 
-div.topic-rating-summary ul li {
+div.quiz-summary ul li {
     margin-bottom: 20px;
+}
+
+/** print **/
+@media print {
+    div.progress,
+    #send-to-printer {
+        display: none;
+    }
 }

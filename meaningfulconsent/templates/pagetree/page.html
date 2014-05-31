@@ -175,14 +175,17 @@
                         <input type="hidden" name="next-section" value="{{next_section.get_absolute_url}}" />
                     {% endifequal %}
                     
+                    <div id="working" class="pull-right" style="display: none"></div>
+                    
                     {% if allow_redo or not is_submitted %}
-                        <div>
-                            <button id="submit-page-button" type="submit" class="btn btn-primary pull-right" 
-                                data-loading-text="Saving...">
-                                <span class="glyphicon glyphicon-chevron-right"></span>
+                        <li class="next">
+                            <button id="submit-page-button" type="submit" class="btn btn-next pull-right">
+                                <span class="glyphicon glyphicon-chevron-right">
                             </button>
-                            <span style="display: none" class="error-inline alert alert-danger">An error occurred. Please see your facilitator.</span>           
-                        </div>
+                            <span style="display: none" class="error-inline alert alert-danger">
+                                An error occurred. Please see your facilitator.
+                            </span>           
+                        </li>
                     {% else %}
                         <li class="next">
                             <a id="next-page-button" href="#" class="btn btn-next">
