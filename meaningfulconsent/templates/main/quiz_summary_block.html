@@ -1,0 +1,25 @@
+{% load quizsummary %}
+{% with cls="topic-rating" %}
+
+    {% get_quiz_summary user cls as ratings %}
+    
+    <div class="well quiz-summary">
+        <h3>My Priorities</h3>
+        
+        <ul>
+            {% for item in ratings %}
+                <li>
+                    <h4>{{item.0}}</h4>
+                    {% if item.1|length == 0 %}
+                        No reply recorded
+                    {% else %}
+                        {% for answer in item.1 %}
+                            {{answer}}{% if not forloop.last %},{% endif %} 
+                        {% endfor %}
+                    {% endif %}
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+{% endwith %}
