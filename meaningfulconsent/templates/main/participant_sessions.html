@@ -65,5 +65,48 @@
             <% } %>
         </tbody>
     </table>
+
+        
+            
+        <!-- Confirm Archive Modal -->
+        <div class="modal" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="Confirm Archive" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Confirm Archive</h4>
+                    </div>
+                    <div class="modal-body"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                        <button type="button" class="btn btn-primary btn-confirm-archive">Yes</button>
+                    </div>
+                </div>
+            </div>
+        </div>    
+    
+        <!-- Facilitator Notes Modal -->
+        <div class="modal" id="notes-modal" tabindex="-1" role="dialog" aria-labelledby="Facilitator Notes" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Facilitator Notes</h4>
+                    </div>
+                    <div class="modal-body">
+                        <p>Add general notes about the participant here.</p>
+                        <textarea class="notes form-control" rows="3"></textarea>
+                        <div class="alert alert-danger">
+                            <b>Important</b>: Do not include personally identifying information in this field. 
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary btn-save-notes">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>        
+
 <% } %>
 </script>

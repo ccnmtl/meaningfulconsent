@@ -107,37 +107,21 @@ class UserVideoView(models.Model):
         unique_together = (('user', 'video_url'),)
 
 
-class UserSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ('username',)
+# class ParticipantVideoView(models.Model):
+#     user = models.ForeignKey(User)
+#     youtube_id = models.CharField(max_length=256)
+#     video_duration = models.IntegerField(default=0)
+#     seconds_viewed = models.IntegerField(default=0)
+#
+#     def percent_viewed(self):
+#         rv = float(self.seconds_viewed) / self.video_duration * 100
+#         return rv
+#
+#     class Meta:
+#         unique_together = (('user', 'youtube_id'),)
 
-
-class ParticipantSerializer(serializers.HyperlinkedModelSerializer):
-    user = UserSerializer(many=False, read_only=True)
-    percent_complete = serializers.Field(source='percent_complete')
-    last_access = serializers.Field()
-
-    class Meta:
-        model = UserProfile
-        fields = ('user', 'percent_complete', 'notes', 'last_access')
-
-
-class ParticipantViewSet(viewsets.ModelViewSet):
-    model = UserProfile
-    serializer_class = ParticipantSerializer
-
-    def get_queryset(self):
-        queryset = UserProfile.objects.filter(
-            archived=False,
-            user__username__startswith=USERNAME_PREFIX,
-            user__is_active=False).order_by('-modified')
-
-        username = self.request.QUERY_PARAMS.get('username', None)
-        if username:
-            queryset = queryset.filter(user__username__startswith=username)
-
-        return queryset
+####################
+# custom pageblocks
 
 
 class QuizSummaryBlock(models.Model):
@@ -180,3 +164,83 @@ class QuizSummaryBlock(models.Model):
 class QuizSummaryForm(forms.ModelForm):
     class Meta:
         model = QuizSummaryBlock
+
+
+# class ParticipantVideoBlock(models.Model):
+#     pageblocks = generic.GenericRelation(
+#         PageBlock, related_name="participant_video")
+#     template_file = "main/participant_video.html"
+#     display_name = "Participant Video"
+#
+#     youtube_id = models.CharField(max_length=256)
+#     language = models.CharField(max_length=2, choices=LANGUAGES)
+#
+#     def pageblock(self):
+#         return self.pageblocks.all()[0]
+#
+#     def __unicode__(self):
+#         return unicode(self.pageblock())
+#
+#     @classmethod
+#     def add_form(self):
+#         return ParticipantVideoForm()
+#
+#     def edit_form(self):
+#         return ParticipantVideoForm(instance=self)
+#
+#     @classmethod
+#     def create(self, request):
+#         form = ParticipantVideoForm(request.POST)
+#         return form.save()
+#
+#     def edit(self, vals, files):
+#         form = ParticipantVideoForm(data=vals, files=files, instance=self)
+#         if form.is_valid():
+#             form.save()
+#
+#     def needs_submit(self):
+#         return False
+#
+#     def unlocked(self, user):
+#         return True
+#
+#
+# class ParticipantVideoForm(forms.ModelForm):
+#     class Meta:
+#         model = ParticipantVideoBlock
+
+
+##################
+# django-rest interfaces
+
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ('username',)
+
+
+class ParticipantSerializer(serializers.HyperlinkedModelSerializer):
+    user = UserSerializer(many=False, read_only=True)
+    percent_complete = serializers.Field(source='percent_complete')
+    last_access = serializers.Field()
+
+    class Meta:
+        model = UserProfile
+        fields = ('user', 'percent_complete', 'notes', 'last_access')
+
+
+class ParticipantViewSet(viewsets.ModelViewSet):
+    model = UserProfile
+    serializer_class = ParticipantSerializer
+
+    def get_queryset(self):
+        queryset = UserProfile.objects.filter(
+            archived=False,
+            user__username__startswith=USERNAME_PREFIX,
+            user__is_active=False)
+
+        username = self.request.QUERY_PARAMS.get('username', None)
+        if username:
+            queryset = queryset.filter(user__username__startswith=username)
+
+        return sorted(queryset, key=lambda x: x.last_access(), reverse=True)
