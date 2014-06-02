@@ -51,10 +51,11 @@
                         <label class="sr-only" for="exampleInputEmail2">Participant Id: </label>
                         <input type="text" class="form-control" name="participant-search" placeholder="Enter participant id"/>
                     </div>
-                    <button id="participant-search-button" type="submit" class="btn btn-default">
+                    <button id="participant-search-button" type="submit" class="btn btn-default" data-loading-text="searching...">
                         <span class="glyphicon glyphicon-search"></span> Search
                     </button>
-                    <button id="participant-clear-button" type="submit" class="btn btn-default" style="display: none;">
+                    <button id="participant-clear-button" type="submit" class="btn btn-default"
+                        style="display: none;" data-loading-text="clearing...">
                         <span class="glyphicon glyphicon-remove"></span> Clear
                     </button>
                 </form>

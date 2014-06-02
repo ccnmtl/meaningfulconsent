@@ -116,6 +116,9 @@
             } else {
                 jQuery("#participant-clear-button").hide();
             }
+            
+            jQuery("#participant-search-button").button("reset");
+            jQuery("#participant-clear-button").button("reset");
         },
         onArchiveParticipant: function(evt) {
             var username = jQuery(evt.currentTarget).data('username');
@@ -132,6 +135,7 @@
         },
         onClearParticipantSearch: function(evt) {
             evt.preventDefault();
+            jQuery("#participant-clear-button").button("loading");
             jQuery(".help-block").hide();
             jQuery("input[name='participant-search']").val('');
             delete this.participants.filterBy;
@@ -218,6 +222,7 @@
             if (filterBy.length < 1) {
                 jQuery(".help-block").show();
             } else {
+                jQuery("#participant-search-button").button("loading");
                 jQuery(".help-block").hide();
                 this.participants.filterBy = filterBy;
                 this.participants.refresh();
