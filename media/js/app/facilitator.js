@@ -138,6 +138,7 @@
             jQuery("#participant-clear-button").button("loading");
             jQuery(".help-block").hide();
             jQuery("input[name='participant-search']").val('');
+            this.participants.page = 1;
             delete this.participants.filterBy;
             this.participants.refresh();
             return false;
@@ -224,6 +225,7 @@
             } else {
                 jQuery("#participant-search-button").button("loading");
                 jQuery(".help-block").hide();
+                this.participants.page = 1;
                 this.participants.filterBy = filterBy;
                 this.participants.refresh();
             }
