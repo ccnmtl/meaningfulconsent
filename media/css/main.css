@@ -410,6 +410,16 @@ div.participant-sessions.recent ul.pagination {
     display: none;
 }
 
+div.participant-search-container {
+    margin: 20px 0;
+    float: left;
+}
+
+div.participant-search-container .help-block {
+    color: #a94442;
+    
+}
+
 /* participant pages */
 .btn-previous:focus,
 .btn-next:focus {

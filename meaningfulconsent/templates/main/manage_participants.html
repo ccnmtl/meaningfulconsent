@@ -43,13 +43,26 @@
         Instructions: Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula ut id elit.
         </p>
     
-        <div class="administration">
-            <div class="participant-sessions-container">
-                <h4 class="pull-left">Active Participants</h4>
-                <div>
-                    <div class="participant-sessions"></div>
-                </div>
+        <div class="participant-sessions-container">
+            <h4>Active Participants</h4>
+            <div class="participant-search-container">
+                <form class="form-inline" role="form">
+                     <div class="form-group">
+                        <label class="sr-only" for="exampleInputEmail2">Participant Id: </label>
+                        <input type="text" class="form-control" name="participant-search" placeholder="Enter participant id"/>
+                    </div>
+                    <button id="participant-search-button" type="submit" class="btn btn-default">
+                        <span class="glyphicon glyphicon-search"></span> Search
+                    </button>
+                    <button id="participant-clear-button" type="submit" class="btn btn-default" style="display: none;">
+                        <span class="glyphicon glyphicon-remove"></span> Clear
+                    </button>
+                </form>
+                <span class="help-block has-error" style="display:none">
+                    Please enter all or part of a participant id
+                </span>                            
             </div>
+            <div class="participant-sessions"></div>
         </div>
     </div>
 {% endblock %}>

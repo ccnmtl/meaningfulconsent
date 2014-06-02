@@ -9,13 +9,21 @@
         urlRoot: '/api/participants/',
         model: Participant,
         page: 1,
-        next: undefined,
-        prev: undefined,
-        parse: function(response) {
-            this.total = response.count;            
-            this.next = response.next;
-            this.previous = response.previous;
-            return response.results || response;
+        context: function () {
+            var context = {'participants': this.toJSON()};
+            
+            context.next = this.next;
+            context.previous = this.previous;
+            context.pages = Math.ceil(this.total / PAGE_SIZE);
+            context.page = this.page;
+            
+            if (this.hasOwnProperty('filterBy')) {
+                context.filterBy = this.filterBy;
+            } else {
+                context.filterBy = '';
+            }
+            
+            return context;
         },
         get_by_username: function(value) {
             for (var i=0; i < this.length; i++) {
@@ -26,18 +34,25 @@
                 }
             }
         },
-        context: function () {
-            var context = {'participants': this.toJSON()};
-            
-            context.next = this.next;
-            context.previous = this.previous;
-            context.pages = Math.ceil(this.total / PAGE_SIZE);
-            context.page = this.page;
-            
-            return context;
+        refresh: function() {
+            this.fetch({
+                data: {page_size: this.max_sessions},
+                processData: true,
+                reset: true
+            });
+        },
+        parse: function(response) {
+            this.total = response.count;            
+            this.next = response.next;
+            this.previous = response.previous;
+            return response.results || response;
         },
         url: function() {
-            return this.urlRoot + '?page=' + this.page;
+            var url = this.urlRoot + '?page=' + this.page;
+            if (this.hasOwnProperty('filterBy')) {
+                url += "&username=" + this.filterBy;
+            }
+            return url;
         }
     });
     
@@ -49,11 +64,13 @@
     window.FacilitatorView = Backbone.View.extend({
         events: {
             'click .btn-archive': 'onArchiveParticipant',
+            'click #participant-clear-button': 'onClearParticipantSearch',            
             'click .btn-confirm-archive': 'onConfirmArchiveParticipant',
             'click .create-participant': 'onCreateParticipant',
             'click .btn-edit-notes': 'onEditParticipantNotes',
             'hidden.bs.modal #notes-modal': 'onHideParticipantNotes',
             'click .btn-save-notes': 'onSaveParticipantNotes',
+            'click #participant-search-button': 'onSearchParticipants',         
             'shown.bs.modal #notes-modal': 'onShowParticipantNotes',
             'click a.page-link': 'onTurnPage',
             'click .btn-verify-record': 'onVerifyRecording'
@@ -62,10 +79,12 @@
             _.bindAll(this,
                       'render',
                       'onArchiveParticipant',
+                      'onClearParticipantSearch',
                       'onConfirmArchiveParticipant',
                       'onCreateParticipant',
                       'onEditParticipantNotes',
                       'onSaveParticipantNotes',
+                      'onSearchParticipants',
                       'onTurnPage',
                       'onVerifyRecording');
             
@@ -75,16 +94,11 @@
             
             jQuery('#launch-demo-popover').popover();            
             
-            this.max_sessions = options.max_sessions;
-            
-            this.participants = new ParticipantCollection();           
+            this.participants = new ParticipantCollection();
+            this.participants.max_sessions = options.max_sessions;
             this.participants.on("reset", this.render);
-
-            this.participants.fetch({
-                data: {page_size: this.max_sessions},
-                processData: true,
-                reset: true
-            });
+            
+            this.participants.refresh();
         },
         render: function() {
             var ctx = this.participants.context();
@@ -95,6 +109,12 @@
                 jQuery(".administration").show();
             } else {
                 jQuery(".administration").hide();
+            }
+            
+            if (this.participants.hasOwnProperty('filterBy')) {
+                jQuery("#participant-clear-button").show();
+            } else {
+                jQuery("#participant-clear-button").hide();
             }
         },
         onArchiveParticipant: function(evt) {
@@ -110,6 +130,14 @@
                 'keyboard': false
             });
         },
+        onClearParticipantSearch: function(evt) {
+            evt.preventDefault();
+            jQuery(".help-block").hide();
+            jQuery("input[name='participant-search']").val('');
+            delete this.participants.filterBy;
+            this.participants.refresh();
+            return false;
+        },
         onConfirmArchiveParticipant: function(evt) {
             var self = this;
             var username = jQuery(evt.currentTarget).data('username');
@@ -123,12 +151,7 @@
                 url: '/participant/archive/',
                 data: {username: username},
                 success: function() {
-                    self.participants.reset();
-                    self.participants.fetch({
-                        data: {page_size: self.max_sessions},
-                        processData: true,
-                        reset: true
-                    });
+                    self.participants.refresh();
                 },
                 error: function() {
                     alert("An error occurred. Please try again");
@@ -187,6 +210,21 @@
                 }
             });            
         },
+        onSearchParticipants: function(evt) {
+            var self = this;
+            evt.preventDefault();
+            
+            var filterBy = jQuery("input[name='participant-search']").val();
+            if (filterBy.length < 1) {
+                jQuery(".help-block").show();
+            } else {
+                jQuery(".help-block").hide();
+                this.participants.filterBy = filterBy;
+                this.participants.refresh();
+            }
+            
+            return false;
+        },
         onShowParticipantNotes: function() {
             jQuery("#notes-modal").find('textarea.notes').focus();
         },
@@ -208,12 +246,7 @@
             var page = this.getParameterByName("page", href);
             if (page !== null) {
                 this.participants.page = parseInt(page, 10);
-                this.participants.reset();
-                this.participants.fetch({
-                    data: {page_size: self.max_sessions},
-                    processData: true,
-                    reset: true
-                });
+                this.participants.refresh();
             }
             return false;
         },

@@ -124,13 +124,20 @@ class ParticipantSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class ParticipantViewSet(viewsets.ModelViewSet):
-    queryset = UserProfile.objects.filter(
-        archived=False,
-        user__username__startswith=USERNAME_PREFIX,
-        user__is_active=False).order_by('-modified')
-
     model = UserProfile
     serializer_class = ParticipantSerializer
+
+    def get_queryset(self):
+        queryset = UserProfile.objects.filter(
+            archived=False,
+            user__username__startswith=USERNAME_PREFIX,
+            user__is_active=False).order_by('-modified')
+
+        username = self.request.QUERY_PARAMS.get('username', None)
+        if username:
+            queryset = queryset.filter(user__username__startswith=username)
+
+        return queryset
 
 
 class QuizSummaryBlock(models.Model):

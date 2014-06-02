@@ -1,4 +1,23 @@
 <script id="participant-sessions-template" type="text/template">
+
+<% if (participants.length < 1) { %>
+    <div style="clear: both"></div>
+    <h4>No Participant Sessions Found</h4>
+<% } else { %>
+    <% if (pages > 1) { %>
+        <ul class="pagination pagination-sm pull-right">
+            <% for (var i=1; i <= pages; i++) { %>
+                <% if (page === i) { %>
+                    <li class="active"><a class="page-link disabled"
+                <% } else { %>
+                    <li><a class="page-link"
+                <% } %>
+                href="/api/participants/?page=<%=i%>"><%=i%></a></li>
+            <% } %>
+        </ul>
+        <div style="clear: both"></div>
+    <% } %>
+
     <table class="tablesorter tablesorter-bootstrap table table-bordered table-striped table-condensed">
         <thead>
             <tr class="tab">
@@ -9,19 +28,6 @@
             </tr>
         </thead>
         <tbody>
-            <% if (pages > 1) { %>
-                <ul class="pagination pagination-sm pull-right">
-                    <% for (var i=1; i <= pages; i++) { %>
-                        <% if (page === i) { %>
-                            <li class="active"><a class="page-link disabled"
-                        <% } else { %>
-                            <li><a class="page-link"
-                        <% } %>
-                        href="/api/participants/?page=<%=i%>"><%=i%></a></li>
-                    <% } %>
-                </ul>
-            <% } %>
-            
             <% for (var i=0; i < participants.length; i++) { %>
                 <tr>
                     <td><%= participants[i].user.username %></td>
@@ -59,4 +65,5 @@
             <% } %>
         </tbody>
     </table>
+<% } %>
 </script>
