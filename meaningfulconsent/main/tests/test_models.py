@@ -97,7 +97,7 @@ class UserVideoViewTest(TestCase):
 
     def test_percent_viewed(self):
         uvv = UserVideoView(user=self.user,
-                            video_url='http://www.youtube.com',
+                            video_id='ABCDEFG',
                             video_duration=100)
 
         self.assertEquals(uvv.percent_viewed(), 0)

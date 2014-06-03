@@ -369,10 +369,10 @@ class TrackParticipantViewTest(ParticipantTestCase):
         self.assertEquals(response.status_code, 200)
         the_json = json.loads(response.content)
         self.assertFalse(the_json['success'])
-        self.assertEquals(the_json['msg'], "Invalid video url")
+        self.assertEquals(the_json['msg'], "Invalid video id")
 
         response = self.client.post('/participant/track/',
-                                    {'video_url': 'http://www.youtube.com'},
+                                    {'video_id': 'ABCDEFG'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
         the_json = json.loads(response.content)
@@ -380,7 +380,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
         self.assertEquals(the_json['msg'], "Invalid video duration")
 
         ctx = {
-            'video_url': 'http://www.youtube.com',
+            'video_id': 'ABCDEFG',
             'video_duration': -100
         }
         response = self.client.post('/participant/track/', ctx,
@@ -403,7 +403,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
 
         # created
         response = self.client.post('/participant/track/',
-                                    {'video_url': 'http://www.youtube.com',
+                                    {'video_id': 'ABCDEFG',
                                      'video_duration': 100},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
@@ -411,13 +411,13 @@ class TrackParticipantViewTest(ParticipantTestCase):
         self.assertTrue(the_json['success'])
 
         uvv = UserVideoView.objects.get(user=self.user)
-        self.assertEquals(uvv.video_url, 'http://www.youtube.com')
+        self.assertEquals(uvv.video_id, 'ABCDEFG')
         self.assertEquals(uvv.video_duration, 100)
         self.assertEquals(uvv.seconds_viewed, 0)
 
         # updated
         response = self.client.post('/participant/track/',
-                                    {'video_url': 'http://www.youtube.com',
+                                    {'video_id': 'ABCDEFG',
                                      'video_duration': 100,
                                      'seconds_viewed': 50},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
@@ -426,7 +426,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
         self.assertTrue(the_json['success'])
 
         uvv = UserVideoView.objects.get(user=self.user)
-        self.assertEquals(uvv.video_url, 'http://www.youtube.com')
+        self.assertEquals(uvv.video_id, 'ABCDEFG')
         self.assertEquals(uvv.video_duration, 100)
         self.assertEquals(uvv.seconds_viewed, 50)
 
@@ -440,7 +440,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
         self.assertEquals(response.status_code, 200)
 
         response = self.client.post('/participant/track/',
-                                    {'video_url': 'http://www.youtube.com/1/',
+                                    {'video_id': 'ABCDEFG',
                                      'video_duration': 200,
                                      'seconds_viewed': 200},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
@@ -449,7 +449,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
         self.assertTrue(the_json['success'])
 
         uvv = UserVideoView.objects.get(user=self.participant)
-        self.assertEquals(uvv.video_url, 'http://www.youtube.com/1/')
+        self.assertEquals(uvv.video_id, 'ABCDEFG')
         self.assertEquals(uvv.video_duration, 200)
         self.assertEquals(uvv.seconds_viewed, 200)
 

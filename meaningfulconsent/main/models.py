@@ -95,7 +95,7 @@ post_save.connect(create_user_profile, sender=User)
 
 class UserVideoView(models.Model):
     user = models.ForeignKey(User)
-    video_url = models.CharField(max_length=512)
+    video_id = models.CharField(max_length=256)
     video_duration = models.IntegerField(default=0)
     seconds_viewed = models.IntegerField(default=0)
 
@@ -104,21 +104,7 @@ class UserVideoView(models.Model):
         return rv
 
     class Meta:
-        unique_together = (('user', 'video_url'),)
-
-
-# class ParticipantVideoView(models.Model):
-#     user = models.ForeignKey(User)
-#     youtube_id = models.CharField(max_length=256)
-#     video_duration = models.IntegerField(default=0)
-#     seconds_viewed = models.IntegerField(default=0)
-#
-#     def percent_viewed(self):
-#         rv = float(self.seconds_viewed) / self.video_duration * 100
-#         return rv
-#
-#     class Meta:
-#         unique_together = (('user', 'youtube_id'),)
+        unique_together = (('user', 'video_id'),)
 
 ####################
 # custom pageblocks
@@ -166,48 +152,48 @@ class QuizSummaryForm(forms.ModelForm):
         model = QuizSummaryBlock
 
 
-# class ParticipantVideoBlock(models.Model):
-#     pageblocks = generic.GenericRelation(
-#         PageBlock, related_name="participant_video")
-#     template_file = "main/participant_video.html"
-#     display_name = "Participant Video"
-#
-#     youtube_id = models.CharField(max_length=256)
-#     language = models.CharField(max_length=2, choices=LANGUAGES)
-#
-#     def pageblock(self):
-#         return self.pageblocks.all()[0]
-#
-#     def __unicode__(self):
-#         return unicode(self.pageblock())
-#
-#     @classmethod
-#     def add_form(self):
-#         return ParticipantVideoForm()
-#
-#     def edit_form(self):
-#         return ParticipantVideoForm(instance=self)
-#
-#     @classmethod
-#     def create(self, request):
-#         form = ParticipantVideoForm(request.POST)
-#         return form.save()
-#
-#     def edit(self, vals, files):
-#         form = ParticipantVideoForm(data=vals, files=files, instance=self)
-#         if form.is_valid():
-#             form.save()
-#
-#     def needs_submit(self):
-#         return False
-#
-#     def unlocked(self, user):
-#         return True
-#
-#
-# class ParticipantVideoForm(forms.ModelForm):
-#     class Meta:
-#         model = ParticipantVideoBlock
+class YouTubeBlock(models.Model):
+    pageblocks = generic.GenericRelation(
+        PageBlock, related_name="user_video")
+    template_file = "main/youtube_video.html"
+    display_name = "YouTube Video"
+
+    video_id = models.CharField(max_length=256)
+    language = models.CharField(max_length=2, choices=LANGUAGES)
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    @classmethod
+    def add_form(self):
+        return YouTubeForm()
+
+    def edit_form(self):
+        return YouTubeForm(instance=self)
+
+    @classmethod
+    def create(self, request):
+        form = YouTubeForm(request.POST)
+        return form.save()
+
+    def edit(self, vals, files):
+        form = YouTubeForm(data=vals, files=files, instance=self)
+        if form.is_valid():
+            form.save()
+
+    def needs_submit(self):
+        return False
+
+    def unlocked(self, user):
+        return True
+
+
+class YouTubeForm(forms.ModelForm):
+    class Meta:
+        model = YouTubeBlock
 
 
 ##################

@@ -4,6 +4,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.views import logout as auth_logout_view
+from django.contrib.sites.models import Site
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
@@ -30,6 +31,7 @@ def context_processor(request):
     if user_is_participant(request.user):
         # djangowind delivers the form in un-authenticated situations
         ctx['login_form'] = AuthenticationForm(request)
+    ctx['site'] = Site.objects.get_current()
     return ctx
 
 
@@ -93,6 +95,7 @@ class ClearParticipantView(LoggedInFacilitatorMixin, View):
         # clear visits & saved locations
         UserLocation.objects.filter(user=request.user).delete()
         UserPageVisit.objects.filter(user=request.user).delete()
+        UserVideoView.objects.filter(user=request.user).delete()
 
         # clear quiz responses & submission
         import quizblock
@@ -156,17 +159,17 @@ class ParticipantLanguageView(LoggedInMixin, TemplateView):
 class TrackParticipantView(LoggedInMixin, JSONResponseMixin, View):
 
     def post(self, request):
-        video_url = request.POST.get('video_url', '')
+        vid = request.POST.get('video_id', '')
         video_duration = int(request.POST.get('video_duration', 0))
         seconds_viewed = int(request.POST.get('seconds_viewed', 0))
 
-        if video_url == '':
-            context = {'success': False, 'msg': 'Invalid video url'}
+        if vid == '':
+            context = {'success': False, 'msg': 'Invalid video id'}
         elif video_duration < 1:
             context = {'success': False, 'msg': 'Invalid video duration'}
         else:
             uvv = UserVideoView.objects.get_or_create(user=request.user,
-                                                      video_url=video_url)
+                                                      video_id=vid)
             uvv[0].video_duration = video_duration
             uvv[0].seconds_viewed += seconds_viewed
             uvv[0].save()

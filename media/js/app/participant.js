@@ -88,7 +88,7 @@
             return false;
         },
         onPlayerReady: function(event) {
-            this.video_url = this.player.getVideoUrl();
+            this.video_id = this.player.getVideoData().video_id;
             this.video_duration = this.player.getDuration();
         },
         onPlayerStateChange: function(event) {
@@ -151,13 +151,13 @@
                 data: jQuery(form).serialize()});
         },
         onSubmitVideoData: function(data, textStatus, jqXHR) {
-            if (this.hasOwnProperty('video_url') && this.video_url.length > 0 &&
+            if (this.hasOwnProperty('video_id') && this.video_id.length > 0 &&
                     this.hasOwnProperty('video_duration') && this.video_duration > 0) {
                 return jQuery.ajax({
                     type: "post",
                     url: '/participant/track/',
                     data: {
-                        video_url: this.video_url,
+                        video_id: this.video_id,
                         video_duration: Math.round(this.video_duration),
                         seconds_viewed: Math.round(this.seconds_viewed)
                     }
