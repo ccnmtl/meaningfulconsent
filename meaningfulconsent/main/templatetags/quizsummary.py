@@ -1,7 +1,6 @@
 from django import template
-from django.contrib.contenttypes.models import ContentType
-from pagetree.models import PageBlock
-from quizblock.models import Response, Quiz, Submission
+from meaningfulconsent.main.views import get_quiz_blocks
+from quizblock.models import Response, Submission
 
 register = template.Library()
 
@@ -16,9 +15,7 @@ class GetTopicRatings(template.Node):
         u = context[self.user]
         cls = context[self.quiz_class]
 
-        quiz_type = ContentType.objects.get_for_model(Quiz)
-        blocks = PageBlock.objects.filter(css_extra=cls,
-                                          content_type=quiz_type)
+        blocks = get_quiz_blocks(cls)
 
         ratings = []
         for b in blocks:

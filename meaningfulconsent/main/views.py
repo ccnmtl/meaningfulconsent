@@ -4,6 +4,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.views import logout as auth_logout_view
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.http.response import HttpResponseRedirect
 from django.shortcuts import get_object_or_404
@@ -15,7 +16,15 @@ from meaningfulconsent.main.mixins import JSONResponseMixin, LoggedInMixin, \
     LoggedInMixinSuperuser, LoggedInFacilitatorMixin
 from meaningfulconsent.main.models import UserVideoView
 from pagetree.generic.views import EditView
-from pagetree.models import UserLocation, UserPageVisit
+from pagetree.models import UserLocation, UserPageVisit, PageBlock
+from quizblock.models import Quiz
+
+
+def get_quiz_blocks(css_class):
+    quiz_type = ContentType.objects.get_for_model(Quiz)
+    blocks = PageBlock.objects.filter(css_extra=css_class,
+                                      content_type=quiz_type)
+    return blocks
 
 
 def user_is_participant(user):
