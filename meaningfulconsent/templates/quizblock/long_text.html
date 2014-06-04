@@ -7,9 +7,7 @@
     {% if block.allow_redo %}
         <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}">{{response.value}}</textarea>
     {% else %}
-        <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}" disabled="disabled">
-            {{response.value}}
-        </textarea>    
+        <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}" disabled="disabled">{{response.value}}</textarea>    
     {% endif %}
   {% else %}
     <textarea rows="10" name="pageblock-{{block.pageblock.id}}-question{{question.id}}" ></textarea>
