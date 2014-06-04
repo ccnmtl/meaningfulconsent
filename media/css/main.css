@@ -4,14 +4,21 @@ html {
 
 body {
   background-color: #fff;
+  /*height: 100%;*/
 }
 
 body > .container {
   background-color: #fff;
+  /*min-height: 100%;*/
   padding-top: 25px;
 }
 
+.jumbotron {background-color: #fff; border: 1px solid #ccc;}
+
+.banner-pl {margin-top: 7em;}
+
 #content {
+  /*min-height: 100%;*/
 }
 
 /* Logo */
@@ -240,6 +247,8 @@ div.password-change input[type='password'] {
 .navbar-pl .navbar-toggle {
   border: 0;
   color: #000;
+  margin-top: 2.5em;
+
 }
 
 .navbar-pl .navbar-toggle:hover {  
@@ -252,7 +261,7 @@ div.password-change input[type='password'] {
 .navbar-nav-pl {
   margin: 0;
   padding: 0;
-  margin-top: 2em;
+  margin-top: 2.3em;
 }
 
 .navbar-nav-pl>li>a {
@@ -301,6 +310,7 @@ footer {
   padding: 0;
   border: 0;
   text-align: center;
+  margin-top: 150px;
 }
 
 footer a {
