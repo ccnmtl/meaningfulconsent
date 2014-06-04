@@ -221,5 +221,5 @@ REST_FRAMEWORK = {
 }
 
 LOCALE_PATHS = (
-    'locale',
+    '/var/www/meaningfulconsent/locale/',
 )

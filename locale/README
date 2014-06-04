@@ -1,3 +1,8 @@
+https://docs.djangoproject.com/en/1.6/topics/i18n/translation/
+
+* Translation file is located in es/LC_MESSAGES/django.po.
+* For local development, set the fully qualified path for LOCALE_PATHS in your local_settings.py 
+
 # If translation strings are added, changed or deleted, re-makemessages
 ./manage.py makemessages -l es --ignore="ve" --ignore="login.html" --ignore="password*.html"
 
