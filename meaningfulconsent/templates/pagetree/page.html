@@ -33,7 +33,6 @@
 
 {% block usernav %}
     {% language request.user.profile.language %}
-
         {% if request.user.profile.is_participant %}
             <li class="pause-session">
                 <a href="/participant/pause/">
@@ -44,19 +43,24 @@
         {% endif %}
         
         <li class="language">
-            <form action="/participant/language/" method="post">            
-                {% if section.hierarchy.name == 'en' %}
+            <form id="participant-language-form" action="/participant/language/" method="post">            
+                {% if request.user.profile.language == 'en' %}
                     <input type="hidden" name="language" value="es" />
-                    {# Translators: Navbar "Switch to Spanish" link #}
-                    <button type="submit">{% trans "Spanish" %}</button>
                 {% else %}
                     <input type="hidden" name="language" value="en" />
-                    {# Translators: Navbar "Switch to English" link #}
-                    <button type="submit">{% trans "English" %}</button>
                 {% endif %}
             </form> 
+            
+            <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#change-language-modal">
+                {% if request.user.profile.language == 'en' %}
+                    {# Translators: Navbar "Switch to Spanish" link #}
+                    {% trans "Spanish" %}
+                {% else %}
+                    {# Translators: Navbar "Switch to English" link #}
+                    {% trans "English" %}
+                {% endif %}
+            </button>
         </li>
-    
     {% endlanguage %}
 {% endblock %}
 
@@ -104,7 +108,7 @@
                 
                 <!-- Confirm Language Switch -->
                 {% language request.user.profile.language %}
-                <div class="modal" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="Confirm Archive" aria-hidden="true">
+                <div class="modal" id="change-language-modal" tabindex="-1" role="dialog" aria-labelledby="Confirm Language Switch" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -118,7 +122,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "No" %}</button>
-                                <button type="button" class="btn btn-primary btn-confirm-language-switch">{% trans "Yes" %}</button>
+                                <button type="button" class="btn btn-primary change-language">{% trans "Yes" %}</button>
                             </div>
                         </div>
                     </div>

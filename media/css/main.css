@@ -337,6 +337,13 @@ li.language button {
     line-height: normal;
 }
 
+li.language button:hover {
+    color: white;
+    outline: none;
+    background-color: #101010;
+    border: 0;
+}
+
 input.login-uni-form {
     font-size: 13px;
     font-weight: 200;

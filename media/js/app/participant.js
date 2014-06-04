@@ -1,11 +1,8 @@
 (function() {
-    /** Example embed code: 
-     * <iframe id="player" frameborder="0" allowfullscreen="1" title="YouTube video player" width="640" height="390" src="https://www.youtube.com/embed/gukC5bCUMOw?enablejsapi=1&origin=http://localhost:8000"></iframe>
-     */
-    
     window.ParticipantPageView = Backbone.View.extend({
         events: {
             'click li.pause-session a': 'onPauseSession',
+            'click button.change-language': 'onChangeLanguage',
             'click a.disabled': 'onClickDisabledElement',
             'click .nav li.disabled a': 'onClickDisabledElement',
             'submit #submit-page': 'onSubmitPage',
@@ -64,6 +61,9 @@
             tag.src = "https://www.youtube.com/iframe_api";
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        },
+        onChangeLanguage: function(evt) {
+            jQuery("#participant-language-form").submit();
         },
         onClickDisabledElement: function(evt) {
             evt.preventDefault();
