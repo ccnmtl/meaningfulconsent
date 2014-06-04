@@ -3,18 +3,15 @@ html {
 }
 
 body {
-  background-color: #eee;
-  height: 100%;
+  background-color: #fff;
 }
 
 body > .container {
   background-color: #fff;
-  min-height: 100%;
   padding-top: 25px;
 }
 
 #content {
-  min-height: 100%;
 }
 
 /* Logo */
@@ -26,6 +23,11 @@ body > .container {
     padding: 15px 15px;
     font-size: 18px;
     line-height: 20px;
+}
+
+.navbar-default {
+	background-color: #fff !important;
+	border: 1px solid #e7e7e7 !important;
 }
 
 html.busy, html.busy * {  
@@ -250,6 +252,7 @@ div.password-change input[type='password'] {
 .navbar-nav-pl {
   margin: 0;
   padding: 0;
+  margin-top: 2em;
 }
 
 .navbar-nav-pl>li>a {
