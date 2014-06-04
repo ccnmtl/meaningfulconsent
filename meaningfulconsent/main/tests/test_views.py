@@ -316,7 +316,6 @@ class LanguageParticipantViewTest(ParticipantTestCase):
         self.assertEquals(self.participant.profile.language, 'en')
 
         response = self.client.get('/pages/en/', {}, follow=True)
-        print response.content
         self.assertTrue('Pause Tutorial' in response.content)
 
         response = self.client.post('/participant/language/',

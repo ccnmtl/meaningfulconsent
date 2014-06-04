@@ -43,6 +43,8 @@ if 'migrate' not in sys.argv:
     MIDDLEWARE_CLASSES.append(
         'django_statsd.middleware.GraphiteMiddleware')
 
+LOCALE_PATHS = ('/var/www/meaningfulconsent/locale',)
+
 try:
     from local_settings import *
 except ImportError:
