@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load render accessible %}
+{% load render accessible i18n %}
 
 {% block js %}
     <script src="{{STATIC_URL}}js/app/participant.js"></script>
@@ -32,23 +32,32 @@
 {% block title %}{{section.label}}{% endblock %}
 
 {% block usernav %}
-    {% if request.user.profile.is_participant %}
-        <li class="pause-session">
-            <a href="/participant/pause/"><span title="Pause">Pause Session</span></a>
+    {% language request.user.profile.language %}
+
+        {% if request.user.profile.is_participant %}
+            <li class="pause-session">
+                <a href="/participant/pause/">
+                    {# Translators: Navbar command to pause the experience #}
+                    {% trans "Pause Tutorial" %}
+                </a>
+            </li>
+        {% endif %}
+        
+        <li class="language">
+            <form action="/participant/language/" method="post">            
+                {% if section.hierarchy.name == 'en' %}
+                    <input type="hidden" name="language" value="es" />
+                    {# Translators: Navbar "Switch to Spanish" link #}
+                    <button type="submit">{% trans "Spanish" %}</button>
+                {% else %}
+                    <input type="hidden" name="language" value="en" />
+                    {# Translators: Navbar "Switch to English" link #}
+                    <button type="submit">{% trans "English" %}</button>
+                {% endif %}
+            </form> 
         </li>
-    {% endif %}
     
-    <li class="language">
-        <form action="/participant/language/" method="post">            
-            {% if section.hierarchy.name == 'en' %}
-                <input type="hidden" name="language" value="es" />
-                <button type="submit">Espanol</button>
-            {% else %}
-                <input type="hidden" name="language" value="en" />
-                <button type="submit">English</button>
-            {% endif %}
-        </form> 
-    </li>
+    {% endlanguage %}
 {% endblock %}
 
 {% block primarynav %}
@@ -92,39 +101,72 @@
                         </div>
                     {% endfor %}
                 </div>
-            
-                <div class="modal pause-session-modal">
+                
+                <!-- Confirm Language Switch -->
+                {% language request.user.profile.language %}
+                <div class="modal" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="Confirm Archive" aria-hidden="true">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <div class="modal-body text-center">
-                                <h3>Session Paused</h3>
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                {# Translators: Confirm Language Modal Header #}
+                                <h4 class="modal-title">{% trans "Switch Language" %}</h4>
+                            </div>
+                            <div class="modal-body">
+                                {# Translators: Confirm Language Modal Header #}
+                                {% trans "Are you sure?" %}
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-toggle="modal"
-                                    data-target="#login-modal" data-dismiss="modal">
-                                        Facilitator Log In
-                                 </button>
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Resume</button>          
+                                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "No" %}</button>
+                                <button type="button" class="btn btn-primary btn-confirm-language-switch">{% trans "Yes" %}</button>
                             </div>
                         </div>
                     </div>
                 </div>
+                
+                <!-- Pause Session -->
+                <div class="modal pause-session-modal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body text-center">
+                                {# Translators: Tutorial Paused Modal Header #}
+                                <h3>{% trans "Tutorial Paused" %}</h3>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-toggle="modal"
+                                    data-target="#login-modal" data-dismiss="modal">
+                                        {# Translators: Tutorial Paused Facilitator Login button #}
+                                        {% trans "Facilitator" %}
+                                 </button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">
+                                    {# Translators: Tutorial Paused Facilitator Resume button #}
+                                    {% trans "Resume" %}
+                                </button>          
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- End Session -->
                 <div class="modal end-session-modal">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                Thank you!
+                                {# Translators: Tutorial Complete Modal Header #}
+                                {% trans "Thank You!" %}
                             </div>
                             <div class="modal-body text-center">
-                                <p>You're done.</p>
-                                
-                                <p>Please return the device to the facilitator</p>
+                                {# Translators: Tutorial Complete Modal Text #}
+                                {% blocktrans %}
+                                    You're done! <br />Please return the device to the facilitator.
+                                {% endblocktrans %}
                             </div>
                             <div class="modal-footer">
                                 {% if request.user.profile.is_participant %}
                                     <button type="button" class="btn btn-default" data-toggle="modal"
                                         data-target="#login-modal" data-dismiss="modal">
-                                            Facilitator Log In
+                                            {# Translators: Tutorial Complete Facilitator Log in Button #}
+                                            {% trans "Facilitator" %}
                                      </button>
                                 {% else %}
                                     <a href="/" class="btn btn-default">Facilitator Dashboard</a>
@@ -133,6 +175,7 @@
                         </div>
                     </div>
                 </div>
+                {% endlanguage %}
             </div>
     
             {% if section.show_toc %}
@@ -183,7 +226,8 @@
                                 <span class="glyphicon glyphicon-chevron-right">
                             </button>
                             <span style="display: none" class="error-inline alert alert-danger">
-                                An error occurred. Please see your facilitator.
+                                {# Translators: General error message #}
+                                {% trans "An error occurred. Please see your facilitator." %}
                             </span>           
                         </li>
                     {% else %}

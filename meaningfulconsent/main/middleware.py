@@ -1,6 +1,5 @@
 from django.http import HttpResponseNotAllowed
-from django.template import RequestContext
-from django.template import loader
+from django.template import RequestContext, loader
 
 
 class HttpResponseNotAllowedMiddleware(object):

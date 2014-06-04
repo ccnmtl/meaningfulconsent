@@ -287,7 +287,6 @@ class LanguageParticipantViewTest(ParticipantTestCase):
 
     def test_post_as_user(self):
         self.client.login(username=self.user.username, password="test")
-
         self.assertEquals(self.user.profile.language, 'en')
 
         response = self.client.post('/participant/language/',
@@ -295,6 +294,8 @@ class LanguageParticipantViewTest(ParticipantTestCase):
                                     follow=True)
         self.assertEquals(response.redirect_chain[0],
                           ('http://testserver/pages/es//', 302))
+        self.assertEquals(response.redirect_chain[1],
+                          ('http://testserver/pages/es/one/', 302))
 
         sections = self.hierarchy_en.get_root().get_descendants()
         UserPageVisit.objects.create(user=self.user,
@@ -310,6 +311,24 @@ class LanguageParticipantViewTest(ParticipantTestCase):
                           ('http://testserver/pages/en/one/introduction/',
                            302))
 
+    def test_post_as_participant(self):
+        self.login_participant()
+        self.assertEquals(self.participant.profile.language, 'en')
+
+        response = self.client.get('/pages/en/', {}, follow=True)
+        print response.content
+        self.assertTrue('Pause Tutorial' in response.content)
+
+        response = self.client.post('/participant/language/',
+                                    {'language': 'es'},
+                                    follow=True)
+        self.assertEquals(response.redirect_chain[0],
+                          ('http://testserver/pages/es//', 302))
+        self.assertEquals(response.redirect_chain[1],
+                          ('http://testserver/pages/es/one/', 302))
+
+        self.assertTrue('Pausa Tutorial' in response.content)
+
 
 class ClearParticipantViewTest(ParticipantTestCase):
 
@@ -318,7 +337,7 @@ class ClearParticipantViewTest(ParticipantTestCase):
         self.assertEquals(response.status_code, 405)
 
     def test_get_as_participant(self):
-        self.client.login(username=self.participant.username, password="test")
+        self.login_participant()
         response = self.client.get('/participant/clear/')
         self.assertEquals(response.status_code, 405)
 

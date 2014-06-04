@@ -56,7 +56,7 @@ USE_TZ = True
 TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
-USE_I18N = False
+USE_I18N = True
 MEDIA_ROOT = "/var/www/meaningfulconsent/uploads/"
 MEDIA_URL = '/uploads/'
 STATIC_URL = '/media/'
@@ -69,6 +69,7 @@ TEMPLATE_LOADERS = (
 TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
     'django.core.context_processors.request',
     'stagingcontext.staging_processor',
     'gacontext.ga_processor',
@@ -218,3 +219,7 @@ REST_FRAMEWORK = {
     'PAGINATE_BY': 20,
     'PAGINATE_BY_PARAM': 'page_size'
 }
+
+LOCALE_PATHS = (
+    'locale',
+)

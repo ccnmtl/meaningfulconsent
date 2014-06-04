@@ -1,0 +1,5 @@
+# If translation strings are added, changed or deleted, re-makemessages
+./manage.py makemessages -l es --ignore="ve" --ignore="login.html" --ignore="password*.html"
+
+# Then, compile them
+./manage.py compilemessages
