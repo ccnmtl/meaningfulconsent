@@ -107,8 +107,8 @@ class IndexViewTest(ParticipantTestCase):
 
     def test_anonymous_user(self):
         response = self.client.get('/')
-        self.assertTrue('Log in' in response.content)
-        self.assertFalse('log out' in response.content)
+        self.assertTrue('Log In' in response.content)
+        self.assertFalse('Log Out' in response.content)
         self.assertEquals(response.template_name[0], "main/splash.html")
         self.assertEquals(response.status_code, 200)
 
@@ -118,8 +118,8 @@ class IndexViewTest(ParticipantTestCase):
         response = self.client.get('/')
         self.assertEquals(response.template_name[0], "main/facilitator.html")
         self.assertEquals(response.status_code, 200)
-        self.assertFalse('Log in' in response.content)
-        self.assertTrue('log out' in response.content)
+        self.assertFalse('Log In' in response.content)
+        self.assertTrue('Log Out' in response.content)
         self.assertTrue('Dashboard' in response.content)
 
     def test_participant(self):
@@ -188,8 +188,8 @@ class LogoutTest(ParticipantTestCase):
         response = self.client.get('/accounts/logout/?next=/', follow=True)
         self.assertEquals(response.template_name[0], "main/splash.html")
         self.assertEquals(response.status_code, 200)
-        self.assertTrue('Log in' in response.content)
-        self.assertFalse('log out' in response.content)
+        self.assertTrue('Log In' in response.content)
+        self.assertFalse('Log Out' in response.content)
 
     def test_logout_participant(self):
         self.client.login(username=self.user.username, password="test")
