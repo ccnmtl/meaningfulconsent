@@ -25,6 +25,10 @@ validate: ./ve/bin/python
 shell: ./ve/bin/python
 	$(MANAGE) shell_plus
 
+makemessages: ./ve/bin/python validate jenkins
+	$(MANAGE) makemessages -l es --ignore="ve" --ignore="login.html" --ignore="password*.html"
+	$(MANAGE) compilemessages
+
 clean:
 	rm -rf ve
 	rm -rf media/CACHE
