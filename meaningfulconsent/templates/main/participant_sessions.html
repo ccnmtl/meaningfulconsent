@@ -15,18 +15,26 @@
                 href="/api/participants/?page=<%=i%>"><%=i%></a></li>
             <% } %>
         </ul>
-        <div style="clear: both"></div>
+        <div class="clearfix"></div>
     <% } %>
 
     <table class="tablesorter tablesorter-bootstrap table table-bordered table-striped table-condensed">
+     <colgroup>
+		 <col style="width: 125px;"></col>
+		 <col style="width: 160px;"></col>
+		 <col></col>
+		 <col style="width: 320px;"></col>
+ 	</colgroup>
+
         <thead>
             <tr class="tab">
-                <th>Participant Id</th>
+                <th>Participant ID</th>
                 <th>Last Access</th>
-                <th>% Complete</th>
+                <th style="text-align: center;">Percentage (%) Complete</th>
                 <th>Actions</th>
             </tr>
         </thead>
+        
         <tbody>
             <% for (var i=0; i < participants.length; i++) { %>
                 <tr>
@@ -39,6 +47,7 @@
                         </div>
                     </td>
                     <td>
+                    <div class="pull-right">
                         <form action="/participant/login/" method="post" style="display: inline-block">
                             <input class="participant-id" type="hidden" name="username" value="<%= participants[i].user.username %>" />
                             <button type="submit" class="btn btn-default btn-launch-session btn-sm">
@@ -60,14 +69,15 @@
                          data-username="<%= participants[i].user.username %>">
                             <span class="glyphicon glyphicon-save"></span> Archive
                         </button>
+                        </div>
                     </td>
                 </tr>
             <% } %>
         </tbody>
+        
     </table>
 
-        
-            
+ 
         <!-- Confirm Archive Modal -->
         <div class="modal" id="confirm-modal" tabindex="-1" role="dialog" aria-labelledby="Confirm Archive" aria-hidden="true">
             <div class="modal-dialog">

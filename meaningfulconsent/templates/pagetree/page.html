@@ -1,13 +1,12 @@
 {% extends 'base.html' %}
+
 {% load render accessible i18n %}
 
 {% block js %}
     <script src="{{STATIC_URL}}js/app/participant.js"></script>
-
     {% for block in section.pageblock_set.all %}
         {% renderjs block %}
     {% endfor %}
-   
     <script type="text/javascript"> 
         jQuery(document).ready(function() {
             var view = new ParticipantPageView({
@@ -32,18 +31,23 @@
 {% block title %}{{section.label}}{% endblock %}
 
 {% block usernav %}
+
     {% language request.user.profile.language %}
+    
         {% if request.user.profile.is_participant %}
-            <li class="pause-session">
-                <a href="/participant/pause/">
+		<li class="pause-session">
+		
+                <a class="btn btn-default btn-lg" href="/participant/pause/">
                     {# Translators: Navbar command to pause the experience #}
                     {% trans "Pause Tutorial" %}
                 </a>
+                
             </li>
         {% endif %}
         
-        <li class="language">
-            <form id="participant-language-form" action="/participant/language/" method="post">            
+		<li class="language">
+		
+			<form id="participant-language-form" action="/participant/language/" method="post">            
                 {% if request.user.profile.language == 'en' %}
                     <input type="hidden" name="language" value="es" />
                 {% else %}
@@ -51,15 +55,16 @@
                 {% endif %}
             </form> 
             
-            <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#change-language-modal">
+            <a class="btn btn-default btn-lg" data-toggle="modal" data-target="#change-language-modal">
                 {% if request.user.profile.language == 'en' %}
                     {# Translators: Navbar "Switch to Spanish" link #}
-                    {% trans "Spanish" %}
+                    {% trans "Espa&ntilde;ol" %}
                 {% else %}
                     {# Translators: Navbar "Switch to English" link #}
                     {% trans "English" %}
                 {% endif %}
-            </button>
+            </a>
+            
         </li>
     {% endlanguage %}
 {% endblock %}
