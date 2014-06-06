@@ -50,11 +50,11 @@
 				 
 				 {% if request.user.is_anonymous or not request.user.profile.is_participant %}
 					<a class="navbar-brand" href="/" title="Meaningful Consent">
-						<img src="{{STATIC_URL}}img/logo_meaningfulconsent.png" alt="Meaningful Consent" />
+						<img class="img-responsive" src="{{STATIC_URL}}img/logo_meaningfulconsent.png" alt="Meaningful Consent" />
 					</a>
 				 {% else %}
 					<span class="navbar-logo">
-						<img src="{{STATIC_URL}}img/logo_meaningfulconsent.png" alt="Meaningful Consent" />
+						<img class="img-responsive" src="{{STATIC_URL}}img/logo_meaningfulconsent.png" alt="Meaningful Consent" />
 					</span>
 				 {% endif %}
 			  </div>
