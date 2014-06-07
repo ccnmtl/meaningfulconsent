@@ -1,11 +1,11 @@
 from django import forms
 from django.contrib.auth.models import User
+from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.fields import CharField
 from django.db.models.fields.related import OneToOneField
 from django.db.models.signals import post_save
-from django.contrib.contenttypes import generic
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from rest_framework import serializers, viewsets
 
@@ -72,6 +72,9 @@ class UserProfile(models.Model):
 
     def percent_complete(self):
         hierarchy = Hierarchy.get_hierarchy(self.language)
+        return self.percent_complete_hierarchy(hierarchy)
+
+    def percent_complete_hierarchy(self, hierarchy):
         pages = len(hierarchy.get_root().get_descendants())
         visits = UserPageVisit.objects.filter(user=self.user,
                                               section__hierarchy=hierarchy)
@@ -155,11 +158,12 @@ class QuizSummaryForm(forms.ModelForm):
 class YouTubeBlock(models.Model):
     pageblocks = generic.GenericRelation(
         PageBlock, related_name="user_video")
-    template_file = "main/youtube_video.html"
+    template_file = "main/youtube_video_block.html"
     display_name = "YouTube Video"
 
     video_id = models.CharField(max_length=256)
     language = models.CharField(max_length=2, choices=LANGUAGES)
+    title = models.TextField()
 
     def pageblock(self):
         return self.pageblocks.all()[0]
@@ -194,6 +198,7 @@ class YouTubeBlock(models.Model):
 class YouTubeForm(forms.ModelForm):
     class Meta:
         model = YouTubeBlock
+        widgets = {'title': forms.TextInput}
 
 
 ##################

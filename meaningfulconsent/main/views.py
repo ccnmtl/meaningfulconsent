@@ -15,6 +15,7 @@ from meaningfulconsent.main.auth import generate_random_username, \
 from meaningfulconsent.main.mixins import JSONResponseMixin, LoggedInMixin, \
     LoggedInMixinSuperuser, LoggedInFacilitatorMixin
 from meaningfulconsent.main.models import UserVideoView
+from meaningfulconsent.main.reports import MeaningfulConsentReport
 from pagetree.generic.views import EditView
 from pagetree.models import UserLocation, UserPageVisit, PageBlock
 from quizblock.models import Quiz
@@ -150,7 +151,7 @@ class LoginParticipantView(LoggedInFacilitatorMixin, View):
 
 
 class ParticipantLanguageView(LoggedInMixin, TemplateView):
-    template_name = "main/language.html"
+    template_name = "main/participant_language.html"
 
     def post(self, request):
         """
@@ -205,7 +206,7 @@ class ArchiveParticipantView(LoggedInFacilitatorMixin,
 
 class ParticipantPrintView(LoggedInFacilitatorMixin,
                            TemplateView):
-    template_name = "main/participant_worksheet.html"
+    template_name = "main/participant_printout.html"
 
     def get_context_data(self, **kwargs):
         ctx = super(ParticipantPrintView, self).get_context_data(**kwargs)
@@ -228,3 +229,10 @@ class ParticipantNoteView(LoggedInFacilitatorMixin,
         context = {'success': True}
 
         return self.render_to_json_response(context)
+
+
+class ReportView(LoggedInFacilitatorMixin, View):
+
+    def get(self, request):
+        report = MeaningfulConsentReport("meaningfulconsent")
+        return report.get_zip_file()

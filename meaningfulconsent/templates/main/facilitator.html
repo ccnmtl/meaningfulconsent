@@ -41,7 +41,7 @@
 	
 	<hr style="margin-bottom: 50px;" />
 	
-	<div class="administration" style="display: none">
+	<div class="administration">
 	
 		<h2 class="text-center">Participant Administration</h2>
 		
@@ -50,30 +50,30 @@
 		<div class="clearfix"></div>
 		
 		<div class="modal create-participant-modal">
-		<div class="modal-dialog">
-			<div class="modal-content">
-			
-				<div class="modal-body text-center">
-				<div class="alert alert-info">
-				<b>Record</b> the participant id now!
-				</div>
-				<h3>New Participant ID: &nbsp;<span class="participant-id"></span></h3>
-				</div>
-				
-				<div class="modal-footer">
-				<button type="button" class="btn btn-primary btn-verify-record">I have recorded the Participant ID</button>
-				</div>
-				
-				<div class="modal-footer" style="display: none">
-					<form action="/participant/login/" method="post">
-						<input class="participant-id" type="hidden" name="username" />
-						<button type="submit" class="btn btn-primary btn-launch-session">Launch Session</button>
-					</form>
-				</div>
-			
-			</div>
-		</div>
-	</div>            
+    		<div class="modal-dialog">
+    			<div class="modal-content">
+    			
+    				<div class="modal-body text-center">
+    				<div class="alert alert-info">
+    				<b>Record</b> the participant id now!
+    				</div>
+    				<h3>New Participant ID: &nbsp;<span class="participant-id"></span></h3>
+    				</div>
+    				
+    				<div class="modal-footer">
+    				<button type="button" class="btn btn-primary btn-verify-record">I have recorded the Participant ID</button>
+    				</div>
+    				
+    				<div class="modal-footer" style="display: none">
+    					<form action="/participant/login/" method="post">
+    						<input class="participant-id" type="hidden" name="username" />
+    						<button type="submit" class="btn btn-primary btn-launch-session">Launch Session</button>
+    					</form>
+    				</div>
+    			
+    			</div>
+    		</div>
+	   </div>            
 	
 		<div class="participant-sessions recent"></div>
 	
@@ -83,13 +83,15 @@
 			<span class="glyphicon glyphicon-plus"></span> Add a New Participant
 			</button>	
 			
+            {% if participants|length > 0 %}
 			<a class="btn btn-primary" href="/participants/manage/">
 			<span class="glyphicon glyphicon-search"></span> Review All Sessions
 			</a>
+            {% endif %}
 		
-			<button class="btn btn-primary download-reports">
-			<span class="glyphicon glyphicon-file"></span> Download Reports
-			</button>    
+			<a class="btn btn-primary" href="/participants/report/">
+			 <span class="glyphicon glyphicon-file"></span> Download Reports
+			</a>
 		
 		</div>
 		

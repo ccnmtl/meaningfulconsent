@@ -11,7 +11,7 @@ from meaningfulconsent.main.views import ArchiveParticipantView, \
     ClearParticipantView, CreateParticipantView, IndexView, LoginView, \
     LoginParticipantView, LogoutView, ParticipantLanguageView, \
     ParticipantNoteView, RestrictedEditView, TrackParticipantView, \
-    ParticipantPrintView
+    ParticipantPrintView, ReportView
 from pagetree.generic.views import PageView
 from rest_framework import routers
 import debug_toolbar
@@ -52,6 +52,7 @@ urlpatterns = patterns(
 
     (r'^participants/manage/$', is_facilitator(
         TemplateView.as_view(template_name="main/manage_participants.html"))),
+    (r'^participants/report/$', ReportView.as_view()),
 
     (r'^participant/archive/$', ArchiveParticipantView.as_view()),
     (r'^participant/clear/$', ClearParticipantView.as_view()),

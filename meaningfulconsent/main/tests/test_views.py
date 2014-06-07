@@ -127,7 +127,8 @@ class IndexViewTest(ParticipantTestCase):
 
         response = self.client.get('/', follow=True)
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.template_name[0], "main/language.html")
+        self.assertEquals(response.template_name[0],
+                          "main/participant_language.html")
 
         self.participant.profile.language = 'en'
         self.participant.profile.save()
@@ -198,10 +199,12 @@ class LogoutTest(ParticipantTestCase):
                                     {'username': self.participant.username},
                                     follow=True)
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.template_name[0], "main/language.html")
+        self.assertEquals(response.template_name[0],
+                          "main/participant_language.html")
 
         response = self.client.get('/accounts/logout/?next=/', follow=True)
-        self.assertEquals(response.template_name[0], "main/language.html")
+        self.assertEquals(response.template_name[0],
+                          "main/participant_language.html")
         self.assertEquals(response.status_code, 200)
 
 
@@ -253,7 +256,8 @@ class LoginParticipantViewTest(ParticipantTestCase):
                                     follow=True,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.template_name[0], "main/language.html")
+        self.assertEquals(response.template_name[0],
+                          "main/participant_language.html")
 
     def test_post_as_facilitator_second(self):
         self.client.login(username=self.user.username, password="test")
