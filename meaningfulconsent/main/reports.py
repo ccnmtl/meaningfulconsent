@@ -119,7 +119,7 @@ class VideoViewColumn(object):
           'item type', 'item text' '''
 
         return [self.identifier(), self.hierarchy.name,
-                "YouTube Video", 'percent viewed',
+                'YouTube Video', 'percent viewed',
                 '%s in %s' % (self.title, self.language)]
 
     def user_value(self, user):
@@ -173,9 +173,9 @@ class PagetreeReportColumn():
         return self.value_func(user)
 
 
-class PagetreeReport():
-    def __init__(self, report_prefix):
-        self.report_prefix = report_prefix
+class PagetreeReport(object):
+    def __init__(self, *args, **kwargs):
+        self.report_prefix = kwargs.pop('prefix', "pagetree")
 
     def get_users(self):
         return User.objects.all()
@@ -284,12 +284,17 @@ class PagetreeReport():
 
 
 class MeaningfulConsentReport(PagetreeReport):
+
+    def __init__(self, *args, **kwargs):
+        super(MeaningfulConsentReport, self).__init__(*args, **kwargs)
+        self.clinic = kwargs.pop('clinic', None)
+
     def get_users(self):
         users = User.objects.filter(is_active=False,
                                     username__startswith=USERNAME_PREFIX)
 
-        if hasattr(self, 'clinic_id'):
-            users.filter(profile__clinic__id=self.clinic_id)
+        if self.clinic is not None:
+            users = users.filter(profile__clinic=self.clinic)
 
         return users
 

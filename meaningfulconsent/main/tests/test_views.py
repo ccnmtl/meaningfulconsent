@@ -85,7 +85,7 @@ class PagetreeViewTestsLoggedIn(TestCase):
         self.assertEqual(r.status_code, 200)
 
 
-class ChangePasswordTests(ParticipantTestCase):
+class ChangePasswordTest(ParticipantTestCase):
 
     def test_logged_out(self):
         response = self.client.get('/accounts/password_change/')

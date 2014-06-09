@@ -10,7 +10,6 @@ import simplejson
 
 class ClinicFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Clinic
-    name = "Test"
 
 
 class UserFactory(factory.DjangoModelFactory):
@@ -53,25 +52,29 @@ class ModuleFactory(object):
 
 class ParticipantTestCase(TestCase):
     def setUp(self):
-        Clinic.objects.create(name="pilot")
+        super(ParticipantTestCase, self).setUp()
+
+        self.clinic = Clinic.objects.create(name="pilot")
         self.user = UserFactory()
 
         self.client = Client()
-
-        # create a "real" participant to work with
-        self.client.login(username=self.user.username, password="test")
-        response = self.client.post('/participant/create/',
-                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
-        the_json = simplejson.loads(response.content)
-        self.participant = User.objects.get(
-            username=the_json['user']['username'])
-        self.client.logout()
+        self.participant = self.create_participant()
 
         ModuleFactory("en", "/pages/en/")
         ModuleFactory("es", "/pages/es/")
 
         self.hierarchy_en = Hierarchy.objects.get(name='en')
         self.hierarchy_es = Hierarchy.objects.get(name='es')
+
+    def create_participant(self):
+        # create a "real" participant to work with
+        self.client.login(username=self.user.username, password="test")
+        response = self.client.post('/participant/create/',
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        the_json = simplejson.loads(response.content)
+        participant = User.objects.get(username=the_json['user']['username'])
+        self.client.logout()
+        return participant
 
     def login_participant(self):
         # login as facilitator
