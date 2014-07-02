@@ -1,9 +1,9 @@
 {% if site.domain|slice:":9" == 'localhost' %} 
     <iframe id="player" frameborder="0" allowfullscreen="1" 
-     title="YouTube video player" width="640" height="390" 
+     title="YouTube video player"
      src="https://www.youtube.com/embed/{{block.video_id}}?enablejsapi=1&origin={{site.domain}}"></iframe>
 {% else %}
     <iframe id="player" frameborder="0" allowfullscreen="1" 
-     title="YouTube video player" width="640" height="390" 
+     title="YouTube video player"
      src="https://www.youtube.com/embed/{{block.video_id}}?enablejsapi=1"></iframe>
 {% endif %}

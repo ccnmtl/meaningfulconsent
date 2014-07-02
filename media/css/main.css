@@ -329,7 +329,9 @@ footer img {
 
 /* index.html Landing page */
 iframe {
-    border: 0;
+    border: 0px;
+    width: 100%;
+    min-height: 500px;
 }
 
 div.intro-video {
@@ -569,8 +571,10 @@ div.quiz-summary ul li {
 }
 
 
-
-
+@media only screen 
+and (max-width : 465px) {
+.banner-pl {margin-top: 12em;}
+}
 
 /** print **/
 @media print {
