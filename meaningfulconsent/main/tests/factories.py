@@ -3,7 +3,8 @@ from django.test.client import Client
 from django.test.testcases import TestCase
 from meaningfulconsent.main.auth import generate_password
 from meaningfulconsent.main.models import Clinic
-from pagetree.models import Hierarchy, Section
+from pagetree.models import Hierarchy
+from pagetree.tests.factories import UserFactory, ModuleFactory
 import factory
 import simplejson
 
@@ -12,42 +13,12 @@ class ClinicFactory(factory.DjangoModelFactory):
     FACTORY_FOR = Clinic
 
 
-class UserFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = User
-    username = factory.Sequence(lambda n: "user%03d" % n)
-    password = factory.PostGenerationMethodCall('set_password', 'test')
-
-
 class ParticipantFactory(factory.DjangoModelFactory):
     FACTORY_FOR = User
     username = 'MC1234567'
     is_active = False
     password = factory.PostGenerationMethodCall('set_password',
                                                 generate_password('MC1234567'))
-
-
-class HierarchyFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Hierarchy
-    name = "main"
-    base_url = ""
-
-
-class RootSectionFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Section
-    hierarchy = factory.SubFactory(HierarchyFactory)
-    label = "Root"
-    slug = ""
-
-
-class ModuleFactory(object):
-    def __init__(self, hname, base_url):
-        hierarchy = HierarchyFactory(name=hname, base_url=base_url)
-        root = hierarchy.get_root()
-        root.add_child_section_from_dict(
-            {'label': "One", 'slug': "one",
-             'children': [{'label': "Three", 'slug': "introduction"}]})
-        root.add_child_section_from_dict({'label': "Two", 'slug': "two"})
-        self.root = root
 
 
 class ParticipantTestCase(TestCase):
@@ -86,3 +57,14 @@ class ParticipantTestCase(TestCase):
                                     {'username': self.participant.username},
                                     follow=True)
         self.assertEquals(response.status_code, 200)
+
+
+class PagetreeTestCase(TestCase):
+    def setUp(self):
+        super(PagetreeTestCase, self).setUp()
+
+        ModuleFactory("en", "/pages/en/")
+        ModuleFactory("es", "/pages/es/")
+
+        self.hierarchy_en = Hierarchy.objects.get(name='en')
+        self.hierarchy_es = Hierarchy.objects.get(name='es')

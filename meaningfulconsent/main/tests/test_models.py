@@ -82,7 +82,7 @@ class UserProfileTest(TestCase):
                                      section=sections[1],
                                      status="complete")
 
-        self.assertEquals(self.user.profile.percent_complete(), 66)
+        self.assertEquals(self.user.profile.percent_complete(), 50)
 
         self.user.profile.language = "es"
         self.user.profile.save()

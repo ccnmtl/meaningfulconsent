@@ -6,7 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth.views import logout as auth_logout_view
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
-from django.http.response import HttpResponseRedirect
+from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
 from djangowind.views import logout as wind_logout_view
@@ -14,11 +14,14 @@ from meaningfulconsent.main.auth import generate_random_username, \
     generate_password, USERNAME_PREFIX
 from meaningfulconsent.main.mixins import JSONResponseMixin, LoggedInMixin, \
     LoggedInMixinSuperuser, LoggedInFacilitatorMixin
-from meaningfulconsent.main.models import UserVideoView
-from meaningfulconsent.main.reports import MeaningfulConsentReport
+from meaningfulconsent.main.models import UserVideoView, \
+    MeaningfulConsentReport
 from pagetree.generic.views import EditView
-from pagetree.models import UserLocation, UserPageVisit, PageBlock
+from pagetree.models import UserLocation, UserPageVisit, PageBlock, Hierarchy
 from quizblock.models import Quiz
+from zipfile import ZipFile
+from StringIO import StringIO
+import csv
 
 
 def get_quiz_blocks(css_class):
@@ -234,5 +237,37 @@ class ParticipantNoteView(LoggedInFacilitatorMixin,
 class ReportView(LoggedInFacilitatorMixin, View):
 
     def get(self, request):
-        report = MeaningfulConsentReport("meaningfulconsent")
-        return report.get_zip_file()
+        report = MeaningfulConsentReport()
+
+        # setup zip file for the key & value file
+        response = HttpResponse(mimetype='application/zip')
+
+        disposition = 'attachment; filename=meaningfulconsent.zip'
+        response['Content-Disposition'] = disposition
+
+        z = ZipFile(response, 'w')
+
+        output = StringIO()  # temp output file
+        writer = csv.writer(output)
+
+        # report on all hierarchies
+        hierarchies = Hierarchy.objects.all()
+
+        # Key file
+        for row in report.metadata(hierarchies):
+            writer.writerow(row)
+
+        z.writestr("meaningfulconsent_key.csv", output.getvalue())
+
+        # Results file
+        output.truncate(0)
+        output.seek(0)
+
+        writer = csv.writer(output)
+
+        for row in report.values(hierarchies):
+            writer.writerow(row)
+
+        z.writestr("meaningfulconsent_values.csv", output.getvalue())
+
+        return response

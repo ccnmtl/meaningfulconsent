@@ -7,7 +7,10 @@ from django.db.models.fields import CharField
 from django.db.models.fields.related import OneToOneField
 from django.db.models.signals import post_save
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
+from pagetree.reports import PagetreeReport, ReportableInterface, \
+    StandaloneReportColumn, ReportColumnInterface
 from rest_framework import serializers, viewsets
+
 
 USERNAME_LENGTH = 9
 USERNAME_PREFIX = 'MC'
@@ -45,12 +48,16 @@ class UserProfile(models.Model):
         return hierarchy.get_root()
 
     def last_access(self):
-        hierarchy = Hierarchy.get_hierarchy(self.language)
+        return self.last_access_hierarchy(self.language) or self.created
+
+    def last_access_hierarchy(self, hierarchy_name):
+        hierarchy = Hierarchy.get_hierarchy(hierarchy_name)
+
         upv = UserPageVisit.objects.filter(
             user=self.user, section__hierarchy=hierarchy).order_by(
             "-last_visit")
         if len(upv) < 1:
-            return self.created
+            return None
         else:
             return upv[0].last_visit
 
@@ -71,10 +78,10 @@ class UserProfile(models.Model):
             return upv[0].section
 
     def percent_complete(self):
-        hierarchy = Hierarchy.get_hierarchy(self.language)
-        return self.percent_complete_hierarchy(hierarchy)
+        return self.percent_complete_hierarchy(self.language)
 
-    def percent_complete_hierarchy(self, hierarchy):
+    def percent_complete_hierarchy(self, hierarchy_name):
+        hierarchy = Hierarchy.get_hierarchy(hierarchy_name)
         pages = len(hierarchy.get_root().get_descendants())
         visits = UserPageVisit.objects.filter(user=self.user,
                                               section__hierarchy=hierarchy)
@@ -155,6 +162,30 @@ class QuizSummaryForm(forms.ModelForm):
         model = QuizSummaryBlock
 
 
+class YouTubeReportColumn(ReportColumnInterface):
+    def __init__(self, hierarchy, video_id, title, language):
+        self.hierarchy = hierarchy
+        self.video_id = video_id
+        self.title = title
+        self.language = language
+
+    def identifier(self):
+        return self.video_id
+
+    def metadata(self):
+        '''hierarchy, itemIdentifier', 'group', 'item type', 'item text' '''
+        return [self.hierarchy.name, self.identifier(), 'YouTube Video',
+                'percent viewed', '%s' % (self.title)]
+
+    def user_value(self, user):
+        try:
+            view = UserVideoView.objects.get(user=user,
+                                             video_id=self.identifier())
+            return view.percent_viewed()
+        except UserVideoView.DoesNotExist:
+            return 0
+
+
 class YouTubeBlock(models.Model):
     pageblocks = generic.GenericRelation(
         PageBlock, related_name="user_video")
@@ -194,11 +225,53 @@ class YouTubeBlock(models.Model):
     def unlocked(self, user):
         return True
 
+    def report_columns(self):
+        return [YouTubeReportColumn(self.pageblock().section.hierarchy,
+                                    self.video_id, self.title, self.language)]
+
+    def report_metadata(self):
+        return self.report_columns()
+
+    def report_values(self):
+        return self.report_columns()
+
 
 class YouTubeForm(forms.ModelForm):
     class Meta:
         model = YouTubeBlock
         widgets = {'title': forms.TextInput}
+
+ReportableInterface.register(YouTubeBlock)
+
+
+class MeaningfulConsentReport(PagetreeReport):
+
+    def users(self):
+        users = User.objects.filter(
+            is_active=False, username__startswith=USERNAME_PREFIX)
+        return users.order_by('id')
+
+    def standalone_columns(self):
+        return [
+            StandaloneReportColumn(
+                "participant_id", 'profile', 'string',
+                'Randomized Participant Id', lambda x: x.username),
+            StandaloneReportColumn(
+                "english_percent_complete", 'profile', 'percent',
+                '% of hierarchy completed',
+                lambda x: x.profile.percent_complete_hierarchy('en')),
+            StandaloneReportColumn(
+                "english_last_access", 'profile', 'date string',
+                'last access date',
+                lambda x: x.profile.last_access_hierarchy('en')),
+            StandaloneReportColumn(
+                "spanish_percent_complete", 'profile', 'percent',
+                '% of hierarchy completed',
+                lambda x: x.profile.percent_complete_hierarchy('es')),
+            StandaloneReportColumn(
+                "spanish_last_access", 'profile', 'date string',
+                'last access date',
+                lambda x: x.profile.last_access_hierarchy('es'))]
 
 
 ##################
