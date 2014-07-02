@@ -50,6 +50,10 @@ class UserProfile(models.Model):
     def last_access(self):
         return self.last_access_hierarchy(self.language) or self.created
 
+    def last_access_formatted(self, hierarchy_name):
+        dt = self.last_access_hierarchy(hierarchy_name)
+        return dt.strftime("%Y-%m-%dT%H:%M:%S") if dt else ''
+
     def last_access_hierarchy(self, hierarchy_name):
         hierarchy = Hierarchy.get_hierarchy(hierarchy_name)
 
@@ -263,7 +267,7 @@ class MeaningfulConsentReport(PagetreeReport):
             StandaloneReportColumn(
                 "english_last_access", 'profile', 'date string',
                 'last access date',
-                lambda x: x.profile.last_access_hierarchy('en')),
+                lambda x: x.profile.last_access_formatted('en')),
             StandaloneReportColumn(
                 "spanish_percent_complete", 'profile', 'percent',
                 '% of hierarchy completed',
@@ -271,7 +275,7 @@ class MeaningfulConsentReport(PagetreeReport):
             StandaloneReportColumn(
                 "spanish_last_access", 'profile', 'date string',
                 'last access date',
-                lambda x: x.profile.last_access_hierarchy('es'))]
+                lambda x: x.profile.last_access_formatted('es'))]
 
 
 ##################

@@ -88,29 +88,50 @@ class MeaningfulConsentReportTest(ParticipantTestCase):
                                         'percent', '% of hierarchy completed'])
             elif idx == 4:
                 # e2 percent complete
+                self.assertEquals(row, ['', 'english_last_access',
+                                        'profile', 'date string',
+                                        'last access date'])
+            elif idx == 5:
+                # e2 percent complete
                 self.assertEquals(row, ['', 'spanish_percent_complete',
                                         'profile',
                                         'percent', '% of hierarchy completed'])
-            elif idx == 5:
+            elif idx == 6:
+                # e2 percent complete
+                self.assertEquals(row, ['', 'spanish_last_access',
+                                        'profile', 'date string',
+                                        'last access date'])
+            elif idx == 7:
                 youtube_metadata = [u'en', u'avideo', 'YouTube Video',
                                     'percent viewed', u'Title']
                 self.assertEquals(row, youtube_metadata)
             else:
-                self.assertTrue(idx < 6, "too many rows")
+                self.assertTrue(idx < 7, "too many rows")
             idx += 1
 
     def test_values(self):
         idx = 0
         for row in self.report.values([self.hierarchy_en]):
             if idx == 0:
-                header = ['participant_id', 'english_percent_complete',
-                          'spanish_percent_complete', 'avideo']
+                header = ['participant_id',
+                          'english_percent_complete', 'english_last_access',
+                          'spanish_percent_complete', 'spanish_last_access',
+                          'avideo']
                 self.assertEquals(row, header)
             elif idx == 1:
-                self.assertEquals(row,
-                                  [self.participant.username, 50, 0, 25.0])
+                self.assertEquals(row[0], self.participant.username)
+                self.assertEquals(row[1], 50)
+                self.assertIsNotNone(row[2])
+                self.assertEquals(row[3], 0)
+                self.assertIsNotNone(row[4])
+                self.assertEquals(row[5], 25.0)
             elif idx == 2:
-                self.assertEquals(row, [self.participant2.username, 0, 0, 0])
+                self.assertEquals(row[0], self.participant2.username)
+                self.assertEquals(row[1], 0)
+                self.assertEquals(row[2], '')
+                self.assertEquals(row[3], 0)
+                self.assertEquals(row[4], '')
+                self.assertEquals(row[5], 0)
             elif idx == 3:
                 self.assertTrue(idx < 3, "too many rows")
             idx += 1
