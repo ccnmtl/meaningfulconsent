@@ -13,6 +13,9 @@ body > .container {
   padding-top: 25px;
 }
 
+ul#contentnav {font-size: 12px; font-weight: bold;}
+ul#contentnav a {padding: 5px;}
+
 .jumbotron {background-color: #fff; border: 1px solid #ccc;}
 
 .pause-session {margin-right: 10px;}

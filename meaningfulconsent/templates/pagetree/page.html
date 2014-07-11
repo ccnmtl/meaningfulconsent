@@ -70,7 +70,7 @@
 {% endblock %}
 
 {% block primarynav %}
-    <ul id="contentnav" class="nav nav-pills">
+    <ul id="contentnav" class="nav nav-pills nav-justified">
         {% for module in modules %}
             {% ifequal section.get_module module %}
                 <li class="active">
