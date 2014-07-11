@@ -17,6 +17,8 @@ body > .container {
 
 .pause-session {margin-right: 10px;}
 
+.casequestion ol {display: inline-block;}
+
 .banner-pl {margin-top: 7em;}
 
 #content {
