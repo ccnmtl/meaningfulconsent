@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-04 11:28-0400\n"
+"POT-Creation-Date: 2014-07-11 16:07-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,61 +19,61 @@ msgstr ""
 
 #. Translators: Navbar command to pause the experience
 #: meaningfulconsent/templates/pagetree/page.html:41
-msgid "Pause Tutorial"
-msgstr "Pausa Tutorial"
+msgid "Pause"
+msgstr "Pausa"
 
 #. Translators: Navbar "Switch to Spanish" link
-#: meaningfulconsent/templates/pagetree/page.html:51
-msgid "Spanish"
-msgstr "Español"
+#: meaningfulconsent/templates/pagetree/page.html:60
+msgid "Espa&ntilde;ol"
+msgstr ""
 
 #. Translators: Navbar "Switch to English" link
-#: meaningfulconsent/templates/pagetree/page.html:55
+#: meaningfulconsent/templates/pagetree/page.html:63
 msgid "English"
 msgstr "Inglés"
 
 #. Translators: Confirm Language Modal Header
-#: meaningfulconsent/templates/pagetree/page.html:114
+#: meaningfulconsent/templates/pagetree/page.html:121
 msgid "Switch Language"
 msgstr ""
 
 #. Translators: Confirm Language Modal Header
-#: meaningfulconsent/templates/pagetree/page.html:118
+#: meaningfulconsent/templates/pagetree/page.html:125
 msgid "Are you sure?"
 msgstr "¿estás seguro?"
 
-#: meaningfulconsent/templates/pagetree/page.html:121
+#: meaningfulconsent/templates/pagetree/page.html:128
 msgid "No"
 msgstr "No"
 
-#: meaningfulconsent/templates/pagetree/page.html:122
+#: meaningfulconsent/templates/pagetree/page.html:129
 msgid "Yes"
 msgstr "Sí"
 
 #. Translators: Tutorial Paused Modal Header
-#: meaningfulconsent/templates/pagetree/page.html:134
+#: meaningfulconsent/templates/pagetree/page.html:141
 msgid "Tutorial Paused"
 msgstr "Tutorial en Pausa"
 
 #. Translators: Tutorial Paused Facilitator Login button
 #. Translators: Tutorial Complete Facilitator Log in Button
-#: meaningfulconsent/templates/pagetree/page.html:140
-#: meaningfulconsent/templates/pagetree/page.html:170
+#: meaningfulconsent/templates/pagetree/page.html:147
+#: meaningfulconsent/templates/pagetree/page.html:177
 msgid "Facilitator"
 msgstr "Facilitador"
 
 #. Translators: Tutorial Paused Facilitator Resume button
-#: meaningfulconsent/templates/pagetree/page.html:144
+#: meaningfulconsent/templates/pagetree/page.html:151
 msgid "Resume"
 msgstr "Continuar"
 
 #. Translators: Tutorial Complete Modal Header
-#: meaningfulconsent/templates/pagetree/page.html:157
+#: meaningfulconsent/templates/pagetree/page.html:164
 msgid "Thank You!"
 msgstr "Gracias"
 
 #. Translators: Tutorial Complete Modal Text
-#: meaningfulconsent/templates/pagetree/page.html:161
+#: meaningfulconsent/templates/pagetree/page.html:168
 msgid ""
 "\n"
 "                                    You're done! <br />Please return the "
@@ -82,6 +82,9 @@ msgid ""
 msgstr ""
 
 #. Translators: General error message
-#: meaningfulconsent/templates/pagetree/page.html:231
+#: meaningfulconsent/templates/pagetree/page.html:238
 msgid "An error occurred. Please see your facilitator."
 msgstr ""
+
+#~ msgid "Spanish"
+#~ msgstr "Español"

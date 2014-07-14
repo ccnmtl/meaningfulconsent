@@ -330,7 +330,7 @@ class LanguageParticipantViewTest(ParticipantTestCase):
         self.assertEquals(response.redirect_chain[1],
                           ('http://testserver/pages/es/one/', 302))
 
-        self.assertTrue('Pausa Tutorial' in response.content)
+        self.assertTrue('Pausa' in response.content)
 
 
 class ClearParticipantViewTest(ParticipantTestCase):
