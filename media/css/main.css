@@ -384,8 +384,8 @@ div.table-of-contents ul {
     padding-left: 0;
     margin-top: 100px;
 }
-div.table-of-contents ul li a {display: block; margin-left: 24px;}
 
+div.table-of-contents ul li.active a {color: #fff;}
 /* facilitator dashboard */
 div.demo .btn,
 div.demo .progress {
