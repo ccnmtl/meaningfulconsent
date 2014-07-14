@@ -3,13 +3,13 @@
 
 {% getquestionresponse question as response %}
 
-<div class="cases well" style="margin-top: 20px;">
+<div class="cases" style="margin-top: 20px;">
     <div class="casequestionintrotext">{{question.intro_text|markdown}}</div>
 
     <div class="casecontent">
-        <div class="casequestion text-center">
-            <div class="casequestiontext">{{question.text|markdown}}</div>
-  
+        <div class="casequestion text-center panel panel-default">
+            <div class="casequestiontext panel-heading">{{question.text|markdown}}</div>
+  		<div class="panel-body">
             {% if question.answerable %}
                 {% if block.rhetorical %}
                     <form id="form-{{question.id}}" method="post">
@@ -39,6 +39,7 @@
                     {% include 'quizblock/long_text.html' %}
                 {% endif %}
             {% endif %}
+        </div>
         </div>
 
         {% if block.rhetorical %}
