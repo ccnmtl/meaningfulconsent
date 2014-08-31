@@ -121,7 +121,7 @@
                 jQuery(".btn-next").hide();
                 jQuery("#working").fadeIn();
                 
-                if (this.player.hasOwnProperty('stopVideo')) {
+                if (this.player !== undefined && this.player.hasOwnProperty('stopVideo')) {
                     this.player.stopVideo();
                     this.recordSecondsViewed();
                 }

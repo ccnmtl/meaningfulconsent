@@ -94,6 +94,18 @@ class UserProfile(models.Model):
         else:
             return 0
 
+    def time_spent(self, hierarchy_name):
+        hierarchy = Hierarchy.get_hierarchy(hierarchy_name)
+        visits = UserPageVisit.objects.filter(user=self.user,
+                                              section__hierarchy=hierarchy)
+
+        seconds = 0
+        if (len(visits) > 0):
+            start = visits.order_by('first_visit')[0].first_visit
+            end = visits.order_by('-last_visit')[0].last_visit
+            seconds = (end - start).total_seconds() / 60
+        return seconds
+
 
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
@@ -269,13 +281,21 @@ class MeaningfulConsentReport(PagetreeReport):
                 'last access date',
                 lambda x: x.profile.last_access_formatted('en')),
             StandaloneReportColumn(
+                "english_time_spent", 'profile', 'integer',
+                'minutes',
+                lambda x: x.profile.time_spent('en')),
+            StandaloneReportColumn(
                 "spanish_percent_complete", 'profile', 'percent',
                 '% of hierarchy completed',
                 lambda x: x.profile.percent_complete_hierarchy('es')),
             StandaloneReportColumn(
                 "spanish_last_access", 'profile', 'date string',
                 'last access date',
-                lambda x: x.profile.last_access_formatted('es'))]
+                lambda x: x.profile.last_access_formatted('es')),
+            StandaloneReportColumn(
+                "spanish_time_spent", 'profile', 'integer',
+                'minutes',
+                lambda x: x.profile.time_spent('es'))]
 
 
 ##################

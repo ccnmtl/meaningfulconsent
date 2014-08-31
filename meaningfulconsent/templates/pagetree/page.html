@@ -56,11 +56,9 @@
             
             <a class="btn btn-default btn-lg" data-toggle="modal" data-target="#change-language-modal">
                 {% if request.user.profile.language == 'en' %}
-                    {# Translators: Navbar "Switch to Spanish" link #}
-                    {% trans "Espa&ntilde;ol" %}
+                    Espa&ntilde;ol
                 {% else %}
-                    {# Translators: Navbar "Switch to English" link #}
-                    {% trans "English" %}
+                    English
                 {% endif %}
             </a>
             
@@ -117,16 +115,14 @@
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                {# Translators: Confirm Language Modal Header #}
-                                <h4 class="modal-title">{% trans "Switch Language" %}</h4>
+                                <h4 class="modal-title">Switch Language / Cambiar Idioma</h4>
                             </div>
                             <div class="modal-body">
-                                {# Translators: Confirm Language Modal Header #}
-                                {% trans "Are you sure?" %}
+                                Are you sure? / &iquest;Est&aacute;s seguro?
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">{% trans "No" %}</button>
-                                <button type="button" class="btn btn-primary change-language">{% trans "Yes" %}</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                                <button type="button" class="btn btn-primary change-language">Yes / S&iacute;</button>
                             </div>
                         </div>
                     </div>

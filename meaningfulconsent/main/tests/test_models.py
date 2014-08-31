@@ -88,6 +88,23 @@ class UserProfileTest(TestCase):
         self.user.profile.save()
         self.assertEquals(self.user.profile.percent_complete(), 0)
 
+    def test_time_spent(self):
+        self.user.profile.language = 'en'
+        self.user.profile.save()
+        self.assertEquals(self.user.profile.time_spent('en'), 0)
+
+        sections = self.hierarchy_en.get_root().get_descendants()
+        UserPageVisit.objects.create(user=self.user,
+                                     section=sections[0],
+                                     status="complete")
+        self.assertTrue(self.user.profile.time_spent('en') > 0)
+
+        UserPageVisit.objects.create(user=self.user,
+                                     section=sections[1],
+                                     status="complete")
+
+        self.assertTrue(self.user.profile.time_spent('en') > 0)
+
 
 class UserVideoViewTest(TestCase):
 
