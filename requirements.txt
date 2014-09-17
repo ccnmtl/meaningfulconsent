@@ -43,7 +43,7 @@ django-staticmedia==0.2.2
 django-indexer==0.3.0
 django-templatetag-sugar==0.1
 django-paging==0.2.5
-South==0.8.4
+South==1.0
 django-annoying==0.7.6
 django-nose==1.2
 django-appconf==0.6
@@ -61,8 +61,8 @@ django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==0.7.0
 django-treebeard==2.0b2
-django-pagetree==0.14.5
-django-pageblocks==0.5.11
+django-pagetree==1.0.1
+django-pageblocks==1.0.0
 django-quizblock==0.8.1
 django-markwhat==1.0
 djangorestframework==2.3.12
