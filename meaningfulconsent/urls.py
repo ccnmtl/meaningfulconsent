@@ -1,10 +1,15 @@
+import debug_toolbar
 from django.conf import settings
 from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import password_change, password_change_done
+from django.contrib.auth.views import password_change, password_change_done, \
+    password_reset_done, password_reset_confirm, password_reset_complete
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
+from pagetree.generic.views import PageView
+from rest_framework import routers
+
 from meaningfulconsent.main.mixins import is_facilitator
 from meaningfulconsent.main.models import ParticipantViewSet
 from meaningfulconsent.main.views import ArchiveParticipantView, \
@@ -12,10 +17,7 @@ from meaningfulconsent.main.views import ArchiveParticipantView, \
     LoginParticipantView, LogoutView, ParticipantLanguageView, \
     ParticipantNoteView, RestrictedEditView, TrackParticipantView, \
     ParticipantPrintView, ReportView
-from pagetree.generic.views import PageView
-from rest_framework import routers
-import debug_toolbar
-from django.contrib.auth import views as auth_views
+
 
 admin.autodiscover()
 
@@ -45,33 +47,27 @@ if hasattr(settings, 'CAS_BASE'):
 
 urlpatterns = patterns(
     '',
-    logout_page,
-    admin_logout_page,
-    auth_urls,
     (r'^$', ensure_csrf_cookie(IndexView.as_view())),
     (r'^admin/', include(admin.site.urls)),
     (r'^accounts/login/$', LoginView.as_view()),
     (r'^accounts/logout/$', LogoutView.as_view()),
 
     # password change & reset. overriding to gate them.
-    url(r'^password/change/$',
-        is_facilitator(auth_views.password_change),
+    url(r'^accounts/password_change/$',
+        is_facilitator(password_change),
         name='password_change'),
-    url(r'^password/change/done/$',
-        is_facilitator(auth_views.password_change_done),
+    url(r'^accounts/password_change/done/$',
+        is_facilitator(password_change_done),
         name='password_change_done'),
-    url(r'^password/reset/$',
-        auth_views.password_reset,
-        name='password_reset'),
-    url(r'^password/reset/done/$',
-        auth_views.password_reset_done,
+    url(r'^password/reset/done/$', password_reset_done,
         name='password_reset_done'),
-    url(r'^password/reset/complete/$',
-        auth_views.password_reset_complete,
-        name='password_reset_complete'),
-    url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z])-(?P<token>.)/$',
-        auth_views.password_reset_confirm,
+    url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
+        password_reset_confirm,
         name='password_reset_confirm'),
+    url(r'^password/reset/complete/$',
+        password_reset_complete, name='password_reset_complete'),
+
+    auth_urls,
     url(r'^api/', include(router.urls)),
 
     url(r'^_impersonate/', include('impersonate.urls')),
