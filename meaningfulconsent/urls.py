@@ -15,31 +15,63 @@ from meaningfulconsent.main.views import ArchiveParticipantView, \
 from pagetree.generic.views import PageView
 from rest_framework import routers
 import debug_toolbar
+from django.contrib.auth import views as auth_views
+
 admin.autodiscover()
 
 router = routers.DefaultRouter()
 router.register(r'participants', ParticipantViewSet)
 
+redirect_after_logout = getattr(settings, 'LOGOUT_REDIRECT_URL', None)
+
 auth_urls = (r'^accounts/', include('django.contrib.auth.urls'))
-if hasattr(settings, 'WIND_BASE'):
+
+logout_page = (r'^accounts/logout/$',
+               'django.contrib.auth.views.logout',
+               {'next_page': redirect_after_logout})
+admin_logout_page = (r'^accounts/logout/$',
+                     'django.contrib.auth.views.logout',
+                     {'next_page': '/admin/'})
+
+if hasattr(settings, 'CAS_BASE'):
     auth_urls = (r'^accounts/', include('djangowind.urls'))
+    logout_page = (r'^accounts/logout/$',
+                   'djangowind.views.logout',
+                   {'next_page': redirect_after_logout})
+    admin_logout_page = (r'^admin/logout/$',
+                         'djangowind.views.logout',
+                         {'next_page': redirect_after_logout})
+
 
 urlpatterns = patterns(
     '',
+    logout_page,
+    admin_logout_page,
+    auth_urls,
     (r'^$', ensure_csrf_cookie(IndexView.as_view())),
     (r'^admin/', include(admin.site.urls)),
     (r'^accounts/login/$', LoginView.as_view()),
     (r'^accounts/logout/$', LogoutView.as_view()),
 
     # password change & reset. overriding to gate them.
-    url(r'^accounts/password_change/$',
-        is_facilitator(password_change),
+    url(r'^password/change/$',
+        is_facilitator(auth_views.password_change),
         name='password_change'),
-    url(r'^accounts/password_change/done/$',
-        is_facilitator(password_change_done),
+    url(r'^password/change/done/$',
+        is_facilitator(auth_views.password_change_done),
         name='password_change_done'),
-
-    auth_urls,
+    url(r'^password/reset/$',
+        auth_views.password_reset,
+        name='password_reset'),
+    url(r'^password/reset/done/$',
+        auth_views.password_reset_done,
+        name='password_reset_done'),
+    url(r'^password/reset/complete/$',
+        auth_views.password_reset_complete,
+        name='password_reset_complete'),
+    url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z])-(?P<token>.)/$',
+        auth_views.password_reset_confirm,
+        name='password_reset_confirm'),
     url(r'^api/', include(router.urls)),
 
     url(r'^_impersonate/', include('impersonate.urls')),
