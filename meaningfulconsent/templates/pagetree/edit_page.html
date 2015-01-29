@@ -368,22 +368,21 @@
 {% endblock %}
 
 {% block content-nav %}
-<br />
-<ul class="pager">
-{% with previous=section.get_previous next_section=section.get_next %}
-{% if not section.is_root %}
-
-{% if previous %}
-  <li class="previous">
-        <a href="{{previous.get_edit_url}}">&larr; {{previous.label}}</a>
-  </li>
-{% endif %}
-{% endif %}
-
-{% if next_section %}
-<li class="next"><a href="{{next_section.get_edit_url}}">{{next_section.label}} &rarr;</a></li>
-{% endif %}
-</ul>
+    <br />
+    <ul class="pager">
+        {% with previous=section.get_previous next_section=section.get_next %}
+        {% if not section.is_root %}
+            {% if previous %}
+                <li class="previous">
+                    <a href="{{previous.get_edit_url}}">&larr; {{previous.label}}</a>
+                </li>
+            {% endif %}
+        {% endif %}
+        
+        {% if next_section %}
+            <li class="next"><a href="{{next_section.get_edit_url}}">{{next_section.label}} &rarr;</a></li>
+        {% endif %}
+    </ul>
 {% endwith %}
 
 {% endblock %}

@@ -102,7 +102,6 @@
         },
         render: function() {
             var ctx = this.participants.context();
-            ctx.csrfmiddlewaretoken = getCookie('csrftoken');
 
             jQuery(this.el_sessions).html(this.template(ctx));
             

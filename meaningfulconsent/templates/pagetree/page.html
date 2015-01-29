@@ -39,7 +39,6 @@
                     {# Translators: Navbar command to pause the experience #}
                     {% trans "Pause" %}
                 </a>
-                
             </li>
         {% else %}
             <li>
@@ -52,8 +51,8 @@
             {% endif %}
         {% endif %}
         
-		<li class="language">
-			<form id="participant-language-form" action="/participant/language/" method="post">
+        <li class="language">
+            <form id="participant-language-form" action="/participant/language/" method="post">
                 {% csrf_token %}           
                 {% if request.user.profile.language == 'en' %}
                     <input type="hidden" name="language" value="es" />
@@ -188,30 +187,30 @@
                     <h5>
                         {{module.label}}
                     </h5>
-				-->
-				
+                -->
+                
                     <ul class="toc list-group">
                     
                         {% for child in module.get_children %}
                         
-						
+                        
                             
-						{% ifequal child section %}
-						
-						{% ifequal child section %}
-						<li class="list-group-item active">
-						{% endifequal %}
-						<a href="{{child.get_absolute_url}}">{{child.label}}</a>
-						{% else %}
-						{% ifaccessible child %}
-						<li class="list-group-item">
-						<a href="{{child.get_absolute_url}}">{{child.label}}</a>
-						{% else %}
-						<li class="list-group-item">
-						<a href="{{child.get_absolute_url}}" disabled="disabled">{{child.label}}</a>                   
-						{% endifaccessible %}
-						
-						{% endifequal %}
+                        {% ifequal child section %}
+                        
+                        {% ifequal child section %}
+                        <li class="list-group-item active">
+                        {% endifequal %}
+                        <a href="{{child.get_absolute_url}}">{{child.label}}</a>
+                        {% else %}
+                        {% ifaccessible child %}
+                        <li class="list-group-item">
+                        <a href="{{child.get_absolute_url}}">{{child.label}}</a>
+                        {% else %}
+                        <li class="list-group-item">
+                        <a href="{{child.get_absolute_url}}" disabled="disabled">{{child.label}}</a>                   
+                        {% endifaccessible %}
+                        
+                        {% endifequal %}
                             
                             </li>
                             

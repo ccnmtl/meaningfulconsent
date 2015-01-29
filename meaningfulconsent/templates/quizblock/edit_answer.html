@@ -4,10 +4,10 @@
 
 <ul class="breadcrumb">
     <li><a href="{{answer.question.quiz.pageblock.section.get_edit_url}}">{{answer.question.quiz.pageblock.section.label}}</a></li>
-	<li><a href="{% url 'edit-quiz' answer.question.quiz.id %}">Edit Quiz</a></li>
-	<li>
-		<a href="{% url 'edit-question' answer.question.id %}">Edit Question
-			{{answer.question.display_number}}: {{ answer.question.text }}
+    <li><a href="{% url 'edit-quiz' answer.question.quiz.id %}">Edit Quiz</a></li>
+    <li>
+        <a href="{% url 'edit-question' answer.question.id %}">Edit Question
+            {{answer.question.display_number}}: {{ answer.question.text }}
         </a>
     </li>
 </ul>

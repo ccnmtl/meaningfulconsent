@@ -3,16 +3,15 @@
 {{ block.description|markdown }}
 
 {% if request.user.is_anonymous %}
-  <p class="warning">You must be logged in to view this content</p>
+    <p class="warning">You must be logged in to view this content</p>
 {% else %}
 
-{% for question in block.question_set.all %}
-  {% include 'quizblock/question.html' %}
-{% endfor %}
-
-{% if block.rhetorical %}
-  <script src="http://mt.ccnmtl.columbia.edu/pedialabs/js/quizshow.js" type="text/javascript" language="javascript"></script>
-{% endif %}	
-
+    {% for question in block.question_set.all %}
+      {% include 'quizblock/question.html' %}
+    {% endfor %}
+    
+    {% if block.rhetorical %}
+      <script src="http://mt.ccnmtl.columbia.edu/pedialabs/js/quizshow.js" type="text/javascript" language="javascript"></script>
+    {% endif %}
 
 {% endif %}

@@ -54,7 +54,7 @@
     <div class="well quiz-summary">
         <ul>
             {% with cls="topic-rating" %}
-                {% get_quiz_summary participant cls as ratings %}            
+                {% get_quiz_summary participant cls as ratings %}
                 {% for item in ratings %}
                     <li>
                         <h4>{{item.0}}</h4>
@@ -67,7 +67,7 @@
                         {% endif %}
                     </li>
                 {% endfor %}
-            {% endwith %}                
+            {% endwith %}
         </ul>
     </div>
 {% endblock %}

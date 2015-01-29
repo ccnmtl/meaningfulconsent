@@ -1,5 +1,5 @@
 html {
-	height: 100%;
+    height: 100%;
 }
 
 body {
@@ -37,8 +37,8 @@ body > .container {
 }
 
 .navbar-default {
-	background-color: #fff !important;
-	border: 1px solid #e7e7e7 !important;
+    background-color: #fff !important;
+    border: 1px solid #e7e7e7 !important;
 }
 
 html.busy, html.busy * {  
