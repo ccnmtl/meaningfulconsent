@@ -20,11 +20,11 @@
 
     <table class="tablesorter tablesorter-bootstrap table table-bordered table-striped table-condensed">
      <colgroup>
-		 <col style="width: 125px;"></col>
-		 <col style="width: 160px;"></col>
-		 <col></col>
-		 <col style="width: 320px;"></col>
- 	</colgroup>
+         <col style="width: 125px;"></col>
+         <col style="width: 160px;"></col>
+         <col></col>
+         <col style="width: 320px;"></col>
+     </colgroup>
 
         <thead>
             <tr class="tab">
@@ -49,6 +49,7 @@
                     <td>
                     <div class="pull-right">
                         <form action="/participant/login/" method="post" style="display: inline-block">
+                            {% csrf_token %}
                             <input class="participant-id" type="hidden" name="username" value="<%= participants[i].user.username %>" />
                             <button type="submit" class="btn btn-default btn-launch-session btn-sm">
                                 <span class="glyphicon glyphicon-repeat"></span> Resume</a>

@@ -4,19 +4,19 @@
         <a href="#q{{question.id}}" class="moretoggle">Show answer(s) &gt;&gt;</a>
         <div id="q{{question.id}}" class="toggleable">
           <p><i>The correct answer(s):</i></p>
-	  <ol type="A">
-	    {% for answer in question.answer_set.all %}
-	      <li>
+      <ol type="A">
+        {% for answer in question.answer_set.all %}
+          <li>
                 {% if answer.correct %}
-	          <span class="correctanswer">
-		{% else %}
-		  <span class="incorrectanswer" %>
-		{% endif %}
-		<span class="answer-inner">{{answer.label}}</span>
+              <span class="correctanswer">
+        {% else %}
+          <span class="incorrectanswer" %>
+        {% endif %}
+        <span class="answer-inner">{{answer.label}}</span>
                 </span>
               </li>
-	    {% endfor %}
-	  </ol>
+        {% endfor %}
+      </ol>
           <p>{{question.explanation|markdown}}</p>
         </div>
       </div>

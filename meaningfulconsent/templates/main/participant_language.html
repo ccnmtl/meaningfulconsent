@@ -46,6 +46,7 @@
 {% block content %}
     Participant: {{request.user.username}}
     <form action="/participant/language/" method="post">
+        {% csrf_token %}
         <h3>Choose language...</h3>
         <div class="radio">
           <label>

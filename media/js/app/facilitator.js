@@ -102,7 +102,7 @@
         },
         render: function() {
             var ctx = this.participants.context();
-            
+
             jQuery(this.el_sessions).html(this.template(ctx));
             
             if (this.participants.length > 0) {

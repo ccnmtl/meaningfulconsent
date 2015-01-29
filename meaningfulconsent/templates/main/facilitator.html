@@ -29,100 +29,97 @@
 {% block content %}
 <div class="facilitator-dashboard">
 
-	<ul class="breadcrumb">
-		<li>{{user.get_short_name}}'s Dashboard</li>
-	</ul>
-	
-	<h1>Hi {{user.get_short_name}}!</h1>
-	
-	<p class="lead">
-	Instructions: Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula ut id elit.
-	</p>
-	
-	<hr style="margin-bottom: 50px;" />
-	
-	<div class="administration">
-	
-		<h2 class="text-center">Participant Administration</h2>
-		
-		<h5 class="text-center">Create and manage tutorials.</h5>
-		
-		<div class="clearfix"></div>
-		
-		<div class="modal create-participant-modal">
-    		<div class="modal-dialog">
-    			<div class="modal-content">
-    			
-    				<div class="modal-body text-center">
-    				<div class="alert alert-info">
-    				<b>Record</b> the participant id now!
-    				</div>
-    				<h3>New Participant ID: &nbsp;<span class="participant-id"></span></h3>
-    				</div>
-    				
-    				<div class="modal-footer">
-    				<button type="button" class="btn btn-primary btn-verify-record">I have recorded the Participant ID</button>
-    				</div>
-    				
-    				<div class="modal-footer" style="display: none">
-    					<form action="/participant/login/" method="post">
-    						<input class="participant-id" type="hidden" name="username" />
-    						<button type="submit" class="btn btn-primary btn-launch-session">Launch Session</button>
-    					</form>
-    				</div>
-    			
-    			</div>
-    		</div>
-	   </div>            
-	
-		<div class="participant-sessions recent"></div>
-	
-		<div class="text-center">
-		
-			<button class="btn btn-primary create-participant">
-			<span class="glyphicon glyphicon-plus"></span> Add a New Participant
-			</button>	
-			
+    <ul class="breadcrumb">
+        <li>{{user.get_short_name}}'s Dashboard</li>
+    </ul>
+    
+    <h1>Hi {{user.get_short_name}}!</h1>
+    
+    <p class="lead">
+    Instructions: Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula ut id elit.
+    </p>
+    
+    <hr style="margin-bottom: 50px;" />
+    
+    <div class="administration">
+    
+        <h2 class="text-center">Participant Administration</h2>
+        
+        <h5 class="text-center">Create and manage tutorials.</h5>
+        
+        <div class="clearfix"></div>
+        
+        <div class="modal create-participant-modal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                
+                    <div class="modal-body text-center">
+                    <div class="alert alert-info">
+                    <b>Record</b> the participant id now!
+                    </div>
+                    <h3>New Participant ID: &nbsp;<span class="participant-id"></span></h3>
+                    </div>
+                    
+                    <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-verify-record">I have recorded the Participant ID</button>
+                    </div>
+                    
+                    <div class="modal-footer" style="display: none">
+                        <form action="/participant/login/" method="post">
+                            {% csrf_token %}
+                            <input class="participant-id" type="hidden" name="username" />
+                            <button type="submit" class="btn btn-primary btn-launch-session">Launch Session</button>
+                        </form>
+                    </div>
+                
+                </div>
+            </div>
+       </div>            
+    
+        <div class="participant-sessions recent"></div>
+    
+        <div class="text-center">
+        
+            <button class="btn btn-primary create-participant">
+                <span class="glyphicon glyphicon-plus"></span> Add a New Participant
+            </button>    
+            
             {% if participants|length > 0 %}
-			<a class="btn btn-primary" href="/participants/manage/">
-			<span class="glyphicon glyphicon-search"></span> Review All Sessions
-			</a>
+            <a class="btn btn-primary" href="/participants/manage/">
+                <span class="glyphicon glyphicon-search"></span> Review All Sessions
+            </a>
             {% endif %}
-		
-			<a class="btn btn-primary" href="/participants/report/">
-			 <span class="glyphicon glyphicon-file"></span> Download Reports
-			</a>
-		
-		</div>
-		
-		<div class="clearfix"></div>
-		
-	</div>
-	
-	<hr style="margin-bottom: 50px;" />
-	
-	<div>
-	
-		<h2 class="text-center">Demonstration Mode</h2>
-		
-		<h5 class="text-center">Demo mode allows you to complete the tutorial from a participant's point of view</h5>
+        
+            <a class="btn btn-primary" href="/participants/report/">
+                <span class="glyphicon glyphicon-file"></span> Download Reports
+            </a>
+        
+        </div>
+        
+        <div class="clearfix"></div>
+        
+    </div>
+    
+    <hr style="margin-bottom: 50px;" />
+    
+    <div>
+        <h2 class="text-center">Demonstration Mode</h2>
+        
+        <h5 class="text-center">Demo mode allows you to complete the tutorial from a participant's point of view</h5>
 
-		<div class="clearfix"></div>
-		
-		<div class="text-center">
-		
-			<a class="btn btn-primary" href='/participant/clear/'><span class="glyphicon glyphicon-home"></span> Start Demonstration</a>
-			
-			{% if user.profile.percent_complete > 0 %}
-			<a class="btn btn-primary" href='{{user.profile.last_location.get_absolute_url}}'><span class="glyphicon glyphicon-repeat"></span> Resume Demonstration</a>
-			{% endif %}
-			
-			<a href="/participant/print/?username={{user.username}}" class="btn btn-primary btn-print"><span class="glyphicon glyphicon-print"></span> Print Demonstration</a>
-			
-		</div>
-		
-	</div>
-	
+        <div class="clearfix"></div>
+        
+        <div class="text-center">
+        
+            <a class="btn btn-primary" href='/participant/clear/'><span class="glyphicon glyphicon-home"></span> Start Demonstration</a>
+            
+            {% if user.profile.percent_complete > 0 %}
+                <a class="btn btn-primary" href='{{user.profile.last_location.get_absolute_url}}'><span class="glyphicon glyphicon-repeat"></span> Resume Demonstration</a>
+            {% endif %}
+            
+            <a href="/participant/print/?username={{user.username}}" class="btn btn-primary btn-print"><span class="glyphicon glyphicon-print"></span> Print Demonstration</a>
+        </div>
+    </div>
 </div>
 {% endblock %}
 

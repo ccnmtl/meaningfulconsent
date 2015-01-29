@@ -55,8 +55,8 @@
 {% block content %}
 
 <ul class="breadcrumb">
-	<li><a href="{{quiz.pageblock.section.get_edit_url}}">{{quiz.pageblock.section.label}}</a></li>
-	<li>Edit Quiz</li>
+    <li><a href="{{quiz.pageblock.section.get_edit_url}}">{{quiz.pageblock.section.label}}</a></li>
+    <li>Edit Quiz</li>
 </ul>
 
 
@@ -72,6 +72,7 @@
 </ul>
 
 <form action="add_question/" method="post" class="well form-horizontal">
+{% csrf_token %}
 <h2>Add Question</h2>
 <table width="100%">
 {{ quiz.add_question_form|bootstrap}}
@@ -83,5 +84,5 @@
 
 
 {% block primarynavrightextra %}
-						<li><a href="{{section.get_absolute_url}}">View</a></li>
+    <li><a href="{{section.get_absolute_url}}">View</a></li>
 {% endblock %}
