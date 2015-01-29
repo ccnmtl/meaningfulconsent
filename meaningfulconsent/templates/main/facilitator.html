@@ -66,6 +66,7 @@
     				
     				<div class="modal-footer" style="display: none">
     					<form action="/participant/login/" method="post">
+                            {% csrf_token %}
     						<input class="participant-id" type="hidden" name="username" />
     						<button type="submit" class="btn btn-primary btn-launch-session">Launch Session</button>
     					</form>

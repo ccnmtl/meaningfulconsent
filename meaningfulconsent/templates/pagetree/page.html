@@ -31,22 +31,30 @@
 {% block title %}{{section.label}}{% endblock %}
 
 {% block usernav %}
-
     {% language request.user.profile.language %}
     
         {% if request.user.profile.is_participant %}
-		<li class="pause-session">
+            <li class="pause-session">
                 <a class="btn btn-default btn-lg" href="/participant/pause/">
                     {# Translators: Navbar command to pause the experience #}
                     {% trans "Pause" %}
                 </a>
                 
             </li>
+        {% else %}
+            <li>
+                <a href="/participant/clear/">Clear State</a>
+            </li>
+            {% if request.user.is_superuser %}      
+                <li>
+                    <a href="{{section.get_edit_url}}">Edit Page</a>
+                </li>
+            {% endif %}
         {% endif %}
         
 		<li class="language">
-		
-			<form id="participant-language-form" action="/participant/language/" method="post">            
+			<form id="participant-language-form" action="/participant/language/" method="post">
+                {% csrf_token %}           
                 {% if request.user.profile.language == 'en' %}
                     <input type="hidden" name="language" value="es" />
                 {% else %}
@@ -66,6 +74,9 @@
     {% endlanguage %}
 {% endblock %}
 
+{% block pagemode %}
+{% endblock %}
+
 {% block primarynav %}
     <ul id="contentnav" class="nav nav-pills nav-justified">
         {% for module in modules %}
@@ -79,17 +90,6 @@
                 <a href="{{module.get_absolute_url}}">{{module.label}}</a>
             </li>
         {% endfor %}
-          
-        {% if not request.user.profile.is_participant %}
-            <li class="pull-right">
-                <a href="/participant/clear/">Clear State</a>
-            </li>
-            {% if request.user.is_superuser %}      
-                <li class="pull-right">
-                    <a href="{{section.get_edit_url}}">Edit Page</a>
-                </li>
-            {% endif %}
-        {% endif %}
     </ul>
 {% endblock %}
 

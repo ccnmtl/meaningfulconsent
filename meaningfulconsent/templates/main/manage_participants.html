@@ -47,6 +47,7 @@
             <h4>Active Participants</h4>
             <div class="participant-search-container">
                 <form class="form-inline" role="form">
+                    {% csrf_token %}
                      <div class="form-group">
                         <label class="sr-only" for="exampleInputEmail2">Participant Id: </label>
                         <input type="text" class="form-control" name="participant-search" placeholder="Enter participant id"/>
