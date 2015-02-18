@@ -127,7 +127,8 @@ INSTALLED_APPS = [
     'pageblocks',
     'quizblock',
     'meaningfulconsent.main',
-    'rest_framework'
+    'rest_framework',
+    'gunicorn'
 ]
 
 PAGEBLOCKS = [
