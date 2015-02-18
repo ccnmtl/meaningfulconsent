@@ -65,3 +65,5 @@ django-quizblock==0.8.1
 django-markwhat==1.0
 djangorestframework==2.3.12
 gunicorn==19.1.1
+boto==2.34.0
+django-storages==1.1.8
