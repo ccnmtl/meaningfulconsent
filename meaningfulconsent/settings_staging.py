@@ -7,11 +7,6 @@ TEMPLATE_DIRS = (
 
 MEDIA_ROOT = '/var/www/meaningfulconsent/uploads/'
 
-# put any static media here to override app served static media
-STATICMEDIA_MOUNTS = (
-    ('/sitemedia', '/var/www/meaningfulconsent/meaningfulconsent/sitemedia'),
-)
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -43,6 +38,7 @@ if 'migrate' not in sys.argv:
 
 LOCALE_PATHS = ('/var/www/meaningfulconsent/meaningfulconsent/locale',)
 
+STATICFILES_DIRS = ("media/",)
 STATIC_ROOT = "/tmp/meaningfulconsent/static"
 AWS_STORAGE_BUCKET_NAME = "ccnmtl-meaningfulconsent-static-stage"
 AWS_PRELOAD_METADATA = True
