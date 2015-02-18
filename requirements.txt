@@ -64,3 +64,4 @@ django-pageblocks==1.0.0
 django-quizblock==0.8.1
 django-markwhat==1.0
 djangorestframework==2.3.12
+gunicorn==19.1.1
