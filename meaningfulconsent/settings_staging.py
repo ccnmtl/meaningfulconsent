@@ -2,10 +2,11 @@
 from settings_shared import *
 
 TEMPLATE_DIRS = (
-    "/var/www/meaningfulconsent/meaningfulconsent/meaningfulconsent/templates",
+    os.path.join(os.path.dirname(__file__), "templates"),
 )
 
 MEDIA_ROOT = '/var/www/meaningfulconsent/uploads/'
+
 # put any static media here to override app served static media
 STATICMEDIA_MOUNTS = (
     ('/sitemedia', '/var/www/meaningfulconsent/meaningfulconsent/sitemedia'),
@@ -22,7 +23,6 @@ DATABASES = {
     }
 }
 
-COMPRESS_ROOT = "/var/www/meaningfulconsent/meaningfulconsent/media/"
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 STAGING_ENV = True
@@ -33,9 +33,6 @@ STATSD_HOST = '127.0.0.1'
 STATSD_PORT = 8125
 STATSD_PATCHES = ['django_statsd.patches.db', ]
 
-STATICFILES_DIRS = ()
-STATIC_ROOT = "/var/www/meaningfulconsent/meaningfulconsent/media/"
-
 if 'migrate' not in sys.argv:
     INSTALLED_APPS.append('raven.contrib.django.raven_compat')
 
@@ -45,6 +42,22 @@ if 'migrate' not in sys.argv:
         'django_statsd.middleware.GraphiteMiddleware')
 
 LOCALE_PATHS = ('/var/www/meaningfulconsent/meaningfulconsent/locale',)
+
+STATIC_ROOT = "/tmp/meaningfulconsent/static"
+AWS_STORAGE_BUCKET_NAME = "ccnmtl-meaningfulconsent-static-stage"
+AWS_PRELOAD_METADATA = True
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+STATICFILES_STORAGE = 'meaningfulconsent.s3utils.CompressorS3BotoStorage'
+S3_URL = 'https://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+STATIC_URL = 'https://%s.s3.amazonaws.com/compressor/' % AWS_STORAGE_BUCKET_NAME
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
+COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_URL = STATIC_URL
+DEFAULT_FILE_STORAGE = 'meaningfulconsent.s3utils.MediaRootS3BotoStorage'
+MEDIA_URL = S3_URL + '/media/'
+COMPRESS_STORAGE = 'meaningfulconsent.s3utils.CompressorS3BotoStorage'
+AWS_QUERYSTRING_AUTH = False
 
 try:
     from local_settings import *
