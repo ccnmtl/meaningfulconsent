@@ -52,61 +52,59 @@
 {% endblock %}
 
 {% block js %}
-    {% compress js %}
-        <script type="text/javascript">
-            var saveOrderOfChildren = function() {
-                var url = "{% url 'reorder-section-children' section.id %}?";
-                var worktodo = 0;
-                jQuery("#children-order-list li").each(function(index,element) {
-                   worktodo = 1;
-                   var id = jQuery(element).attr('id').split("-")[1];
-                   url += "section_id_" + index + "=" + id + ";";
-                });
-                if (worktodo == 1) {
-                    var req = new XMLHttpRequest();
-                    req.open("POST",url,true);
-                    req.send(null);
-                }
-            };
-            
-            var saveOrderOfPageBlocks = function() {
-                var url = "{% url 'reorder-pageblocks' section.id %}?";
-                var worktodo = 0;
-                jQuery("#edit-blocks-tab>div.block-dragger").each(function(index,element) {
-                  worktodo = 1;
-                  var id = jQuery(element).attr('id').split("-")[1];
-                  url += "pageblock_id_" + index + "=" + id + ";";
-                });
-                if (worktodo == 1) {
-                    /* only bother submitting if there are elements to be sorted */
-                    var req = new XMLHttpRequest();
-                    req.open("POST",url,true);
-                    req.send(null);
-                }
-            }
-        
-            jQuery(document).ready(function() {
-                jQuery("#children-order-list").sortable({
-                    containment : 'parent',
-                    axis : 'y',
-                    tolerance: 'pointer',
-                    stop: function (event,ui) { saveOrderOfChildren();}
-                });
-                
-                jQuery("#children-order-list").disableSelection();
-                
-                jQuery("#edit-blocks-tab").sortable({
-                    containment: 'parent',
-                    axis: 'y',
-                    tolerance: 'pointer',
-                    items : 'div.block-dragger',
-                    stop: function (event,ui) { saveOrderOfPageBlocks();}
-                  });
-            
-                jQuery("#edit-blocks-tab").disableSelection();
+    <script type="text/javascript">
+        var saveOrderOfChildren = function() {
+            var url = "{% url 'reorder-section-children' section.id %}?";
+            var worktodo = 0;
+            jQuery("#children-order-list li").each(function(index,element) {
+               worktodo = 1;
+               var id = jQuery(element).attr('id').split("-")[1];
+               url += "section_id_" + index + "=" + id + ";";
             });
-        </script>
-    {% endcompress %}
+            if (worktodo == 1) {
+                var req = new XMLHttpRequest();
+                req.open("POST",url,true);
+                req.send(null);
+            }
+        };
+        
+        var saveOrderOfPageBlocks = function() {
+            var url = "{% url 'reorder-pageblocks' section.id %}?";
+            var worktodo = 0;
+            jQuery("#edit-blocks-tab>div.block-dragger").each(function(index,element) {
+              worktodo = 1;
+              var id = jQuery(element).attr('id').split("-")[1];
+              url += "pageblock_id_" + index + "=" + id + ";";
+            });
+            if (worktodo == 1) {
+                /* only bother submitting if there are elements to be sorted */
+                var req = new XMLHttpRequest();
+                req.open("POST",url,true);
+                req.send(null);
+            }
+        }
+    
+        jQuery(document).ready(function() {
+            jQuery("#children-order-list").sortable({
+                containment : 'parent',
+                axis : 'y',
+                tolerance: 'pointer',
+                stop: function (event,ui) { saveOrderOfChildren();}
+            });
+            
+            jQuery("#children-order-list").disableSelection();
+            
+            jQuery("#edit-blocks-tab").sortable({
+                containment: 'parent',
+                axis: 'y',
+                tolerance: 'pointer',
+                items : 'div.block-dragger',
+                stop: function (event,ui) { saveOrderOfPageBlocks();}
+              });
+        
+            jQuery("#edit-blocks-tab").disableSelection();
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
