@@ -1,9 +1,12 @@
-{% extends "pagetree/base_pagetree.html" %}
+{% extends "base.html" %}
 {% load bootstrap %}
 {% load render %}
 {% block title %}{{section.label}} (edit){% endblock %}
-
-{% block css %}
+    
+{% block extrahead %}
+    <link href="{{STATIC_URL}}jquery/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+    <script src="{{STATIC_URL}}jquery/js/jquery-ui-1.10.4.min.js"></script>
+    
     <style>
         #content { width: 96%; float: none; };
         .draghandle {float: left;}
@@ -18,12 +21,7 @@
             padding-left: 1.5em; background-color: #ddd; }
         #children li span { position: absolute; margin-left: -1.3em; }
         .dragging {background-color: #fee;}
-    </style>
-{% endblock %}
-    
-{% block extrahead %}
-    <link href="{{STATIC_URL}}jquery/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
-    <script src="{{STATIC_URL}}jquery/js/jquery-ui-1.10.4.min.js"></script>
+    </style>    
 {% endblock %}
 
 {% block bodyclass %}edit module-{{module.slug}}{% endblock %}

@@ -3,9 +3,7 @@
 <!DOCTYPE html>
 
 <html lang="en">
-
     <head>
-      
         <title>Meaningful Consent: {% block title %}{% endblock %}</title>
         
         <meta charset="utf-8" />
@@ -19,8 +17,9 @@
         <link href="{{STATIC_URL}}bootstrap/css/bootstrap-glyphicons.css" rel="stylesheet">
         <!-- Application CSS: -->
         <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
-        {% block css %}{% endblock %}
         {% endcompress %}
+
+        {% block css %}{% endblock %}
         <link rel="shortcut icon" href="{{STATIC_URL}}img/favicon.ico" type="image/x-icon" /> 
       
         <script src="{{STATIC_URL}}jquery/js/jquery-1.10.1.min.js"></script>
@@ -29,7 +28,6 @@
         
         {% block extrahead %}{% endblock %}
         {% block feeds %}{% endblock %}
-        
     </head>
     
     <body class="{% block bodyclass %}{% endblock %}" id="{% block bodyid %}{% endblock %}">
