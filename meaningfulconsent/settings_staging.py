@@ -43,16 +43,16 @@ STATIC_ROOT = "/tmp/meaningfulconsent/static"
 AWS_STORAGE_BUCKET_NAME = "ccnmtl-meaningfulconsent-static-stage"
 AWS_PRELOAD_METADATA = True
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-STATICFILES_STORAGE = 'meaningfulconsent.s3utils.CompressorS3BotoStorage'
+STATICFILES_STORAGE = 'cacheds3storage.CompressorS3BotoStorage'
 S3_URL = 'https://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 STATIC_URL = 'https://%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 COMPRESS_ROOT = STATIC_ROOT
 COMPRESS_URL = STATIC_URL
-DEFAULT_FILE_STORAGE = 'meaningfulconsent.s3utils.MediaRootS3BotoStorage'
+DEFAULT_FILE_STORAGE = 'cacheds3storage.MediaRootS3BotoStorage'
 MEDIA_URL = S3_URL + '/media/'
-COMPRESS_STORAGE = 'meaningfulconsent.s3utils.CompressorS3BotoStorage'
+COMPRESS_STORAGE = 'cacheds3storage.CompressorS3BotoStorage'
 AWS_QUERYSTRING_AUTH = False
 
 try:
