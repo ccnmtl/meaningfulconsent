@@ -57,9 +57,6 @@ TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
-MEDIA_ROOT = "/var/www/meaningfulconsent/uploads/"
-MEDIA_URL = '/uploads/'
-STATIC_URL = '/media/'
 SECRET_KEY = ')ng#)ef_u@_^zvvu@dxm7ql-yb^_!a6%v3v^j3b(mp+)l+5%@h'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',

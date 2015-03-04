@@ -5,8 +5,6 @@ TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), "templates"),
 )
 
-MEDIA_ROOT = '/var/www/meaningfulconsent/uploads/'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -40,9 +38,10 @@ LOCALE_PATHS = ('/var/www/meaningfulconsent/meaningfulconsent/locale',)
 
 STATICFILES_DIRS = ("media/",)
 STATIC_ROOT = "/tmp/meaningfulconsent/static"
+
 AWS_STORAGE_BUCKET_NAME = "ccnmtl-meaningfulconsent-static-stage"
 AWS_PRELOAD_METADATA = True
-DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
+DEFAULT_FILE_STORAGE = 'cacheds3storage.MediaRootS3BotoStorage'
 STATICFILES_STORAGE = 'cacheds3storage.CompressorS3BotoStorage'
 S3_URL = 'https://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
 STATIC_URL = 'https://%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
