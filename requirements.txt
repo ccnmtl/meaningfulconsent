@@ -62,7 +62,7 @@ django-treebeard==2.0b2
 django-pagetree==1.0.5
 django-pageblocks==1.0.0
 django-quizblock==1.0.2
-django-markwhat==1.0
+django-markwhat==2014.9.20
 djangorestframework==2.3.12
 gunicorn==19.1.1
 boto==2.34.0
