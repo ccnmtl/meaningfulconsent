@@ -138,7 +138,7 @@ class UserVideoView(models.Model):
 
 class QuizSummaryBlock(models.Model):
     pageblocks = generic.GenericRelation(
-        PageBlock, related_name="quiz_summary")
+        PageBlock, related_query_name="quiz_summary")
     template_file = "main/quiz_summary_block.html"
     display_name = "Quiz Summary Block"
     quiz_class = models.CharField(max_length=50)
@@ -204,7 +204,7 @@ class YouTubeReportColumn(ReportColumnInterface):
 
 class YouTubeBlock(models.Model):
     pageblocks = generic.GenericRelation(
-        PageBlock, related_name="user_video")
+        PageBlock, related_query_name="user_video")
     template_file = "main/youtube_video_block.html"
     display_name = "YouTube Video"
 
@@ -309,8 +309,8 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ParticipantSerializer(serializers.HyperlinkedModelSerializer):
     user = UserSerializer(many=False, read_only=True)
-    percent_complete = serializers.Field(source='percent_complete')
-    last_access = serializers.Field()
+    percent_complete = serializers.ReadOnlyField()
+    last_access = serializers.ReadOnlyField()
 
     class Meta:
         model = UserProfile
