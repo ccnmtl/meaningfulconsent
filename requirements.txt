@@ -25,7 +25,7 @@ lettuce==0.2.14
 rdflib==3.1.0
 selenium==2.45.0
 coverage==3.7.1
-requests==0.13.3
+requests==2.6.0
 logilab-common==0.59.0
 logilab-astng==0.24.1
 pylint==1.4.1
