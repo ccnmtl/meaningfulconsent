@@ -1,4 +1,5 @@
 from django import forms
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes import generic
 from django.core.urlresolvers import reverse
@@ -6,6 +7,7 @@ from django.db import models
 from django.db.models.fields import CharField
 from django.db.models.fields.related import OneToOneField
 from django.db.models.signals import post_save
+from django.template.defaultfilters import slugify
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from pagetree.reports import PagetreeReport, ReportableInterface, \
     StandaloneReportColumn, ReportColumnInterface
@@ -258,6 +260,87 @@ class YouTubeForm(forms.ModelForm):
         widgets = {'title': forms.TextInput}
 
 ReportableInterface.register(YouTubeBlock)
+
+
+class SimpleImageBlock(models.Model):
+    pageblocks = generic.GenericRelation(PageBlock)
+    image = models.ImageField(upload_to="images")
+    caption = models.TextField(blank=True)
+    alt = models.CharField(max_length=100, null=True, blank=True)
+    template_file = "main/simpleimageblock.html"
+    display_name = "Simple Image Block"
+
+    def pageblock(self):
+        return self.pageblocks.all()[0]
+
+    def __unicode__(self):
+        return unicode(self.pageblock())
+
+    def edit_form(self):
+        class EditForm(forms.Form):
+            image = forms.FileField(label="replace image")
+            caption = forms.CharField(initial=self.caption,
+                                      widget=forms.widgets.Textarea())
+            alt = forms.CharField(initial=self.alt)
+        return EditForm()
+
+    @classmethod
+    def add_form(cls):
+        class AddForm(forms.Form):
+            image = forms.FileField(label="select image")
+            caption = forms.CharField(widget=forms.widgets.Textarea())
+            alt = forms.CharField()
+        return AddForm()
+
+    @classmethod
+    def create(cls, request):
+        if 'image' in request.FILES:
+            ib = cls.objects.create(
+                alt=request.POST.get('alt', ''),
+                caption=request.POST.get('caption', ''),
+                image="")
+            ib.save_image(request.FILES['image'])
+            return ib
+        return None
+
+    @classmethod
+    def create_from_dict(cls, d):
+        # since it's coming from a dict, not a request
+        # we assume that some other part is handling the writing of
+        # the image file to disk and we just get a path to it
+        return cls.objects.create(
+            image=d.get('image', ''),
+            alt=d.get('alt', ''),
+            caption=d.get('caption', ''))
+
+    def as_dict(self):
+        return dict(image=self.image.name,
+                    alt=self.alt,
+                    caption=self.caption)
+
+    def edit(self, vals, files):
+        self.caption = vals.get('caption', '')
+        self.alt = vals.get('alt', '')
+        if 'image' in files:
+            self.save_image(files['image'])
+        self.save()
+
+    def save_image(self, f):
+        ext = f.name.split(".")[-1].lower()
+        basename = slugify(f.name.split(".")[-2].lower())[:20]
+        if ext not in ['jpg', 'jpeg', 'gif', 'png']:
+            # unsupported image format
+            return None
+        full_filename = "%s/%s.%s" % (
+            self.image.field.upload_to, basename, ext)
+        fd = self.image.storage.open(
+            settings.MEDIA_ROOT + "/" + full_filename, 'wb')
+
+        for chunk in f.chunks():
+            fd.write(chunk)
+        fd.close()
+        self.image = full_filename
+        self.save()
 
 
 class MeaningfulConsentReport(PagetreeReport):
