@@ -45,6 +45,7 @@ def context_processor(request):
         # djangowind delivers the form in un-authenticated situations
         ctx['login_form'] = AuthenticationForm(request)
     ctx['site'] = Site.objects.get_current()
+    ctx['MEDIA_URL'] = settings.MEDIA_URL
     return ctx
 
 

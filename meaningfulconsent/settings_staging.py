@@ -5,8 +5,6 @@ TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), "templates"),
 )
 
-MEDIA_ROOT = '/var/www/meaningfulconsent/uploads/'
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -38,22 +36,24 @@ if 'migrate' not in sys.argv:
 
 LOCALE_PATHS = ('/var/www/meaningfulconsent/meaningfulconsent/locale',)
 
-STATICFILES_DIRS = ("media/",)
-STATIC_ROOT = "/tmp/meaningfulconsent/static"
+# AWS Settings for staging
 AWS_STORAGE_BUCKET_NAME = "ccnmtl-meaningfulconsent-static-stage"
 AWS_PRELOAD_METADATA = True
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
-STATICFILES_STORAGE = 'cacheds3storage.CompressorS3BotoStorage'
 S3_URL = 'https://%s.s3.amazonaws.com/' % AWS_STORAGE_BUCKET_NAME
+
+# static data, e.g. css, js, etc.
+STATIC_ROOT = "/tmp/meaningfulconsent/static"
+STATICFILES_STORAGE = 'cacheds3storage.CompressorS3BotoStorage'
 STATIC_URL = 'https://%s.s3.amazonaws.com/media/' % AWS_STORAGE_BUCKET_NAME
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 COMPRESS_ROOT = STATIC_ROOT
 COMPRESS_URL = STATIC_URL
-DEFAULT_FILE_STORAGE = 'cacheds3storage.MediaRootS3BotoStorage'
-MEDIA_URL = S3_URL + '/media/'
 COMPRESS_STORAGE = 'cacheds3storage.CompressorS3BotoStorage'
-AWS_QUERYSTRING_AUTH = False
+
+# uploaded images
+MEDIA_URL = 'https://%s.s3.amazonaws.com/uploads/' % AWS_STORAGE_BUCKET_NAME
 
 try:
     from local_settings import *
