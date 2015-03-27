@@ -54,9 +54,6 @@ TIME_ZONE = 'America/New_York'
 LANGUAGE_CODE = 'en-us'
 SITE_ID = 1
 USE_I18N = True
-MEDIA_URL = "/uploads/"
-MEDIA_ROOT = 'uploads'
-STATIC_URL = "/media/"
 SECRET_KEY = ')ng#)ef_u@_^zvvu@dxm7ql-yb^_!a6%v3v^j3b(mp+)l+5%@h'
 TEMPLATE_LOADERS = (
     'django.template.loaders.filesystem.Loader',
@@ -164,6 +161,9 @@ EMAIL_HOST = 'localhost'
 SERVER_EMAIL = "meaningfulconsent@ccnmtl.columbia.edu"
 DEFAULT_FROM_EMAIL = SERVER_EMAIL
 
+MEDIA_URL = "/uploads/"
+MEDIA_ROOT = 'uploads'
+STATIC_URL = "/media/"
 STATIC_ROOT = os.path.join(os.path.dirname(__file__), "../media")
 STATICFILES_DIRS = ('media/',)
 STATICFILES_FINDERS = (

@@ -37,6 +37,7 @@ if 'migrate' not in sys.argv:
 LOCALE_PATHS = ('/var/www/meaningfulconsent/meaningfulconsent/locale',)
 
 # AWS Settings for staging
+AWS_QUERYSTRING_AUTH = False
 AWS_STORAGE_BUCKET_NAME = "ccnmtl-meaningfulconsent-static-stage"
 AWS_PRELOAD_METADATA = True
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto.S3BotoStorage'
