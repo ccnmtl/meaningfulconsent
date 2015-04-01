@@ -63,7 +63,7 @@ django-pageblocks==1.0.1
 django-quizblock==1.0.8
 django-markwhat==2014.9.20
 djangorestframework==3.0.4
-gunicorn==19.1.1
+gunicorn==19.3.0
 boto==2.34.0
 python-dateutil==2.2
 django-storages-redux==1.2.2
