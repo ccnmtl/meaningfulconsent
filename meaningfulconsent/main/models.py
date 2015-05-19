@@ -62,7 +62,7 @@ class UserProfile(models.Model):
         upv = UserPageVisit.objects.filter(
             user=self.user, section__hierarchy=hierarchy).order_by(
             "-last_visit")
-        if len(upv) < 1:
+        if upv.count() < 1:
             return None
         else:
             return upv[0].last_visit
@@ -78,7 +78,7 @@ class UserProfile(models.Model):
         upv = UserPageVisit.objects.filter(
             user=self.user, section__hierarchy=hierarchy).order_by(
             "-last_visit")
-        if len(upv) < 1:
+        if upv.count() < 1:
             return hierarchy.get_root()
         else:
             return upv[0].section
@@ -88,11 +88,11 @@ class UserProfile(models.Model):
 
     def percent_complete_hierarchy(self, hierarchy_name):
         hierarchy = Hierarchy.get_hierarchy(hierarchy_name)
-        pages = len(hierarchy.get_root().get_descendants())
-        visits = UserPageVisit.objects.filter(user=self.user,
-                                              section__hierarchy=hierarchy)
-        if pages:
-            return int(len(visits) / float(pages) * 100)
+        pages = hierarchy.get_root().get_descendants().count()
+        visits = UserPageVisit.objects.filter(
+            user=self.user, section__hierarchy=hierarchy).count()
+        if pages > 0:
+            return int(visits / float(pages) * 100)
         else:
             return 0
 
@@ -102,7 +102,7 @@ class UserProfile(models.Model):
                                               section__hierarchy=hierarchy)
 
         seconds = 0
-        if (len(visits) > 0):
+        if (visits.count() > 0):
             start = visits.order_by('first_visit')[0].first_visit
             end = visits.order_by('-last_visit')[0].last_visit
             seconds = (end - start).total_seconds() / 60
@@ -112,7 +112,7 @@ class UserProfile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         clinics = Clinic.objects.all()
-        if len(clinics) < 1:
+        if clinics.count() < 1:
             clinic = Clinic.objects.create(name='Pilot')
         else:
             clinic = clinics[0]
