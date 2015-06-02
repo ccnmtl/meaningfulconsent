@@ -64,5 +64,5 @@ djangorestframework==3.0.4
 gunicorn==19.3.0
 boto==2.38.0
 python-dateutil==2.2
-django-storages-redux==1.2.2
+django-storages-redux==1.2.3
 django-cacheds3storage==0.1.1
