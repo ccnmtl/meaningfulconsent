@@ -150,9 +150,7 @@
                            <input type="hidden" name="next" value="/" />
                          </div>
                         </div>
-                        
-                            </div><!--/ .login-local-form -->
-                    
+                        </div><!--/ .login-local-form -->
                     </form>
     
                  {% if request.user.is_anonymous %}
@@ -160,7 +158,16 @@
                         <a href="/accounts/password_reset/">Forgot Password?</a>
                     </div>
                     <div style="clear: both"></div>
-                 {% endif %}                  
+                 {% endif %}
+                 {% if CAS_BASE %}
+                    <form method="get" action="{{ CAS_BASE }}cas/login" style="float: right">
+                        <input type="hidden" name="destination"
+                        value="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}/accounts/caslogin/?next=/" />
+                        <input class="btn btn-default btn-small login-uni-form" type="submit" value="Columbia University Network ID (UNI)" />
+                        <div style="clear: both;"></div>
+                    </form>
+                    <div style="clear: both"></div>
+                 {% endif %}<!-- CAS -->
             </div><!-- /.modal-body -->
            </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
