@@ -12,9 +12,9 @@
         <meta name="author" content="CCNMTL">
       
         <!-- Bootstrap CSS: -->
-        <link href="{{STATIC_URL}}bootstrap/css/bootstrap.min.css" rel="stylesheet">
+        <link href="{{STATIC_URL}}bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
         {% compress css %}
-        <link href="{{STATIC_URL}}bootstrap/css/bootstrap-glyphicons.css" rel="stylesheet">
+        <link href="{{STATIC_URL}}bootstrap-3.3.5/css/bootstrap-glyphicons.css" rel="stylesheet">
         <!-- Application CSS: -->
         <link href="{{STATIC_URL}}css/main.css" rel="stylesheet">
         {% endcompress %}
@@ -214,7 +214,7 @@
     
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>
     <script src="{{STATIC_URL}}js/backbone-min.js"></script>
-    <script src="{{STATIC_URL}}bootstrap/js/bootstrap.min.js"></script>
+    <script src="{{STATIC_URL}}bootstrap-3.3.5/js/bootstrap.min.js"></script>
     
     {% if request.user.is_anonymous or request.user.profile.is_participant %}
         <script src="{{STATIC_URL}}js/app/login.js"></script>
