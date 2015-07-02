@@ -241,7 +241,7 @@ class ReportView(LoggedInFacilitatorMixin, View):
         report = MeaningfulConsentReport()
 
         # setup zip file for the key & value file
-        response = HttpResponse(mimetype='application/zip')
+        response = HttpResponse(content_type='application/zip')
 
         disposition = 'attachment; filename=meaningfulconsent.zip'
         response['Content-Disposition'] = disposition

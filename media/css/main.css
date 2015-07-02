@@ -4,45 +4,23 @@ html {
 
 body {
   background-color: #fff;
-  /*height: 100%;*/
 }
 
-body > .container {
+body > .container-fluid {
   background-color: #fff;
-  /*min-height: 100%;*/
-  padding-top: 25px;
+  padding-top: 50px; /* required for navbar-fixed */
 }
-
-.jumbotron {background-color: #fff; border: 1px solid #ccc;}
-
-.pause-session {margin-right: 10px;}
-
-.casequestion ol {display: inline-block;}
-
-.banner-pl {margin-top: 7em;}
 
 #content {
-  /*min-height: 100%;*/
-}
-
-/* Logo */
-
-.navbar-logo {
-    margin-left: -15px;
-    color: #999;
-    float: left;
-    padding: 15px 15px;
-    font-size: 18px;
-    line-height: 20px;
-}
-
-.navbar-default {
-    background-color: #fff !important;
-    border: 1px solid #e7e7e7 !important;
+  padding-top: 10px;
 }
 
 html.busy, html.busy * {  
   cursor: wait;
+}
+
+a[disabled] {
+    color: #999;
 }
 
 /* LOGIN PAGE */
@@ -76,7 +54,6 @@ html.busy, html.busy * {
     background-color: #fff;
     -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
-    font-size: 12px;
 }
 .loginbox h2
 {
@@ -86,7 +63,6 @@ html.busy, html.busy * {
     -webkit-border-radius: 10px 10px 0 0;
     background: #e0e0e0;
     font-weight: bold !important;
-    font-size: 14px !important;
     color: black;
 }
 .loginbox .content
@@ -116,7 +92,6 @@ html.busy, html.busy * {
     display: block;
     font-weight: bold;
     color: #666;
-    font-size: 12px;
 }
 
 .loginbox .fieldwrapper input {
@@ -142,7 +117,6 @@ html.busy, html.busy * {
     margin: 0 0 10px 10px;
     color: #000;
     font-weight: normal;
-    font-size: 14px;
     border: 1px solid #ccc;
     border-bottom: 1px solid #ccc;
     border-left-color: #ccc;
@@ -169,21 +143,15 @@ html.busy, html.busy * {
     background: -moz-linear-gradient(top, #fff, #669999);
 }
 
-.loginbox .smalltxt
-{
+input.login-uni-form {
+    font-weight: 200;
+    color: #999;
+    border: none;
+    background: none;
+    line-height: normal;
+    float: right;
+    margin-right: -14px;
     font-size: 11px;
-}
-
-.errornote {
-    background: url("/media/img/icon_alert.png") no-repeat 5px 5px #FFEBE8;
-    border: 1px solid #c00 !important;
-    display: block;
-    font-size: 11px !important;
-    margin: 0 0 10px 0;
-    padding: 5px 5px 5px 10px !important;
-    -moz-border-radius: 3px;
-    -webkit-border-radius: 3px;
-    line-height: 140%;
 }
 
 /** password change **/
@@ -213,7 +181,6 @@ div.password-change input[type='password'] {
     width: 300px;
     height: 34px;
     padding: 6px 12px;
-    font-size: 14px;
     line-height: 1.428571429;
     color: #555;
     vertical-align: middle;
@@ -226,50 +193,52 @@ div.password-change input[type='password'] {
     transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }
 
-
 /* NAV BAR NEAR TOP PAGE BANNER */
+
+.navbar-logo {
+    margin-left: -15px;
+    color: #999;
+    font-size: 18px;
+    line-height: 20px;
+}
+
+.navbar-brand {
+    padding: 5px 5px;
+}
+
+.navbar-brand img {
+    height: 30px;
+    width: auto;
+}
+
+.navbar-default {
+    background-color: #fff !important;
+    border: 1px solid #e7e7e7 !important;
+}
 
 .navbar-pl {
   border: 0;
   border-radius: 0;
   margin-bottom: 0;
-  min-height: 20px;
-}
-
-.navbar-pl a {
-  
-}
-
-.navbar-pl a:hover {
-  
-}
-
-.navbar-pl a:hover .glyphicon-home {
-  
+  height: 35px;
 }
 
 .navbar-pl .navbar-toggle {
   border: 0;
   color: #000;
-  margin-top: 2.5em;
-
 }
 
 .navbar-pl .navbar-toggle:hover {  
   border: 0;
 }
 
-.navbar-pl .navbar-toggle:hover .icon-bar {
-}
-
 .navbar-nav-pl {
   margin: 0;
   padding: 0;
-  margin-top: 2.3em;
+  margin-top: .1em;
 }
 
 .navbar-nav-pl>li>a {
-  font-size: 13px;
   font-weight: 200;
   padding-top: 10px;
   padding-bottom: 10px;
@@ -330,69 +299,19 @@ footer img {
   width: 150px;
 }
 
-
-/* index.html Landing page */
-iframe {
-    border: 0px;
-    width: 100%;
-    min-height: 500px;
-}
-
-div.intro-video {
-    text-align: center;
-}
-
-/* navbar styling */
-li.language button {
-    font-size: 13px;
-    font-weight: 200;
-    padding: 0;
-    padding-top: 12px;
-    padding-bottom: 10px;
-    color: #999;
-    border: none;
-    background: none;
-    margin: 0;
-    line-height: normal;
-}
-
-li.language button:hover {
-    color: white;
-    outline: none;
-    background-color: #101010;
+/* landing page */
+.splash-page .jumbotron {
+    background-color: #fff;
     border: 0;
 }
 
-input.login-uni-form {
-    font-size: 13px;
-    font-weight: 200;
-    color: #999;
-    border: none;
-    background: none;
-    line-height: normal;
-    float: right;
-    margin-right: -14px;
-}
-
-/* page styling */
-a[disabled] {
-    color: #999;
-}
-
-div.table-of-contents ul {
-    list-style-type: none;
-    padding-left: 0;
-    margin-top: 100px;
-}
-
-div.table-of-contents ul li.active a {color: #fff;}
 /* facilitator dashboard */
 div.demo .btn,
 div.demo .progress {
     margin-left: 20px;
 }
 
-div.progress {
+.facilitator-dashboard .progress {
     position: relative;
     height: 20px;
     margin-bottom: 0px;
@@ -402,13 +321,18 @@ div.progress {
     box-shadow: inset 0 1px 2px rgba(0,0,0,.1);    
 }
 
-div.bar {
+.facilitator-dashboard .breadcrumb {
+    margin-left: -20px;
+    margin-right: -20px;
+}
+
+.facilitator-dashboard .bar {
     background-color: #5cb85c;
     height: 20px;
     color: white;
 }
 
-div.progress span {
+.facilitator-dashboard .progress span {
     position: absolute;
     top: 0px;
     z-index: 2;
@@ -417,11 +341,11 @@ div.progress span {
     width: 100%;
 }
 
-.btn-print {
+.facilitator-dashboard .btn-print {
     margin-right: 3px;
 }
 
-.btn-archive {
+.facilitator-dashboard .btn-archive {
     margin-left: 3px;
 }
 
@@ -445,29 +369,53 @@ div.participant-search-container {
 
 div.participant-search-container .help-block {
     color: #a94442;
-    
 }
 
-/* participant pages */
-.btn-previous:focus,
-.btn-next:focus {
+/* participant navigation */
+
+.content-carousel {
+    display: table;
+    margin-top: -5px;    
+}
+
+.content-carousel h3 {
+    margin-top: 15px;
+    margin-bottom: 8px;
+}
+
+.content-carousel-progress {
+    height: 15px;
+    border-radius: 0;
+    margin-bottom: 0;
+}
+
+.content-carousel .col-sm-1 {
+    display: table-cell;
+    float: none;
+    vertical-align: middle;
+}
+.content-carousel .col-sm-10 {
+    display: table-cell;
+    float: none;
+}
+
+.content-carousel .col-sm-1 {
+    display: table-cell;
+    float: none;
+    vertical-align: middle;
+}
+
+.content-carousel .col-sm-1 a:active,
+.content-carousel .col-sm-1 a:focus { 
     outline: 0;
 }
 
-#submit-page-button {
-    display: inline-block;
-    padding: 5px 14px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 15px;
-    float: right;
-    color: #428bca;
-    border-color: #ccc;    
+.content-carousel .col-sm-1 a.disabled {
+    color: #ddd;
 }
 
-#submit-page-button:hover {
-    text-decoration: none;
-    background-color: #eeeeee;
+.content-carousel .col-sm-1 a .glyphicon {
+    font-size: 40px;
 }
 
 #working {
@@ -478,7 +426,34 @@ div.participant-search-container .help-block {
     height: 20px;
 }    
 
-.saving {
+/* participant pages */
+.youtube-pageblock {
+    text-align: center;
+}
+
+.youtube-pageblock iframe {
+    width: 853px;
+    height: 480px;
+}
+
+@media only screen
+and (min-device-width: 768px) 
+and (max-device-width: 1024px)
+and (orientation: landscape) { 
+    .youtube-pageblock iframe {
+        width: 800px;
+        height: 450px;
+    }
+}
+
+@media only screen 
+and (min-device-width: 768px) 
+and (max-device-width: 1024px)
+and (orientation: portrait) { 
+    .youtube-pageblock iframe {
+        width: 550px;
+        height: 309px;
+    }
 }
 
 /* participant input -- topic_discussion */
@@ -576,16 +551,6 @@ div.quiz-summary ul li {
     margin-bottom: 20px;
 }
 
-
-@media only screen 
-and (max-width : 465px) {
-.banner-pl {margin-top: 12em;}
-}
-
-/** print **/
-@media print {
-    div.progress,
-    #send-to-printer {
-        display: none;
-    }
+.casequestion ol {
+    display: inline-block;
 }
