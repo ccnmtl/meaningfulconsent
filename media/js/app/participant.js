@@ -1,7 +1,7 @@
 (function() {
     window.ParticipantPageView = Backbone.View.extend({
         events: {
-            'click li.pause-session a': 'onPauseSession',
+            'click a.pause-session': 'onPauseSession',
             'click button.change-language': 'onChangeLanguage',
             'click a.disabled': 'onClickDisabledElement',
             'click .nav li.disabled a': 'onClickDisabledElement',

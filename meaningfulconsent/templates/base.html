@@ -33,80 +33,106 @@
     <body class="{% block bodyclass %}{% endblock %}" id="{% block bodyid %}{% endblock %}">
     
     {% block topnavbar %}
-    <nav class="navbar navbar-default navbar-pl navbar-fixed-top" role="navigation">
-    
-        <div class="container container-header">
-        
+    <nav class="navbar navbar-default navbar-fixed-top navbar-pl">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
-                 <button type="button" class="navbar-toggle"
+                <button type="button" class="navbar-toggle collapsed"
                     data-toggle="collapse"
-                    data-target="#navbar-collapse-pl"  style="border: 1px solid #ccc;">
-                    <span class="sr-only">Toggle Navigation</span> <span
-                        class="icon-bar"></span> <span class="icon-bar"></span>
+                    data-target="#user-nav-collapse" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
                     <span class="icon-bar"></span>
-                 </button>
-                 
-                 {% if request.user.is_anonymous or not request.user.profile.is_participant %}
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                {% if request.user.is_anonymous or not request.user.profile.is_participant %}
                     <a class="navbar-brand" href="/" title="Meaningful Consent">
-                        <img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/logo_meaningfulconsent.png" alt="Meaningful Consent" />
+                        <img class="img-responsive"
+                         style="display: inline-block;"
+                         src="{{STATIC_URL}}img/logo_meaningfulconsent.png"
+                         alt="Meaningful Consent" />
                     </a>
-                 {% else %}
-                    <span class="navbar-logo">
-                        <img class="img-responsive" style="display: inline-block;" src="{{STATIC_URL}}img/logo_meaningfulconsent.png" alt="Meaningful Consent" />
+                {% else %}
+                    <span class="navbar-brand">
+                        <img class="img-responsive"
+                         style="display: inline-block;"
+                         src="{{STATIC_URL}}img/logo_meaningfulconsent.png"
+                         alt="Meaningful Consent" />
                     </span>
-                 {% endif %}
-              </div>
-    
-            <!--/.navbar-header -->
-            <div class="collapse navbar-collapse" id="navbar-collapse-pl">
-            
-                <ul class="nav navbar-nav navbar-right navbar-nav-pl">
-                    
-                    {% block usernav %}
-                    
-                    {% if request.user.is_anonymous %}
-                    <li><a href="#" data-toggle="modal" data-target="#login-modal" class="btn-log-in btn btn-sm">Log In</a></li>
-                    <li><a href="/about/">About</a></li>
-                    <li><a href="/credits/">Credits</a></li>
-                    <li><a href="/contact/">Contact</a></li>
-                    <li><a href="/help/">Help</a></li>
-                    {% else %}
-                    {% if not request.user.profile.is_participant %}
-                    <li class="logged-in-greeting">
-                        <span>Hello, {% if user.first_name %}{{user.get_short_name}}{% else %}{{user.username}}{% endif %} ! |</span>
-                        <a href="/accounts/logout/?next=/"><span title="Log Out">Log Out</span></a>
-                    </li>
-                    {% if user.has_usable_password %}
-                    <li><a href="/accounts/password_change/">Change Password</a></li>
-                    {% endif %}
-                    {% if user.is_superuser %}
-                    <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Content <b class="caret"></b></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="/pages/en/edit/">English</a></li>
-                            <li><a href="/pages/es/edit/">Spanish</a></li>
-                        </ul>
-                    </li>                                
-                    {% endif %}
-                    <li><a href="/about/">About</a></li>
-                    <li><a href="/credits/">Credits</a></li>
-                    <li><a href="/contact/">Contact</a></li>
-                    <li><a href="/help/">Help</a></li>
-                    {% endif %}
-                    {% endif %}
-                    
-                    {% endblock %}
-                 
-                 </ul>
-            
+                {% endif %}
             </div>
-            <!--/.nav-collapse -->
-              
-           </div>
-        <!--/.container-header -->
-    
-    </nav><!--/.navbar-pl -->
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="user-nav-collapse">
+                <ul class="nav navbar-nav navbar-right">
+                    {% block usernav %}
+                    {% if request.user.is_anonymous %}
+                        <li>
+                            <a href="#" data-toggle="modal"
+                             data-target="#login-modal">Log In</a>
+                        </li>
+                        <li><a href="/about/">About</a></li>
+                        <li><a href="/credits/">Credits</a></li>
+                        <li><a href="/contact/">Contact</a></li>
+                        <li><a href="/help/">Help</a></li>
+                    {% else %}
+                        {% if not request.user.profile.is_participant %}
+                            {% if user.has_usable_password %}
+                                <li>
+                                    <a href="/accounts/password_change/">
+                                        Change Password
+                                    </a>
+                                </li>
+                            {% endif %}
+                            {% if user.is_superuser %}
+                                <li class="dropdown">
+                                    <a href="#" class="dropdown-toggle"
+                                     data-toggle="dropdown">
+                                        Content <b class="caret"></b>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li>
+                                            <a href="/pages/en/edit/">
+                                                English
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="/pages/es/edit/">
+                                                Spanish
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                            {% endif %}
+                            <li><a href="/about/">About</a></li>
+                            <li><a href="/credits/">Credits</a></li>
+                            <li><a href="/contact/">Contact</a></li>
+                            <li><a href="/help/">Help</a></li>
+                            <li>
+                                <a href="/accounts/logout/?next=/">
+                                    <span title="Log Out">Log Out</span>
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endif %}
+                    {% endblock %}
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>    
     {% endblock %}
+
+    <div class="container-fluid">
+        {% block pagemode %}{% endblock %}
+        <div class="content">
+            <div class="row">
+              <div class="col-md-12">
+                 {% block content %}
+                 {% endblock %}
+              </div>
+           </div> <!-- /.row -->
+        </div> <!-- /.content -->
+    </div> <!-- /.container-pl -->
     
     {% if request.user.is_anonymous or request.user.profile.is_participant %}
     <!-- Login Modal -->
@@ -163,7 +189,9 @@
                     <form method="get" action="{{ CAS_BASE }}cas/login" style="float: right">
                         <input type="hidden" name="destination"
                         value="http{% if request.is_secure %}s{% endif %}://{{ request.get_host }}/accounts/caslogin/?next=/" />
-                        <input class="btn btn-default btn-small login-uni-form" type="submit" value="Columbia University Network ID (UNI)" />
+                        <input class="btn btn-default btn-small login-uni-form"
+                            type="submit"
+                            value="Columbia University Network ID (UNI)" />
                         <div style="clear: both;"></div>
                     </form>
                     <div style="clear: both"></div>
@@ -174,42 +202,11 @@
     </div><!-- /.modal -->
     {% endif %}<!-- request.user.is_anonymous -->
     
-    <div class="banner-pl">
-      <div class="container container-banner">
-        <div class="banner-pl-bg">
-         <div class="logo-pl">
-           {% comment %}
-              <a href="/"><span>Meaningful Consent</span></a>
-           {% endcomment %}
-         </div>
-        </div><!--/ .banner-pl-bg -->
-      </div><!--/ .container-banner -->
-    </div><!--/ .banner-pl -->
-    
-    <div class="container container-pl" id="outer-container">
-        {% block pagemode %}{% endblock %}
-        <div class="content">
-            {% block primarynav %}{% endblock %}
-            <div class="row">
-              <div class="col-md-12">                
-                 {% block content %}
-                 {% endblock %}
-                 {% block content-nav %}
-                 {% endblock %}                
-              </div>
-           </div> <!-- /.row -->
-        </div> <!-- /.content -->
-    
-    </div> <!-- /.container-pl -->
-    
     {% block footer %}
-    <footer class="footer">
-    
-        <p>Footer Information</p>
-        
-        <!--<a href="http://ccnmtl.columbia.edu" target="_blank" title="Columbia Center for New Media Teaching and Learning"><img src="{{STATIC_URL}}img/logo_ccnmtl.png" /></a>-->
-        
-    </footer>
+        <footer class="footer">
+            <p>Footer Information</p>
+            <!--<a href="http://ccnmtl.columbia.edu" target="_blank" title="Columbia Center for New Media Teaching and Learning"><img src="{{STATIC_URL}}img/logo_ccnmtl.png" /></a>-->
+        </footer>
     {% endblock %}
     
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>

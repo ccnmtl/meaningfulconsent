@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 
+{% block title %}Facilitator Dashboard{% endblock %}
+
 {% block extrahead %}
     {% include "main/participant_sessions.html" %}
 {% endblock %}
@@ -32,14 +34,6 @@
     <ul class="breadcrumb">
         <li>{{user.get_short_name}}'s Dashboard</li>
     </ul>
-    
-    <h1>Hi {{user.get_short_name}}!</h1>
-    
-    <p class="lead">
-    Instructions: Nullam quis risus eget urna mollis ornare vel eu leo. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nullam id dolor id nibh ultricies vehicula ut id elit.
-    </p>
-    
-    <hr style="margin-bottom: 50px;" />
     
     <div class="administration">
     
