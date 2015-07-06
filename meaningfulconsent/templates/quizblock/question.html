@@ -7,12 +7,11 @@
     {% if 'video-complete-quiz' in question.quiz.pageblock.css_extra %}
         {% include 'quizblock/video_complete_quiz.html' %}
     {% else %}
-    <div class="casequestionintrotext">{{question.intro_text|markdown}}</div>
-
     <div class="casecontent">
         <div class="casequestion text-center panel panel-default">
-            <div class="casequestiontext panel-heading">{{question.text|markdown}}</div>
-          <div class="panel-body">
+            <div class="casequestiontext panel-heading">
+            
+            {{question.text|markdown}}
             {% if question.answerable %}
                 {% if block.rhetorical %}
                     <form id="form-{{question.id}}" method="post">
@@ -42,15 +41,11 @@
                     {% include 'quizblock/long_text.html' %}
                 {% endif %}
             {% endif %}
-        </div>
+            </div>
         </div>
 
-        {% if block.rhetorical %}
+        {% if response %}
             {% include 'quizblock/show_answer.html' %}
-        {% else %}
-            {% if response %}
-                {% include 'quizblock/show_answer.html' %}
-            {% endif %}
         {% endif %}
     </div>
     {% endif %}

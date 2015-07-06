@@ -4,34 +4,8 @@
             'click a.pause-session': 'onPauseSession',
             'click button.change-language': 'onChangeLanguage',
             'click .dimmed': 'onClickDisabled',
-            'click .video-complete-quiz input[type="checkbox"]': 'onSubmitPage'
-        },
-        isFormComplete: function(form) {
-            var complete = true;
-            var children = jQuery(form).find("input,textarea,select");
-            jQuery.each(children, function() {
-                if (complete) {
-                    
-                    if (this.tagName === 'INPUT' && this.type === 'text' ||
-                        this.tagName === 'TEXTAREA') {
-                        complete = jQuery(this).val().trim().length > 0;
-                    }
-            
-                    if (this.tagName === 'SELECT') {
-                        var value = jQuery(this).val();
-                        complete = value !== undefined && value.length > 0 &&
-                            jQuery(this).val().trim() !== '-----';
-                    }
-            
-                    if (this.type === 'checkbox' || this.type === 'radio') {
-                        // one in the group needs to be checked
-                        var selector = 'input[name=' + jQuery(this).attr("name") + ']';
-                        complete = jQuery(selector).is(":checked");
-                    }
-                }
-            });
-
-            return complete;
+            'click .video-complete-quiz input[type="checkbox"]': 'onSubmitPage',
+            'click .topic-rating-quiz input[type="radio"]': 'onSubmitPage'
         },
         initialize: function(options) {
             _.bindAll(this,
