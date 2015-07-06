@@ -3,7 +3,10 @@
 
 {% getquestionresponse question as response %}
 
-<div class="cases" style="margin-top: 20px;">
+<div class="cases">
+    {% if 'video-complete-quiz' in question.quiz.pageblock.css_extra %}
+        {% include 'quizblock/video_complete_quiz.html' %}
+    {% else %}
     <div class="casequestionintrotext">{{question.intro_text|markdown}}</div>
 
     <div class="casecontent">
@@ -50,4 +53,5 @@
             {% endif %}
         {% endif %}
     </div>
+    {% endif %}
 </div>

@@ -1,0 +1,21 @@
+{% load markup %}
+{% load getresponse %}
+
+<div class="casecontent">
+    <div class="casequestion text-center panel panel-default">
+        <div class="casequestiontext panel-heading">
+            <span>{{question.text|markdown}}</span>&nbsp;&nbsp;
+            {% with answer=question.answer_set.first %}
+            <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                value="{{answer.value}}" type="checkbox"
+                {% if response %}
+                    {% if not block.allow_redo %}disabled="disabled"{% endif %}
+                    {% ifanswerin response answer %}
+                        checked="checked"
+                    {% else %}{% endifanswerin %}
+                {% endif %}>
+            </input>
+            {% endwith %}
+        </div>
+    </div>
+</div>
