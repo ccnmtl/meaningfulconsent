@@ -3,10 +3,8 @@
         events: {
             'click a.pause-session': 'onPauseSession',
             'click button.change-language': 'onChangeLanguage',
-            'click a.disabled': 'onClickDisabledElement',
-            'click .nav li.disabled a': 'onClickDisabledElement',
-            'submit #submit-page': 'onSubmitPage',
-            'click #next-page-button': 'onNextPage'
+            'click .dimmed': 'onClickDisabled',
+            'click .video-complete-quiz input[type="checkbox"]': 'onSubmitPage'
         },
         isFormComplete: function(form) {
             var complete = true;
@@ -32,7 +30,7 @@
                     }
                 }
             });
-            
+
             return complete;
         },
         initialize: function(options) {
@@ -42,6 +40,7 @@
                     'onPlayerStateChange',
                     'onYouTubeIframeAPIReady',
                     'onNextPage',
+                    'onClickDisabled',
                     'onSubmitPage',
                     'onSubmitQuiz',
                     'onSubmitVideoData',
@@ -61,13 +60,15 @@
             tag.src = "https://www.youtube.com/iframe_api";
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+            
+            jQuery('.dimmed').popover({
+                'placement': 'left',
+                'title': 'Oops!',
+                'content': 'Please answer all questions before you move on.'
+            });
         },
         onChangeLanguage: function(evt) {
             jQuery("#participant-language-form").submit();
-        },
-        onClickDisabledElement: function(evt) {
-            evt.preventDefault();
-            return false;
         },
         onNextPage: function(evt) {
             var elts = jQuery("input[type='hidden'][name='next-section']");
@@ -79,9 +80,6 @@
                 });            
                 return false;
             } else {
-                jQuery(".btn-next").hide();
-                jQuery("#working").show();
-                    
                 var url = jQuery(elts[0]).val();
                 window.location = url;
             }
@@ -110,39 +108,40 @@
             });            
             return false;
         },
+        onClickDisabled: function(evt) {
+            evt.preventDefault();
+            return false;
+        },
         onSubmitPage: function(evt) {
             var self = this;
+            var $nextButton = jQuery(".next a");
+            var $span = jQuery(".next a span");
 
-            evt.preventDefault();
             jQuery(".alert").hide();
 
-            var form = evt.currentTarget;
-            if (this.isFormComplete(form)) {
-                jQuery(".btn-next").hide();
-                jQuery("#working").fadeIn();
-                
-                if (this.player !== undefined && this.player.hasOwnProperty('stopVideo')) {
-                    this.player.stopVideo();
-                    this.recordSecondsViewed();
-                }
-                
-                jQuery.when(this.onSubmitQuiz(form),
-                            this.onSubmitVideoData())
-                    .done(function(first_call, second_call) {
-                        self.onNextPage();
-                    })
-                    .fail(function() {
-                        jQuery(".error-inline").fadeIn(function() {
-                            jQuery(".btn-next").hide();
-                            jQuery("#working").show();
-                        });
-                        
-                    });
-            } else {
-                jQuery(".help-inline").fadeIn();
-            }
+            var form = jQuery(evt.currentTarget).parents('form')[0];
+            $span.removeClass('glyphicon-circle-arrow-right').addClass('glyphicon-repeat spin');
             
-            return false;
+            if (this.player !== undefined &&
+                    this.player.hasOwnProperty('stopVideo')) {
+                this.player.stopVideo();
+                this.recordSecondsViewed();
+            }
+
+            jQuery.when(this.onSubmitQuiz(form), this.onSubmitVideoData())
+                .done(function(first_call, second_call) {
+                    setTimeout(function() {
+                        $nextButton.popover('destroy');
+                        $nextButton.removeClass('dimmed');
+                        $span.removeClass('glyphicon-repeat spin');
+                        $span.addClass('glyphicon-circle-arrow-right');
+                    }, 1000);
+                })
+                .fail(function() {
+                    jQuery(".error-inline").fadeIn(function() {
+                        $nextButton.hide();
+                    });
+                });
         },
         onSubmitQuiz: function(form) {
             return jQuery.ajax({
@@ -180,7 +179,7 @@
                 this.seconds_viewed += (end - this._start) / 1000;
                 delete this._start;
             }
-        }        
+        }
     });
 })();
 

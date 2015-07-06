@@ -32,23 +32,20 @@
 
 {% block usernav %}
     {% language request.user.profile.language %}
-        {% if not request.user.profile.is_participant %}
+        {% if request.user.is_superuser %}
             <li>
-                <a href="/participant/clear/">Clear State</a>
+                <a href="{{section.get_edit_url}}">Edit Page</a>
             </li>
-            {% if request.user.is_superuser %}
-                <li>
-                    <a href="{{section.get_edit_url}}">Edit Page</a>
-                </li>
-            {% endif %}
         {% endif %}
-        
-        <li>
-            <a class="pause-session" href="/participant/pause/">
-                {# Translators: Navbar command to pause the experience #}
-                {% trans "Pause" %}
-            </a>
-        </li>
+
+        {% if request.user.profile.is_participant %}    
+            <li>
+                <a class="pause-session" href="/participant/pause/">
+                    {# Translators: Navbar command to pause the experience #}
+                    {% trans "Pause" %}
+                </a>
+            </li>
+        {% endif %}
         <li>
             <a href="#" data-toggle="modal" data-target="#change-language-modal">
                 {% if request.user.profile.language == 'en' %}
@@ -59,9 +56,6 @@
             </a>
         </li>
     {% endlanguage %}
-{% endblock %}
-
-{% block pagemode %}
 {% endblock %}
 
 {% block content %}
@@ -84,14 +78,12 @@
         <div class="col-sm-1 previous">
             {% if previous_section %}
                 <a href="{{previous_section.get_absolute_url}}" class="btn">
-            {% else %}
-                <a href="#" class="btn disabled">
+                    <span class="glyphicon glyphicon-circle-arrow-left"></span>
+                </a>
             {% endif %}
-                <span class="glyphicon glyphicon-circle-arrow-left"></span>
-            </a>
         </div>
         <div class="col-sm-10">
-            <form action="." method="post" id="submit-page">
+            <form action="." method="post">
                 <div class="row">
                     <div class="col-md-12">
                         <div id="content">
@@ -113,11 +105,13 @@
             </form>        
         </div>
         <div class="col-sm-1 next">
-            <div id="working" class="pull-right" style="display: none"></div>
             {% if next_section %}
-                <a href="{{next_section.get_absolute_url}}" class="btn">
+                <a href="{{next_section.get_absolute_url}}"
+                 class="btn 
+                 {% if needs_submit and not is_submitted %}dimmed{% endif %}">
             {% else %}
-                <a href="#" class="btn disabled">
+                <a href="#" class="btn" role="button" data-toggle="modal"
+                 data-target="end-session-modal">
             {% endif %}
                 <span class="glyphicon glyphicon-circle-arrow-right"></span>
             </a>
@@ -127,19 +121,25 @@
     
     <!-- Confirm Language Switch -->
     {% language request.user.profile.language %}
-    <div class="modal" id="change-language-modal" tabindex="-1" role="dialog" aria-labelledby="Confirm Language Switch" aria-hidden="true">
+    <div class="modal" id="change-language-modal" tabindex="-1" role="dialog"
+        aria-labelledby="Confirm Language Switch" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <button type="button" class="close" data-dismiss="modal"
+                     aria-hidden="true">&times;</button>
                     <h4 class="modal-title">Switch Language / Cambiar Idioma</h4>
                 </div>
                 <div class="modal-body">
                     Are you sure? / &iquest;Est&aacute;s seguro?
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
-                    <button type="button" class="btn btn-primary change-language">Yes / S&iacute;</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        No
+                    </button>
+                    <button type="button" class="btn btn-primary change-language">
+                        Yes / S&iacute;
+                    </button>
                 </div>
             </div>
         </div>
@@ -169,7 +169,7 @@
     </div>
     
     <!-- End Session -->
-    <div class="modal end-session-modal">
+    <div class="modal" id="end-session-modal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">

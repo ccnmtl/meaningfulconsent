@@ -403,14 +403,18 @@ div.participant-search-container .help-block {
     display: table-cell;
     float: none;
     vertical-align: middle;
+    position: relative;
 }
 
 .content-carousel .col-sm-1 a:active,
-.content-carousel .col-sm-1 a:focus { 
-    outline: 0;
+.content-carousel .col-sm-1 a:focus,
+.content-carousel .col-sm-1 a:active:focus { 
+    outline: none;
+    box-shadow: none;
 }
 
-.content-carousel .col-sm-1 a.disabled {
+.content-carousel .col-sm-1 a.disabled,
+.content-carousel .col-sm-1 a.dimmed {
     color: #ddd;
 }
 
@@ -418,13 +422,48 @@ div.participant-search-container .help-block {
     font-size: 40px;
 }
 
-#working {
-    background-image: url(../img/saving.gif);
-    background-repeat: no-repeat;
-    background-position: center center;
-    width: 100px;
-    height: 20px;
-}    
+.content-carousel .col-sm-1.next .popover {
+    width: 225px !important;
+}
+
+.content-carousel h3.popover-title {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+}
+
+.spin {
+    -webkit-animation: spin 2s infinite linear;
+    -moz-animation: spin 2s infinite linear;
+    -o-animation: spin 2s infinite linear;
+    animation: spin 2s infinite linear;
+}
+
+@-moz-keyframes spin {
+    from {
+        -moz-transform: rotate(0deg);
+    }
+    to {
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 /* participant pages */
 .youtube-pageblock {
@@ -435,6 +474,28 @@ div.participant-search-container .help-block {
     width: 853px;
     height: 480px;
 }
+.video-complete-quiz {
+    width: 853px;
+    margin-top: -10px;
+}
+
+.video-complete-quiz .panel {
+    margin-bottom: 0;
+}
+
+.video-complete-quiz .panel-heading {
+    padding: 10px 5px 8px 5px;
+}
+
+.video-complete-quiz p {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 20px;
+}
+
+.video-complete-quiz input {
+    font-size: 20px;
+}
 
 @media only screen
 and (min-device-width: 768px) 
@@ -443,6 +504,9 @@ and (orientation: landscape) {
     .youtube-pageblock iframe {
         width: 800px;
         height: 450px;
+    }
+    .video-complete-quiz {
+        width: 800px;
     }
 }
 
@@ -453,6 +517,9 @@ and (orientation: portrait) {
     .youtube-pageblock iframe {
         width: 550px;
         height: 309px;
+    }
+    .video-complete-quiz {
+        width: 550px;
     }
 }
 
@@ -535,7 +602,6 @@ div.pageblock.topic-rating input[type=radio]:checked + label {
 }
 
 /** participant input -- survey **/
-
 div.pageblock.survey div.cases {
     margin-bottom: 30px;
 }

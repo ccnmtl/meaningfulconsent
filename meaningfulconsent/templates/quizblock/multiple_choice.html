@@ -4,9 +4,6 @@
 <ol>
     {% for answer in question.answer_set.all %}
         <li>
-        {% if block.rhetorical %}
-            <input name="question{{question.id}}" value="{{answer.label}}" type="checkbox" />{{answer.label}}
-        {% else %}
             <input name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
                 value="{{answer.value}}" type="checkbox"
                 {% if response %}
@@ -15,6 +12,6 @@
                 {% endif %}>
                 <label>{{answer.label}}</label>
             </input>
-        {% endif %}
+        </li>
     {% endfor %}
 </ol>

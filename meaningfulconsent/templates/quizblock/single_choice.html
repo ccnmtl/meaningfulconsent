@@ -2,31 +2,27 @@
 
 <ol type="A">
     {% for answer in question.answer_set.all %}
-        {% if block.rhetorical %}
-            <li><input name="question{{question.id}}" value="{{answer.label}}" type="radio" /> {{answer.label}}</li>
+        <li>
+        {% if response %}
+            <input id="question{{question.id}}-{{answer.value}}"
+                name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                value="{{answer.value}}" type="radio"
+                {% if not block.allow_redo %}disabled="disabled"{% endif %}
+                {% ifequal response.value answer.value %}checked="checked"{% endifequal %}>
+                <label for="question{{question.id}}-{{answer.value}}">
+                    {{answer.label}}
+                </label>
+            </input>
         {% else %}
-            <li>
-            {% if response %}
-                <input id="question{{question.id}}-{{answer.value}}"
-                    name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
-                    value="{{answer.value}}" type="radio"
-                    {% if not block.allow_redo %}disabled="disabled"{% endif %}
-                    {% ifequal response.value answer.value %}checked="checked"{% endifequal %}>
-                    <label for="question{{question.id}}-{{answer.value}}">
-                        {{answer.label}}
-                    </label>
-                </input>
-            {% else %}
-                <input id="question{{question.id}}-{{answer.value}}"
-                    name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
-                    value="{{answer.value}}" type="radio">
-                    <label for="question{{question.id}}-{{answer.value}}">
-                        {{answer.label}}
-                    </label>
-                </input>
-            {% endif %}
-            </li>
+            <input id="question{{question.id}}-{{answer.value}}"
+                name="pageblock-{{block.pageblock.id}}-question{{question.id}}"
+                value="{{answer.value}}" type="radio">
+                <label for="question{{question.id}}-{{answer.value}}">
+                    {{answer.label}}
+                </label>
+            </input>
         {% endif %}
+        </li>
   {% endfor %}
 </ol>
 <div style="clear: both"></div>
