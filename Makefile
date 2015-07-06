@@ -2,16 +2,23 @@ MANAGE=./manage.py
 APP=meaningfulconsent
 FLAKE8=./ve/bin/flake8
 
-jenkins: ./ve/bin/python validate test flake8
+jenkins: ./ve/bin/python validate test flake8 jshint
 
 ./ve/bin/python: requirements.txt bootstrap.py virtualenv.py
+	chmod +x manage.py bootstrap.py
 	./bootstrap.py
+
+jshint: node_modules/jshint/bin/jshint
+	./node_modules/jshint/bin/jshint media/js/app/
+
+node_modules/jshint/bin/jshint:
+	npm install jshint --prefix .
 
 test: ./ve/bin/python
 	$(MANAGE) jenkins --pep8-exclude=migrations --enable-coverage --coverage-rcfile=.coveragerc
 
 flake8: ./ve/bin/python
-	$(FLAKE8) $(APP) --max-complexity=7
+	$(FLAKE8) $(APP) --max-complexity=12
 
 runserver: ./ve/bin/python validate
 	$(MANAGE) runserver
@@ -25,16 +32,12 @@ validate: ./ve/bin/python
 shell: ./ve/bin/python
 	$(MANAGE) shell_plus
 
-makemessages: ./ve/bin/python validate jenkins
-	$(MANAGE) makemessages -l es --ignore="ve" --ignore="login.html" --ignore="password*.html"
-	$(MANAGE) compilemessages
-
 clean:
 	rm -rf ve
 	rm -rf media/CACHE
 	rm -rf reports
-	rm -f celerybeat-schedule
-	rm -rf .coverage
+	rm celerybeat-schedule
+	rm .coverage
 	find . -name '*.pyc' -exec rm {} \;
 
 pull:
@@ -50,6 +53,19 @@ rebase:
 	make test
 	make migrate
 	make flake8
+
+syncdb: ./ve/bin/python
+	$(MANAGE) syncdb
+
+collectstatic: ./ve/bin/python validate
+	$(MANAGE) collectstatic --noinput --settings=$(APP).settings_production
+
+makemessages: ./ve/bin/python
+	$(MANAGE) makemessages -l en --ignore="ve" --ignore="login.html" --ignore="password*.html"
+	$(MANAGE) makemessages -l es --ignore="ve" --ignore="login.html" --ignore="password*.html"
+
+compilemessages: ./ve/bin/python
+	$(MANAGE) compilemessages
 
 # run this one the very first time you check
 # this out on a new machine to set up dev

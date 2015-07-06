@@ -1,13 +1,13 @@
 (function() {
     var PAGE_SIZE = 20;
     
-    Participant = Backbone.Model.extend({
+    window.Participant = Backbone.Model.extend({
         url: '/api/participants/'
     });
     
-    ParticipantCollection = Backbone.Collection.extend({
+    window.ParticipantCollection = Backbone.Collection.extend({
         urlRoot: '/api/participants/',
-        model: Participant,
+        model: window.Participant,
         page: 1,
         context: function () {
             var context = {'participants': this.toJSON()};
@@ -94,7 +94,7 @@
             
             jQuery('#launch-demo-popover').popover();            
             
-            this.participants = new ParticipantCollection();
+            this.participants = new window.ParticipantCollection();
             this.participants.max_sessions = options.max_sessions;
             this.participants.on("reset", this.render);
             
