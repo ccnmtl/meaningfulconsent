@@ -478,23 +478,8 @@ div.participant-search-container .help-block {
     width: 853px;
     margin-top: -10px;
 }
-
-.video-complete-quiz .panel {
-    margin-bottom: 0;
-}
-
-.video-complete-quiz .panel-heading {
-    padding: 10px 5px 8px 5px;
-}
-
-.video-complete-quiz p {
-    display: inline-block;
-    margin-top: 10px;
-    font-size: 20px;
-}
-
-.video-complete-quiz input {
-    font-size: 20px;
+.topic-rating-quiz {
+    width: 853px;
 }
 
 @media only screen
@@ -505,7 +490,8 @@ and (orientation: landscape) {
         width: 800px;
         height: 450px;
     }
-    .video-complete-quiz {
+    .video-complete-quiz,
+    .topic-rating-quiz {
         width: 800px;
     }
 }
@@ -518,9 +504,31 @@ and (orientation: portrait) {
         width: 550px;
         height: 309px;
     }
-    .video-complete-quiz {
+    .video-complete-quiz,
+    .topic-rating-quiz {
         width: 550px;
     }
+}
+
+/* video complete quiz */
+.video-complete-quiz .panel {
+    margin-bottom: 0;
+}
+
+.video-complete-quiz .panel-heading {
+    padding: 10px 5px 8px 5px;
+}
+
+.video-complete-quiz p {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+.video-complete-quiz input {
+    font-size: 20px;
 }
 
 /* participant input -- topic_discussion */
@@ -537,42 +545,48 @@ div.pageblock.topic-discussion div.casequestionintrotext {
     display: none;
 }
 
-/** participant input -- topic-rating **/
-
-div.pageblock.topic-rating {
-    margin-bottom: 10px;
+/** participant input -- topic-rating-quiz **/
+.topic-rating-quiz .panel {
+    margin-bottom: 0;
 }
 
-div.pageblock.topic-rating div.casequestionintrotext {
-    display: none;
+.topic-rating-quiz .panel-heading {
+    padding: 10px 5px 8px 5px;
 }
- 
-div.pageblock.topic-rating div.casequestion ol {
+
+.topic-rating-quiz p {
+    font-size: 18px;
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+.topic-rating-quiz div.casequestion ol {
     list-style-type: none;
     padding-left: 2px;
+    margin-bottom: 0px;
 }
 
-div.pageblock.topic-rating div.casequestion ol li {
+.topic-rating-quiz div.casequestion ol li {
     float: left; 
 }
 
-div.pageblock.topic-rating input[type=radio] {
-    display:none;
+.topic-rating-quiz input[type=radio] {
+    display: none;
 }
 
-div.pageblock.topic-rating input[type=radio] + label {
-    display:inline-block;
-    margin:-2px;
-    padding: 4px 12px;
-    margin-bottom: 0;
+.topic-rating-quiz input[type=radio] + label {
+    display: inline-block;
+    display:table-cell;
+    vertical-align:middle;
     font-weight: normal;
-    line-height: 20px;
     color: #333;
+    margin-bottom: 0px;
     text-align: center;
     text-shadow: 0 1px 1px rgba(255,255,255,0.75);
     vertical-align: middle;
     cursor: pointer;
     width: 150px;
+    height: 48px;
     margin-right: 10px;
     background-color: #f5f5f5;
     background-image: -moz-linear-gradient(top,#fff,#e6e6e6);
@@ -592,7 +606,7 @@ div.pageblock.topic-rating input[type=radio] + label {
     box-shadow: inset 0 1px 0 rgba(255,255,255,0.2),0 1px 2px rgba(0,0,0,0.05);
 }
 
-div.pageblock.topic-rating input[type=radio]:checked + label {
+.topic-rating-quiz input[type=radio]:checked + label {
     background-image: none;
     outline: 0;
     -webkit-box-shadow: inset 0 2px 4px rgba(0,0,0,0.15),0 1px 2px rgba(0,0,0,0.05);
