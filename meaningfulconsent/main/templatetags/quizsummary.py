@@ -1,6 +1,5 @@
 from django import template
 from django.contrib.contenttypes.models import ContentType
-from django.utils.text import slugify
 from pagetree.models import PageBlock
 from quizblock.models import Response, Submission, Quiz
 
