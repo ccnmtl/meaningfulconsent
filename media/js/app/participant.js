@@ -4,7 +4,8 @@
             'click a.pause-session': 'onPauseSession',
             'click button.change-language': 'onChangeLanguage',
             'click .dimmed': 'onClickDisabled',
-            'click .video-complete-quiz input[type="checkbox"]': 'onSubmitPage'
+            'click .video-complete-quiz input[type="checkbox"]': 'onSubmitPage',
+            'click .topic-rating-quiz input[type="radio"]': 'onSubmitPage'
         },
         isFormComplete: function(form) {
             var complete = true;
@@ -135,7 +136,7 @@
                         $nextButton.removeClass('dimmed');
                         $span.removeClass('glyphicon-repeat spin');
                         $span.addClass('glyphicon-circle-arrow-right');
-                    }, 1000);
+                    }, 500);
                 })
                 .fail(function() {
                     jQuery(".error-inline").fadeIn(function() {

@@ -1,8 +1,19 @@
 from django import template
-from meaningfulconsent.main.views import get_quiz_blocks
-from quizblock.models import Response, Submission
+from django.contrib.contenttypes.models import ContentType
+from django.utils.text import slugify
+from pagetree.models import PageBlock
+from quizblock.models import Response, Submission, Quiz
+
 
 register = template.Library()
+
+
+def get_quizzes_by_css_class(hierarchy, cls):
+    ctype = ContentType.objects.get_for_model(Quiz)
+    blocks = PageBlock.objects.filter(content_type__pk=ctype.pk)
+    blocks = blocks.filter(css_extra__contains=cls)
+    blocks = blocks.filter(section__hierarchy=hierarchy)
+    return blocks
 
 
 class GetTopicRatings(template.Node):
@@ -15,26 +26,26 @@ class GetTopicRatings(template.Node):
         u = context[self.user]
         cls = context[self.quiz_class]
 
-        blocks = get_quiz_blocks(cls)
+        blocks = get_quizzes_by_css_class(u.profile.default_hierarchy(), cls)
 
-        ratings = []
+        ratings = {}
         for b in blocks:
             # assumption: each of these quiz types has one question
             question = b.content_object.question_set.first()
-            values = []
 
             submissions = Submission.objects.filter(
-                quiz=b.content_object, user=u).order_by(
-                "-submitted")
+                quiz=b.content_object, user=u).order_by("-submitted")
 
             if submissions.count() > 0:
-                # most recent submission
-                responses = Response.objects.filter(submission=submissions[0])
-                for r in responses:
-                    answer = r.question.answer_set.get(value=r.value)
-                    values.append(answer.label)
+                # most recent submission. pick up the one response.
+                r = Response.objects.filter(
+                    submission=submissions[0]).first()
+                answer = r.question.answer_set.get(value=r.value)
 
-            ratings.append((question.intro_text, values))
+                key = slugify(answer.label)
+                if answer.label not in ratings:
+                    ratings[key] = []
+                ratings[key].append(question.intro_text)
 
         context[self.var_name] = ratings
         return ''

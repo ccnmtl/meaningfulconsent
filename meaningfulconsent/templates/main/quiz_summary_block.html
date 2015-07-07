@@ -1,11 +1,31 @@
 {% load quizsummary %}
-{% with cls="topic-rating" %}
+{% with cls="topic-rating-quiz" %}
 
     {% get_quiz_summary user cls as ratings %}
+
+    <div class="row">
+        <!-- Unimportant -->
+        <h4>Unimportant</h4>
+        <div class="col-md-15 col-sm-3">
+             {% for item in ratings.unimportant %}
+                {{item}}
+             {% endfor %}
+        </div>
+        
+        <!-- Important -->
+        <h4>Important</h4>
+        <div class="col-md-15 col-sm-3">
+             {% for item in ratings.important %}
+                {{item}}
+             {% endfor %}
+        </div>
+    </div>
+
+{% comment %}    
+    [u'Important'] [u'Neutral'] [u'Not important'] [u'Unimportant'] [u'Very important'] [u'Very important']
+    
     
     <div class="well quiz-summary">
-        <h3>My Priorities</h3>
-        
         <ul>
             {% for item in ratings %}
                 <li>
@@ -21,5 +41,6 @@
             {% endfor %}
         </ul>
     </div>
+{% endcomment %}
 
 {% endwith %}

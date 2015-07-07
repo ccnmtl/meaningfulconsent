@@ -1,28 +1,8 @@
 {% extends "base.html" %}
 {% load bootstrap %}
 {% load render %}
+{% load static %}
 {% block title %}{{section.label}} (edit){% endblock %}
-    
-{% block extrahead %}
-    <link href="{{STATIC_URL}}jquery/css/jquery-ui-1.10.4.min.css" rel="stylesheet">
-    <script src="{{STATIC_URL}}jquery/js/jquery-ui-1.10.4.min.js"></script>
-    
-    <style>
-        #content { width: 96%; float: none; };
-        .draghandle {float: left;}
-        #children-order-list {list-style-type: none; margin: 0; padding: 0;}
-        
-        #children-order-list li span.glyphicon,
-        div.block-dragger span.glyphicon {
-            cursor: pointer;
-        }
-        
-        #children li { margin: 0 3px 3px 3px; padding: 0.4em;
-            padding-left: 1.5em; background-color: #ddd; }
-        #children li span { position: absolute; margin-left: -1.3em; }
-        .dragging {background-color: #fee;}
-    </style>    
-{% endblock %}
 
 {% block bodyclass %}edit module-{{module.slug}}{% endblock %}
 
@@ -36,59 +16,80 @@
 {% endblock %}
 
 {% block js %}
-    <script type="text/javascript">
-        var saveOrderOfChildren = function() {
-            var url = "{% url 'reorder-section-children' section.id %}?";
-            var worktodo = 0;
-            jQuery("#children-order-list li").each(function(index,element) {
-               worktodo = 1;
-               var id = jQuery(element).attr('id').split("-")[1];
-               url += "section_id_" + index + "=" + id + ";";
-            });
-            if (worktodo == 1) {
-                var req = new XMLHttpRequest();
-                req.open("POST",url,true);
-                req.send(null);
-            }
-        };
-        
-        var saveOrderOfPageBlocks = function() {
-            var url = "{% url 'reorder-pageblocks' section.id %}?";
-            var worktodo = 0;
-            jQuery("#edit-blocks-tab>div.block-dragger").each(function(index,element) {
-              worktodo = 1;
-              var id = jQuery(element).attr('id').split("-")[1];
-              url += "pageblock_id_" + index + "=" + id + ";";
-            });
-            if (worktodo == 1) {
-                /* only bother submitting if there are elements to be sorted */
-                var req = new XMLHttpRequest();
-                req.open("POST",url,true);
-                req.send(null);
-            }
-        }
+
+<link rel="stylesheet"
+      href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+
+<style type="text/css">
+    .draghandle {
+        cursor: move;
+        float: left;
+    }
+    #children-order-list {list-style-type: none; margin: 0; padding: 0;}
+    #children li { margin: 0 3px 3px 3px; padding: 0.4em;
+    padding-left: 1.5em;
+          background-color: #ddd;
+    }
+    #children li span { position: absolute; margin-left: -1.3em; }
+    .dragging {background-color: #fee;}
+</style>
+
+<!-- Prevent pagetree's jQuery and jQueryUI from interfering with the
+     main application's copy. -->
+<script>
+    var _pagetree_define_backup = window.define;
+    window.define = undefined;
+</script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+<script src="{% static 'pagetree/js/jquery.cookie.js' %}"></script>
+<script>
+    var pagetree = { $: jQuery.noConflict(true) };
+    window.define = _pagetree_define_backup;
+</script>
+
+<script src="{% static 'pagetree/js/pagetree-admin.js' %}"></script>
+<script>
+(function($) {
+    // handle hash tag navigation
+    var hash = window.location.hash;
+    hash && $('.edit-page-nav a[href="' + hash + '"]').tab('show');
     
-        jQuery(document).ready(function() {
-            jQuery("#children-order-list").sortable({
-                containment : 'parent',
-                axis : 'y',
-                tolerance: 'pointer',
-                stop: function (event,ui) { saveOrderOfChildren();}
-            });
-            
-            jQuery("#children-order-list").disableSelection();
-            
-            jQuery("#edit-blocks-tab").sortable({
-                containment: 'parent',
-                axis: 'y',
-                tolerance: 'pointer',
-                items : 'div.block-dragger',
-                stop: function (event,ui) { saveOrderOfPageBlocks();}
-              });
-        
-            jQuery("#edit-blocks-tab").disableSelection();
-        });
-    </script>
+    // when the nav item is selected update the page hash
+    $('.edit-page-nav a').on('shown', function (e) {
+        window.location.hash = e.target.hash;
+        scrollTo(0,0);
+    });
+    
+  $("#children-order-list").sortable({
+    containment : 'parent'
+    ,axis : 'y'
+    ,tolerance: 'pointer'
+    ,activeClass: 'dragging'
+    ,handle: '.draghandle'
+    ,stop: function (event,ui) {
+        pagetree.saveOrderOfChildren(
+            "{% url 'reorder-section-children' section.id %}?");
+    }
+  });
+  $("#children-order-list").disableSelection();
+
+  $("#edit-blocks-tab").sortable({
+    items : 'div.block-dragger'
+    ,axis: 'y'
+    ,containment: 'parent'
+    ,handle: '.draghandle'
+    ,activeClass: 'dragging'
+    ,tolerance: 'pointer'
+    ,stop: function (event,ui) {
+        pagetree.saveOrderOfPageBlocks(
+            "{% url 'reorder-pageblocks' section.id %}?");
+    }
+  });
+  $("#edit-blocks-tab").disableSelection();
+})(pagetree.$);
+</script>
+
 {% endblock %}
 
 {% block content %}

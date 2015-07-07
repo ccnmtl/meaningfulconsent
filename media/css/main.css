@@ -6,6 +6,10 @@ body {
   background-color: #fff;
 }
 
+.pageblock {
+    font-size: 16px;
+}
+
 body > .container-fluid {
   background-color: #fff;
   padding-top: 50px; /* required for navbar-fixed */
@@ -607,16 +611,54 @@ div.pageblock.survey div.cases {
 }
 
 /** topic rating summary **/
-div.quiz-summary ul {
+.quiz-summary ul {
     margin-top: 20px;
     list-style-type: none;
     padding-left: 0;
 }
 
-div.quiz-summary ul li {
+.quiz-summary ul li {
     margin-bottom: 20px;
+}
+
+.casequestionintrotext {
+    display: none;
 }
 
 .casequestion ol {
     display: inline-block;
+}
+
+/** 5 column layout **/
+.col-xs-15,
+.col-sm-15,
+.col-md-15,
+.col-lg-15 {
+    position: relative;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+.col-xs-15 {
+    width: 20%;
+    float: left;
+}
+@media (min-width: 768px) {
+.col-sm-15 {
+        width: 20%;
+        float: left;
+    }
+}
+@media (min-width: 992px) {
+    .col-md-15 {
+        width: 20%;
+        float: left;
+    }
+}
+@media (min-width: 1200px) {
+    .col-lg-15 {
+        width: 20%;
+        float: left;
+    }
 }

@@ -45,9 +45,11 @@ class UserProfile(models.Model):
         return (not self.user.is_active and
                 self.user.username.startswith(USERNAME_PREFIX))
 
+    def default_hierarchy(self):
+        return Hierarchy.get_hierarchy(self.language)
+
     def default_location(self):
-        hierarchy = Hierarchy.get_hierarchy(self.language)
-        return hierarchy.get_root()
+        return self.default_hierarchy().get_root()
 
     def last_access(self):
         return self.last_access_hierarchy(self.language) or self.created
