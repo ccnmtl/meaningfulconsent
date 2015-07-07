@@ -7,6 +7,33 @@
             'click .video-complete-quiz input[type="checkbox"]': 'onSubmitPage',
             'click .topic-rating-quiz input[type="radio"]': 'onSubmitPage'
         },
+        isFormComplete: function(form) {
+            var complete = true;
+            var children = jQuery(form).find("input,textarea,select");
+            jQuery.each(children, function() {
+                if (complete) {
+                    
+                    if (this.tagName === 'INPUT' && this.type === 'text' ||
+                        this.tagName === 'TEXTAREA') {
+                        complete = jQuery(this).val().trim().length > 0;
+                    }
+            
+                    if (this.tagName === 'SELECT') {
+                        var value = jQuery(this).val();
+                        complete = value !== undefined && value.length > 0 &&
+                            jQuery(this).val().trim() !== '-----';
+                    }
+            
+                    if (this.type === 'checkbox' || this.type === 'radio') {
+                        // one in the group needs to be checked
+                        var selector = 'input[name=' + jQuery(this).attr("name") + ']';
+                        complete = jQuery(selector).is(":checked");
+                    }
+                }
+            });
+
+            return complete;
+        },
         initialize: function(options) {
             _.bindAll(this,
                     'onPauseSession',
@@ -109,7 +136,7 @@
                         $nextButton.removeClass('dimmed');
                         $span.removeClass('glyphicon-repeat spin');
                         $span.addClass('glyphicon-circle-arrow-right');
-                    }, 1000);
+                    }, 500);
                 })
                 .fail(function() {
                     jQuery(".error-inline").fadeIn(function() {
