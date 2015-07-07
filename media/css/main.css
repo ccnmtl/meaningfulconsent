@@ -382,11 +382,6 @@ div.participant-search-container .help-block {
     margin-top: -5px;    
 }
 
-.content-carousel h3 {
-    margin-top: 15px;
-    margin-bottom: 8px;
-}
-
 .content-carousel-progress {
     height: 15px;
     border-radius: 0;
@@ -512,6 +507,14 @@ and (orientation: portrait) {
     .topic-rating-quiz {
         width: 550px;
     }
+    
+    .col-xs-5ths,
+    .col-sm-5ths,
+    .col-md-5ths,
+    .col-lg-5ths,
+    .topic-rating-summary .panel-body {
+        height: auto !important;
+    }
 }
 
 /* video complete quiz */
@@ -535,19 +538,6 @@ and (orientation: portrait) {
     font-size: 20px;
 }
 
-/* participant input -- topic_discussion */
-div.pageblock.topic_discussion div.cases {
-    margin-top: 50px;
-}
-
-div.pageblock.topic_discussion div.casequestion ol {
-    list-style-type: none;
-    padding-left: 2px;
-}
-
-div.pageblock.topic-discussion div.casequestionintrotext {
-    display: none;
-}
 
 /** participant input -- topic-rating-quiz **/
 .topic-rating-quiz .panel {
@@ -619,6 +609,18 @@ div.pageblock.topic-discussion div.casequestionintrotext {
         background-color:#e0e0e0;
 }
 
+/** topic rating summary **/
+
+.topic-rating-summary h3.panel-title {
+    font-size: 18px !important;
+    text-align: center;
+    height: 40px;
+}
+
+.topic-rating-summary .panel-body {
+    height: 400px;
+}
+
 /** participant input -- survey **/
 div.pageblock.survey div.cases {
     margin-bottom: 30px;
@@ -678,5 +680,65 @@ div.pageblock.survey div.cases {
     .col-lg-5ths {
         width: 20%;
         float: left;
+    }
+}
+
+/* Priority colors */
+.pr-important {
+    /* background-color: #bf4726 !important; */
+    background-color: #E84C23 !important;
+}
+
+.pr-somewhat-important {
+    /* background-color: #CC7259 !important; */
+    background-color: #EB7657 !important;
+}
+
+.pr-neutral {
+    /* background-color: #DA9E8D !important; */
+    background-color: #EEA08C !important;
+}
+
+.pr-somewhat-unimportant {
+    /* background-color: #E7C9C1 !important; */
+    background-color: #F1CAC0 !important;
+}
+
+.pr-unimportant {
+    background-color: #f5f5f5 !important;
+}
+
+.participant-printout {
+    padding: 20px;
+    width: 75%;
+}
+
+.participant-printout p {
+    font-size: 18px;
+}
+
+.participant-printout h3.panel-title {
+    font-size: 24px !important;
+}
+
+@media print {
+    a[href]:after {
+        content: none !important;
+    }
+    .navbar {
+        display: block;
+        border-width: 0 !important;
+    }
+    .navbar-toggle {
+        display:none;
+    }    
+    .navbar-collapse, ul.nav {
+        display: none;
+    }
+    .participant-printout .panel-title {
+        -webkit-print-color-adjust: exact;
+    }
+    #send-to-printer {
+        display: none
     }
 }

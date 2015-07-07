@@ -3,54 +3,84 @@
 
     {% get_quiz_summary user cls as ratings %}
     
-    <div class="row">
+    <div class="row topic-rating-summary">
         <!-- Unimportant -->
         <div class="col-md-5ths">
-            <div class="well">
-                <h4>Unimportant</h4>
-                {% for item in ratings.unimportant %}
-                    {{item}}
-                {% endfor %}
+            <div class="panel panel-default">
+                <div class="panel-heading pr-unimportant">
+                    <h3 class="panel-title">Unimportant</h3>
+                </div>
+                <div class="panel-body">
+                    {% for item in ratings.unimportant %}
+                        <p>{{item}}</p>
+                    {% empty %}
+                        <p>nothing chosen</p>                
+                    {% endfor %}
+                </div>
             </div>
         </div>
 
         <!-- Somewhat Unimportant -->
         <div class="col-md-5ths">
-            <div class="well">
-                <h4>Somewhat Unimportant</h4>
-                 {% for item in ratings.somewhatunimportant %}
-                    {{item}}
-                 {% endfor %}
+            <div class="panel panel-default">
+                <div class="panel-heading pr-somewhat-unimportant">
+                    <h3 class="panel-title">Somewhat<br />Unimportant</h3>
+                </div>
+                <div class="panel-body">
+                    {% for item in ratings.somewhatunimportant %}
+                        <p>{{item}}</p>
+                    {% empty %}
+                        <p>nothing chosen</p>                
+                    {% endfor %}
+                </div>
             </div>
         </div>
         
         <!-- Neutral -->
         <div class="col-md-5ths">
-            <div class="well">
-                <h4>Neutral</h4>
-                {% for item in ratings.neutral %}
-                   {{item}}
-                {% endfor %}
+            <div class="panel panel-default">
+                <div class="panel-heading pr-neutral">
+                    <h3 class="panel-title">Neutral</h3>
+                </div>
+                <div class="panel-body">
+                    {% for item in ratings.neutral %}
+                        <p>{{item}}</p>
+                    {% empty %}
+                        <p>nothing chosen</p>                
+                    {% endfor %}
+                </div>
             </div>
         </div>
         
         <!-- Somewhat Important -->
         <div class="col-md-5ths">
-            <div class="well">
-                <h4>Somewhat Important</h4>
-                {% for item in ratings.somewhatimportant %}
-                    {{item}}
-                {% endfor %}
+            <div class="panel panel-default">
+                <div class="panel-heading pr-somewhat-important">
+                    <h3 class="panel-title">Somewhat<br />Important</h3>
+                </div>
+                <div class="panel-body">
+                    {% for item in ratings.somewhatimportant %}
+                        <p>{{item}}</p>
+                    {% empty %}
+                        <p>nothing chosen</p>                
+                    {% endfor %}
+                </div>
             </div>
         </div>
                 
         <!-- Important -->
         <div class="col-md-5ths">
-            <div class="well">
-                <h4>Important</h4>
-                {% for item in ratings.important %}
-                    {{item}}
-                {% endfor %}
+            <div class="panel panel-default">
+                <div class="panel-heading pr-important">
+                    <h3 class="panel-title">Important</h3>
+                </div>
+                <div class="panel-body">
+                    {% for item in ratings.important %}
+                        <p>{{item}}</p>
+                    {% empty %}
+                        <p>nothing chosen</p>                
+                    {% endfor %}
+                </div>
             </div>
         </div>
     </div>
