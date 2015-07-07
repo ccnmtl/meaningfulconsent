@@ -643,35 +643,39 @@ div.pageblock.survey div.cases {
     display: inline-block;
 }
 
-/** 5 column layout **/
-.col-xs-15,
-.col-sm-15,
-.col-md-15,
-.col-lg-15 {
+/** Five column layout **/
+.col-xs-5ths,
+.col-sm-5ths,
+.col-md-5ths,
+.col-lg-5ths {
     position: relative;
     min-height: 1px;
     padding-right: 10px;
     padding-left: 10px;
+    height: 400px;
 }
 
-.col-xs-15 {
+.col-xs-5ths {
     width: 20%;
     float: left;
 }
+
 @media (min-width: 768px) {
-.col-sm-15 {
+    .col-sm-5ths {
         width: 20%;
         float: left;
     }
 }
+
 @media (min-width: 992px) {
-    .col-md-15 {
+    .col-md-5ths {
         width: 20%;
         float: left;
     }
 }
+
 @media (min-width: 1200px) {
-    .col-lg-15 {
+    .col-lg-5ths {
         width: 20%;
         float: left;
     }

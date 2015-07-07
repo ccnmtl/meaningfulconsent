@@ -42,7 +42,10 @@ class GetTopicRatings(template.Node):
                     submission=submissions[0]).first()
                 answer = r.question.answer_set.get(value=r.value)
 
-                key = slugify(answer.label)
+                key = answer.label.replace("<br />", "")
+                key = key.replace(" ", "")
+                key = key.lower()
+
                 if answer.label not in ratings:
                     ratings[key] = []
                 ratings[key].append(question.intro_text)

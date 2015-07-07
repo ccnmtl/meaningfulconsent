@@ -2,45 +2,56 @@
 {% with cls="topic-rating-quiz" %}
 
     {% get_quiz_summary user cls as ratings %}
-
+    
     <div class="row">
         <!-- Unimportant -->
-        <h4>Unimportant</h4>
-        <div class="col-md-15 col-sm-3">
-             {% for item in ratings.unimportant %}
-                {{item}}
-             {% endfor %}
+        <div class="col-md-5ths">
+            <div class="well">
+                <h4>Unimportant</h4>
+                {% for item in ratings.unimportant %}
+                    {{item}}
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Somewhat Unimportant -->
+        <div class="col-md-5ths">
+            <div class="well">
+                <h4>Somewhat Unimportant</h4>
+                 {% for item in ratings.somewhatunimportant %}
+                    {{item}}
+                 {% endfor %}
+            </div>
         </div>
         
+        <!-- Neutral -->
+        <div class="col-md-5ths">
+            <div class="well">
+                <h4>Neutral</h4>
+                {% for item in ratings.neutral %}
+                   {{item}}
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Somewhat Important -->
+        <div class="col-md-5ths">
+            <div class="well">
+                <h4>Somewhat Important</h4>
+                {% for item in ratings.somewhatimportant %}
+                    {{item}}
+                {% endfor %}
+            </div>
+        </div>
+                
         <!-- Important -->
-        <h4>Important</h4>
-        <div class="col-md-15 col-sm-3">
-             {% for item in ratings.important %}
-                {{item}}
-             {% endfor %}
+        <div class="col-md-5ths">
+            <div class="well">
+                <h4>Important</h4>
+                {% for item in ratings.important %}
+                    {{item}}
+                {% endfor %}
+            </div>
         </div>
     </div>
-
-{% comment %}    
-    [u'Important'] [u'Neutral'] [u'Not important'] [u'Unimportant'] [u'Very important'] [u'Very important']
-    
-    
-    <div class="well quiz-summary">
-        <ul>
-            {% for item in ratings %}
-                <li>
-                    <h4>{{item.0}}</h4>
-                    {% if item.1|length == 0 %}
-                        No reply recorded
-                    {% else %}
-                        {% for answer in item.1 %}
-                            {{answer}}{% if not forloop.last %},{% endif %} 
-                        {% endfor %}
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    </div>
-{% endcomment %}
-
 {% endwith %}
