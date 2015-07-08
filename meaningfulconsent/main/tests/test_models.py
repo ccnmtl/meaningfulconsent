@@ -241,15 +241,15 @@ class SimpleImageBlockTest(TestCase):
         self.assertTrue("alt" in edit_form.fields)
 
     def test_create(self):
-        r = FakeReq()
-        r.POST = {'caption': 'abcdefg', 'alt': 'alt text'}
-        f = ContentFile(factory.django.ImageField()._make_data(
-                        {'width': 1024, 'height': 768}
-                        ), 'test.jpg')
-        r.FILES = {'image': f}
-        block = SimpleImageBlock.create(r)
-        self.assertEquals(block.caption, 'abcdefg')
-        self.assertEquals(block.alt, 'alt text')
+        with self.settings(MEDIA_ROOT='../media'):
+            r = FakeReq()
+            r.POST = {'caption': 'abcdefg', 'alt': 'alt text'}
+            f = ContentFile(factory.django.ImageField()._make_data(
+                            {'width': 1024, 'height': 768}), 'test.jpg')
+            r.FILES = {'image': f}
+            block = SimpleImageBlock.create(r)
+            self.assertEquals(block.caption, 'abcdefg')
+            self.assertEquals(block.alt, 'alt text')
 
     def test_edit(self):
         block = SimpleImageBlockFactory()
