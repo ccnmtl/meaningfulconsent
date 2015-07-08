@@ -1,12 +1,17 @@
+import json
+
 from django.contrib.auth.models import User
+from django.core.urlresolvers import reverse
+from django.http.response import Http404
 from django.test import TestCase
-from django.test.client import Client
+from django.test.client import Client, RequestFactory
+from pagetree.helpers import get_hierarchy
+from pagetree.models import UserPageVisit
+
 from meaningfulconsent.main.auth import generate_password
 from meaningfulconsent.main.models import Clinic, UserVideoView
 from meaningfulconsent.main.tests.factories import ParticipantTestCase
-from pagetree.helpers import get_hierarchy
-from pagetree.models import UserPageVisit
-import json
+from meaningfulconsent.main.views import ParticipantPrintView
 
 
 class BasicTest(TestCase):
@@ -561,3 +566,57 @@ class ParticipantNoteViewTest(ParticipantTestCase):
 
         user = User.objects.get(username=self.participant.username)
         self.assertEquals(user.profile.notes, 'foo bar baz')
+
+
+class ParticipantPrintViewTest(ParticipantTestCase):
+
+    def test_get_as_facilitator(self):
+        url = "%s?username=%s" % (reverse('participant-print-view'),
+                                  self.participant.username)
+
+        view = ParticipantPrintView()
+        view.request = RequestFactory().get(url)
+        view.request.user = self.user
+
+        ctx = view.get_context_data()
+        self.assertEquals(ctx['participant'], self.participant)
+
+    def test_post_as_participant(self):
+        url = "%s?username=%s" % (reverse('participant-print-view'),
+                                  self.participant.username)
+        self.login_participant()
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 405)
+
+    def test_post_as_facilitator_invalidparams(self):
+        url = "%s?username=%s" % (reverse('participant-print-view'),
+                                  'foobar')
+        view = ParticipantPrintView()
+        view.request = RequestFactory().get(url)
+        view.request.user = self.user
+
+        with self.assertRaises(Http404):
+            view.get_context_data()
+
+
+class ReportViewTest(ParticipantTestCase):
+
+    def test_access_denied(self):
+        url = reverse('report-view')
+
+        # not logged in
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 405)
+
+        # as participant
+        self.login_participant()
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 405)
+
+    def test_facilitator(self):
+        url = reverse('report-view')
+
+        # facilitator
+        self.client.login(username=self.user.username, password="test")
+        response = self.client.get(url)
+        self.assertEquals(response.status_code, 200)

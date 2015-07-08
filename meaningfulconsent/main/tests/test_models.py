@@ -1,8 +1,12 @@
 from django.test import TestCase
-from meaningfulconsent.main.models import Clinic, UserVideoView
+from pagetree.models import Hierarchy, UserPageVisit, Section
+from quizblock.tests.test_models import FakeReq
+
+from meaningfulconsent.main.models import Clinic, UserVideoView, \
+    QuizSummaryBlock, YouTubeBlock
 from meaningfulconsent.main.tests.factories import UserFactory, \
-    ModuleFactory, ParticipantFactory
-from pagetree.models import Hierarchy, UserPageVisit
+    ModuleFactory, ParticipantFactory, QuizSummaryBlockFactory, \
+    YouTubeBlockFactory, SimpleImageBlockFactory
 
 
 class UserProfileTest(TestCase):
@@ -124,3 +128,118 @@ class UserVideoViewTest(TestCase):
 
         uvv.seconds_viewed = 200
         self.assertEquals(uvv.percent_viewed(), 200.0)
+
+
+class QuizSummaryBlockTest(TestCase):
+
+    def test_basics(self):
+        block = QuizSummaryBlockFactory()
+        ModuleFactory("one", "/pages/one/")
+        self.hierarchy = Hierarchy.objects.get(name='one')
+        self.section_one = Section.objects.get(slug='one')
+
+        self.section_one.append_pageblock('test', '', block)
+
+        self.assertTrue(block.__unicode__().startswith('One'))
+        self.assertIsNotNone(block.pageblock())
+        self.assertFalse(block.needs_submit())
+        self.assertTrue(block.unlocked(None))
+
+    def test_add_form(self):
+        add_form = QuizSummaryBlockFactory().add_form()
+        self.assertTrue("quiz_class" in add_form.fields)
+
+    def test_edit_form(self):
+        edit_form = QuizSummaryBlockFactory().edit_form()
+        self.assertTrue("quiz_class" in edit_form.fields)
+
+    def test_create(self):
+        r = FakeReq()
+        r.POST = {'quiz_class': 'quiz class info here'}
+        block = QuizSummaryBlock.create(r)
+        self.assertEquals(block.quiz_class, 'quiz class info here')
+        self.assertEquals(block.display_name, 'Quiz Summary Block')
+
+    def test_edit(self):
+        block = QuizSummaryBlockFactory()
+        block.edit({'quiz_class': 'updated class'}, None)
+        self.assertEquals(block.quiz_class, 'updated class')
+
+
+class YouTubeBlockTest(TestCase):
+
+    def test_basics(self):
+        block = YouTubeBlockFactory()
+        ModuleFactory("one", "/pages/one/")
+        self.hierarchy = Hierarchy.objects.get(name='one')
+        self.section_one = Section.objects.get(slug='one')
+
+        self.section_one.append_pageblock('test', '', block)
+
+        self.assertTrue(block.__unicode__().startswith('One'))
+        self.assertIsNotNone(block.pageblock())
+        self.assertFalse(block.needs_submit())
+        self.assertTrue(block.unlocked(None))
+
+    def test_add_form(self):
+        add_form = YouTubeBlockFactory().add_form()
+        self.assertTrue("video_id" in add_form.fields)
+        self.assertTrue("title" in add_form.fields)
+        self.assertTrue("language" in add_form.fields)
+
+    def test_edit_form(self):
+        edit_form = YouTubeBlockFactory().edit_form()
+        self.assertTrue("video_id" in edit_form.fields)
+        self.assertTrue("title" in edit_form.fields)
+        self.assertTrue("language" in edit_form.fields)
+
+    def test_create(self):
+        r = FakeReq()
+        r.POST = {'video_id': 'abcdefg', 'language': 'en', 'title': 'Sample'}
+        block = YouTubeBlock.create(r)
+        self.assertEquals(block.video_id, 'abcdefg')
+        self.assertEquals(block.language, 'en')
+        self.assertEquals(block.title, 'Sample')
+        self.assertEquals(block.display_name, 'YouTube Video')
+
+    def test_edit(self):
+        block = YouTubeBlockFactory()
+        block.edit({'video_id': 'xyz', 'language': 'es', 'title': 'Foo'}, None)
+        self.assertEquals(block.video_id, 'xyz')
+        self.assertEquals(block.language, 'es')
+        self.assertEquals(block.title, 'Foo')
+
+
+class SimpleImageBlockTest(TestCase):
+
+    def test_basics(self):
+        block = SimpleImageBlockFactory()
+        ModuleFactory("one", "/pages/one/")
+        self.hierarchy = Hierarchy.objects.get(name='one')
+        self.section_one = Section.objects.get(slug='one')
+
+        self.section_one.append_pageblock('test', '', block)
+
+        self.assertTrue(block.__unicode__().startswith('One'))
+        self.assertIsNotNone(block.pageblock())
+        self.assertFalse(block.needs_submit())
+        self.assertTrue(block.unlocked(None))
+        self.assertEquals(block.display_name, 'Simple Image Block')
+
+    def test_add_form(self):
+        add_form = SimpleImageBlockFactory().add_form()
+        self.assertTrue("caption" in add_form.fields)
+        self.assertTrue("image" in add_form.fields)
+        self.assertTrue("alt" in add_form.fields)
+
+    def test_edit_form(self):
+        edit_form = SimpleImageBlockFactory().edit_form()
+        self.assertTrue("caption" in edit_form.fields)
+        self.assertTrue("image" in edit_form.fields)
+        self.assertTrue("alt" in edit_form.fields)
+
+    def test_edit(self):
+        block = SimpleImageBlockFactory()
+        block.edit({'caption': 'xyz', 'alt': 'foo'}, None)
+        self.assertEquals(block.caption, 'xyz')
+        self.assertEquals(block.alt, 'foo')

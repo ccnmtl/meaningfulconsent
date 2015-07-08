@@ -1,12 +1,15 @@
 from django.contrib.auth.models import User
+from django.core.files.base import ContentFile
 from django.test.client import Client
 from django.test.testcases import TestCase
-from meaningfulconsent.main.auth import generate_password
-from meaningfulconsent.main.models import Clinic
+import factory
 from pagetree.models import Hierarchy
 from pagetree.tests.factories import UserFactory, ModuleFactory
-import factory
 import simplejson
+
+from meaningfulconsent.main.auth import generate_password
+from meaningfulconsent.main.models import Clinic, QuizSummaryBlock, \
+    YouTubeBlock, SimpleImageBlock
 
 
 class ClinicFactory(factory.DjangoModelFactory):
@@ -68,3 +71,26 @@ class PagetreeTestCase(TestCase):
 
         self.hierarchy_en = Hierarchy.objects.get(name='en')
         self.hierarchy_es = Hierarchy.objects.get(name='es')
+
+
+class QuizSummaryBlockFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = QuizSummaryBlock
+    quiz_class = "quiz class"
+
+
+class YouTubeBlockFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = YouTubeBlock
+    video_id = 'abcdefg'
+    language = 'en'
+    title = 'Sample Title'
+
+
+class SimpleImageBlockFactory(factory.DjangoModelFactory):
+    FACTORY_FOR = SimpleImageBlock
+    caption = 'abcdefg'
+    alt = 'alt text'
+
+    image = factory.LazyAttribute(
+        lambda _: ContentFile(
+            factory.django.ImageField(upload_to="img")._make_data(
+                {'width': 1024, 'height': 768}), 'test.gif'))

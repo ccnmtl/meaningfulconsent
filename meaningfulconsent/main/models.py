@@ -278,6 +278,12 @@ class SimpleImageBlock(models.Model):
     def __unicode__(self):
         return unicode(self.pageblock())
 
+    def needs_submit(self):
+        return False
+
+    def unlocked(self, user):
+        return True
+
     def edit_form(self):
         class EditForm(forms.Form):
             image = forms.FileField(label="replace image")
@@ -323,7 +329,7 @@ class SimpleImageBlock(models.Model):
     def edit(self, vals, files):
         self.caption = vals.get('caption', '')
         self.alt = vals.get('alt', '')
-        if 'image' in files:
+        if files and 'image' in files:
             self.save_image(files['image'])
         self.save()
 
