@@ -80,7 +80,8 @@ urlpatterns = patterns(
 
     (r'^participants/manage/$', is_facilitator(
         TemplateView.as_view(template_name="main/manage_participants.html"))),
-    (r'^participants/report/$', ReportView.as_view()),
+    (r'^participants/report/$', ReportView.as_view(), {},
+     'report-view'),
 
     (r'^participant/archive/$', ArchiveParticipantView.as_view()),
     (r'^participant/clear/$', ClearParticipantView.as_view()),
@@ -89,7 +90,8 @@ urlpatterns = patterns(
         name='participant-language'),
     (r'^participant/login/$', LoginParticipantView.as_view()),
     (r'^participant/note/$', ParticipantNoteView.as_view()),
-    (r'^participant/print/$', ParticipantPrintView.as_view()),
+    (r'^participant/print/$', ParticipantPrintView.as_view(),
+     {}, 'participant-print-view'),
     (r'^participant/track/$', TrackParticipantView.as_view()),
 
     # English
