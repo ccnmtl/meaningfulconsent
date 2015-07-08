@@ -582,13 +582,15 @@ class ParticipantPrintViewTest(ParticipantTestCase):
         self.assertEquals(ctx['participant'], self.participant)
 
     def test_post_as_participant(self):
-        url = '/participant/print/?username=%s' % self.participant.username
+        url = "%s?username=%s" % (reverse('participant-print-view'),
+                                  self.participant.username)
         self.login_participant()
         response = self.client.get(url)
         self.assertEquals(response.status_code, 405)
 
     def test_post_as_facilitator_invalidparams(self):
-        url = '/participant/print/?username=foobar'
+        url = "%s?username=%s" % (reverse('participant-print-view'),
+                                  'foobar')
         view = ParticipantPrintView()
         view.request = RequestFactory().get(url)
         view.request.user = self.user
