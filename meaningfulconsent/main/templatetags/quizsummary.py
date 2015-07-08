@@ -45,7 +45,7 @@ class GetTopicRatings(template.Node):
                 key = key.replace(" ", "")
                 key = key.lower()
 
-                if answer.label not in ratings:
+                if key not in ratings:
                     ratings[key] = []
                 ratings[key].append(question.intro_text)
 
