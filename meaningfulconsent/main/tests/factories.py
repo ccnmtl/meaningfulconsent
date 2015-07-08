@@ -90,6 +90,7 @@ class SimpleImageBlockFactory(factory.DjangoModelFactory):
     caption = 'abcdefg'
     alt = 'alt text'
 
-    image = factory.LazyAttribute(lambda _: ContentFile(
-        factory.django.ImageField()._make_data({'width': 1024, 'height': 768}),
-        'test.jpg'))
+    image = factory.LazyAttribute(
+        lambda _: ContentFile(
+            factory.django.ImageField(upload_to="img")._make_data(
+                {'width': 1024, 'height': 768}), 'test.gif'))

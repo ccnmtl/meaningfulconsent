@@ -1,11 +1,9 @@
-from django.core.files.base import ContentFile
 from django.test import TestCase
-import factory
 from pagetree.models import Hierarchy, UserPageVisit, Section
 from quizblock.tests.test_models import FakeReq
 
 from meaningfulconsent.main.models import Clinic, UserVideoView, \
-    QuizSummaryBlock, YouTubeBlock, SimpleImageBlock
+    QuizSummaryBlock, YouTubeBlock
 from meaningfulconsent.main.tests.factories import UserFactory, \
     ModuleFactory, ParticipantFactory, QuizSummaryBlockFactory, \
     YouTubeBlockFactory, SimpleImageBlockFactory
@@ -239,17 +237,6 @@ class SimpleImageBlockTest(TestCase):
         self.assertTrue("caption" in edit_form.fields)
         self.assertTrue("image" in edit_form.fields)
         self.assertTrue("alt" in edit_form.fields)
-
-    def test_create(self):
-        with self.settings(MEDIA_ROOT='../media'):
-            r = FakeReq()
-            r.POST = {'caption': 'abcdefg', 'alt': 'alt text'}
-            f = ContentFile(factory.django.ImageField()._make_data(
-                            {'width': 1024, 'height': 768}), 'test.jpg')
-            r.FILES = {'image': f}
-            block = SimpleImageBlock.create(r)
-            self.assertEquals(block.caption, 'abcdefg')
-            self.assertEquals(block.alt, 'alt text')
 
     def test_edit(self):
         block = SimpleImageBlockFactory()

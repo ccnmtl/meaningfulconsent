@@ -57,6 +57,6 @@ COMPRESS_STORAGE = 'cacheds3storage.CompressorS3BotoStorage'
 MEDIA_URL = 'https://%s.s3.amazonaws.com/uploads/' % AWS_STORAGE_BUCKET_NAME
 
 try:
-    from local_settings import *
+    from meaningfulconsent.local_settings import *
 except ImportError:
     pass
