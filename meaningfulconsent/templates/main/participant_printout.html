@@ -11,63 +11,90 @@
     </script>
 {% endblock %}
 
-{% block css %}
-    <link href="{{STATIC_URL}}css/tablesorter.css" rel="stylesheet" />
-{% endblock %}
-
 {% block content %}
-    <div>
-        <h1 class="pull-left">Printout for {{participant.username}}</h1>
-        <a  id="send-to-printer" class="btn btn-default pull-right" href="#">
-            <span class="glyphicon glyphicon-print"></span> Send to Printer
-        </a>
-    </div>
-    <div style="clear: both"></div>    
-    
-    <div class="progress">
-        <div class="bar" style="width: {{participant.profile.percent_complete}}%"></div>
-        <span class="progress-bar-label">{{participant.profile.percent_complete}}% Complete</span>
-    </div>
+    {% with cls="topic-rating-quiz" %}
+    {% get_quiz_summary user cls as ratings %}
+        
+    <div class="participant-printout center-block">
+        <div>
+            <a id="send-to-printer" class="btn btn-default pull-right" href="#">
+                <span class="glyphicon glyphicon-print"></span> Send to Printer
+            </a>
+        </div>
+        
+        <h2>My Priorities</h2>
+        <br />
 
-    <h3>Discussion Topics</h3>
-    <div class="well quiz-summary">
-        <ul>
-            {% with cls="topic-discussion" %}
-                {% get_quiz_summary participant cls as discussions %} 
-                {% for item in discussions %}
-                    <li>
-                        <h4>{{item.0}}</h4>
-                        {% if item.1|length == 0 %}
-                            No reply recorded
-                        {% else %}
-                            {% for answer in item.1 %}
-                                {{answer}}{% if not forloop.last %},{% endif %} 
-                            {% endfor %}
-                        {% endif %}
-                    </li>
+        <!-- Important -->
+        <div class="panel panel-default">
+            <div class="panel-heading pr-important">
+                <h3 class="panel-title">Important</h3>
+            </div>
+            <div class="panel-body">
+                {% for item in ratings.important %}
+                    <p>{{item}}</p>
+                {% empty %}
+                    <p>nothing chosen</p>                
                 {% endfor %}
-            {% endwith %}
-        </ul>
-    </div>    
-    
-    <h3>Priorities</h3>
-    <div class="well quiz-summary">
-        <ul>
-            {% with cls="topic-rating" %}
-                {% get_quiz_summary participant cls as ratings %}
-                {% for item in ratings %}
-                    <li>
-                        <h4>{{item.0}}</h4>
-                        {% if item.1|length == 0 %}
-                            No reply recorded
-                        {% else %}
-                            {% for answer in item.1 %}
-                                {{answer}}{% if not forloop.last %},{% endif %} 
-                            {% endfor %}
-                        {% endif %}
-                    </li>
+            </div>
+        </div>
+
+        <!-- Somewhat Important -->
+        <div class="panel panel-default">
+            <div class="panel-heading pr-somewhat-important">
+                <h3 class="panel-title">Somewhat Important</h3>
+            </div>
+            <div class="panel-body">
+                {% for item in ratings.somewhatimportant %}
+                    <p>{{item}}</p>
+                {% empty %}
+                    <p>nothing chosen</p>                
                 {% endfor %}
-            {% endwith %}
-        </ul>
+            </div>
+        </div>
+
+        <!-- Neutral -->
+        <div class="panel panel-default">
+            <div class="panel-heading pr-neutral">
+                <h3 class="panel-title">Neutral</h3>
+            </div>
+            <div class="panel-body">
+                {% for item in ratings.neutral %}
+                    <p>{{item}}</p>
+                {% empty %}
+                    <p>nothing chosen</p>                
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Somewhat Unimportant -->
+        <div class="panel panel-default">
+            <div class="panel-heading pr-somewhat-unimportant">
+                <h3 class="panel-title">Somewhat Unimportant</h3>
+            </div>
+            <div class="panel-body">
+                {% for item in ratings.somewhatunimportant %}
+                    <p>{{item}}</p>
+                {% empty %}
+                    <p>nothing chosen</p>                
+                {% endfor %}
+            </div>
+        </div>
+        
+
+        <!-- Unimportant -->
+        <div class="panel panel-default">
+            <div class="panel-heading pr-unimportant">
+                <h3 class="panel-title">Unimportant</h3>
+            </div>
+            <div class="panel-body">
+                {% for item in ratings.unimportant %}
+                    <p>{{item}}</p>
+                {% empty %}
+                    <p>nothing chosen</p>                
+                {% endfor %}
+            </div>
+        </div>                  
     </div>
+    {% endwith %}
 {% endblock %}
