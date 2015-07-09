@@ -8,7 +8,7 @@
         {% include 'quizblock/video_complete_quiz.html' %}
     {% else %}
     <div class="casecontent">
-        <div class="casequestion text-center panel panel-default">
+        <div class="casequestion panel panel-default">
             <div class="casequestiontext panel-heading">
             
             {{question.text|markdown}}
@@ -43,10 +43,6 @@
             {% endif %}
             </div>
         </div>
-
-        {% if response %}
-            {% include 'quizblock/show_answer.html' %}
-        {% endif %}
     </div>
     {% endif %}
 </div>
