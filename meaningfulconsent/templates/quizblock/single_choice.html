@@ -1,6 +1,6 @@
 {% load markup %}
 
-<ol type="A">
+<ol class="caseanswercontainer">
     {% for answer in question.answer_set.all %}
         <li>
         {% if response %}
@@ -27,4 +27,3 @@
         </li>
   {% endfor %}
 </ol>
-<div style="clear: both"></div>

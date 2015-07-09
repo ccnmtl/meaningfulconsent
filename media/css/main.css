@@ -391,18 +391,16 @@ div.participant-search-container .help-block {
 .content-carousel .col-sm-1 {
     display: table-cell;
     float: none;
-    vertical-align: middle;
+    vertical-align: top;
+    position: relative;
 }
 .content-carousel .col-sm-10 {
     display: table-cell;
     float: none;
 }
 
-.content-carousel .col-sm-1 {
-    display: table-cell;
-    float: none;
-    vertical-align: middle;
-    position: relative;
+.content-carousel .col-sm-1 a {
+    margin-top: 250px;
 }
 
 .content-carousel .col-sm-1 a:active,
@@ -542,6 +540,7 @@ and (orientation: portrait) {
 /** participant input -- topic-rating-quiz **/
 .topic-rating-quiz .panel {
     margin-bottom: 0;
+    text-align: center;
 }
 
 .topic-rating-quiz .panel-heading {
@@ -609,9 +608,30 @@ and (orientation: portrait) {
 }
 
 /** participant input -- survey **/
-div.pageblock.survey div.cases {
+.pageblock.survey .cases {
     margin-bottom: 30px;
 }
+
+.pageblock.survey .caseanswercontainer {
+    list-style: none;
+    margin-left: -20px;
+}
+
+.pageblock.survey .caseanswercontainer label {
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+.pageblock.survey .casequestiontext.panel-heading p {
+    padding: 20px 20px 0 20px;
+}
+
+.pageblock.survey .casequestiontext.panel-heading textarea {
+    margin-left: 20px;
+    width: 60%;
+}
+
+
 
 /** topic rating summary **/
 .quiz-summary ul {

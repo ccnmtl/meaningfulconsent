@@ -77,7 +77,8 @@
     <div class="content-carousel row">
         <div class="col-sm-1 previous">
             {% if previous_section %}
-                <a href="{{previous_section.get_absolute_url}}" class="btn">
+                <a href="{{previous_section.get_absolute_url}}" class="btn"
+                 data-spy="affix">
                     <span class="glyphicon glyphicon-circle-arrow-left"></span>
                 </a>
             {% endif %}
@@ -106,12 +107,12 @@
         </div>
         <div class="col-sm-1 next">
             {% if next_section %}
-                <a href="{{next_section.get_absolute_url}}"
+                <a href="{{next_section.get_absolute_url}}" data-spy="affix"
                  class="btn 
                  {% if needs_submit and not is_submitted %}dimmed{% endif %}">
             {% else %}
                 <a href="#" class="btn" role="button" data-toggle="modal"
-                 data-target="end-session-modal">
+                 data-target="end-session-modal" data-spy="affix">
             {% endif %}
                 <span class="glyphicon glyphicon-circle-arrow-right"></span>
             </a>
