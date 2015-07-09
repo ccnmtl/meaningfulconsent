@@ -683,6 +683,44 @@ and (orientation: portrait) {
 .pageblock.survey .caseanswercontainer {
     list-style: none;
     margin-left: -20px;
+<<<<<<< HEAD
+=======
+}
+
+.pageblock.survey .caseanswercontainer label {
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+.pageblock.survey .casequestiontext.panel-heading p {
+    padding: 20px 20px 0 20px;
+}
+
+.pageblock.survey .casequestiontext.panel-heading textarea {
+    margin-left: 20px;
+    width: 60%;
+}
+
+
+
+/** topic rating summary **/
+.quiz-summary ul {
+    margin-top: 20px;
+    list-style-type: none;
+    padding-left: 0;
+}
+
+.quiz-summary ul li {
+    margin-bottom: 20px;
+}
+
+.casequestionintrotext {
+    display: none;
+}
+
+.casequestion ol {
+    display: inline-block;
+>>>>>>> 9ce6b122c5a9f144bf4d731218264bafb9088a69
 }
 
 .pageblock.survey .caseanswercontainer label {
