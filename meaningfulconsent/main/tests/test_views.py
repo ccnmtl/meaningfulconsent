@@ -1,3 +1,4 @@
+from json import loads
 import json
 
 from django.contrib.auth.models import User
@@ -295,12 +296,11 @@ class LanguageParticipantViewTest(ParticipantTestCase):
         self.assertEquals(response.status_code, 405)
 
     def test_post_as_user(self):
+        url = reverse('participant-language')
         self.client.login(username=self.user.username, password="test")
         self.assertEquals(self.user.profile.language, 'en')
 
-        response = self.client.post('/participant/language/',
-                                    {'language': 'es'},
-                                    follow=True)
+        response = self.client.post(url, {'language': 'es'}, follow=True)
         self.assertEquals(response.redirect_chain[0],
                           ('http://testserver/pages/es//', 302))
         self.assertEquals(response.redirect_chain[1],
@@ -313,29 +313,36 @@ class LanguageParticipantViewTest(ParticipantTestCase):
         UserPageVisit.objects.create(user=self.user,
                                      section=sections[1],
                                      status="complete")
-        response = self.client.post('/participant/language/',
-                                    {'language': 'en'},
-                                    follow=True)
+        response = self.client.post(url, {'language': 'en'}, follow=True)
         self.assertEquals(response.redirect_chain[0],
                           ('http://testserver/pages/en/one/introduction/',
                            302))
 
     def test_post_as_participant(self):
+        url = reverse('participant-language')
         self.login_participant()
         self.assertEquals(self.participant.profile.language, 'en')
 
         response = self.client.get('/pages/en/', {}, follow=True)
         self.assertTrue('Pause' in response.content)
 
-        response = self.client.post('/participant/language/',
-                                    {'language': 'es'},
-                                    follow=True)
+        response = self.client.post(url, {'language': 'es'}, follow=True)
         self.assertEquals(response.redirect_chain[0],
                           ('http://testserver/pages/es//', 302))
         self.assertEquals(response.redirect_chain[1],
                           ('http://testserver/pages/es/one/', 302))
 
         self.assertTrue('Pausa' in response.content)
+
+    def test_post_as_participant_ajax(self):
+        url = reverse('participant-language')
+        self.login_participant()
+        self.assertEquals(self.participant.profile.language, 'en')
+        response = self.client.post(url, {'language': 'es'},
+                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        the_json = loads(response.content)
+        self.assertEqual(the_json['next_url'], '/pages/es//')
 
 
 class ClearParticipantViewTest(ParticipantTestCase):

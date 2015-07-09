@@ -1,3 +1,8 @@
+from StringIO import StringIO
+import csv
+import json
+from zipfile import ZipFile
+
 from django import http
 from django.conf import settings
 from django.contrib.auth import login, authenticate
@@ -9,17 +14,15 @@ from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
 from djangowind.views import logout as wind_logout_view
+from pagetree.generic.views import EditView
+from pagetree.models import UserLocation, UserPageVisit, Hierarchy
+
 from meaningfulconsent.main.auth import generate_random_username, \
     generate_password, USERNAME_PREFIX
 from meaningfulconsent.main.mixins import JSONResponseMixin, LoggedInMixin, \
     LoggedInMixinSuperuser, LoggedInFacilitatorMixin
 from meaningfulconsent.main.models import UserVideoView, \
     MeaningfulConsentReport
-from pagetree.generic.views import EditView
-from pagetree.models import UserLocation, UserPageVisit, Hierarchy
-from zipfile import ZipFile
-from StringIO import StringIO
-import csv
 
 
 def user_is_participant(user):
@@ -156,9 +159,14 @@ class ParticipantLanguageView(LoggedInMixin, TemplateView):
         request.user.profile.language = language
         request.user.profile.save()
 
-        loc = request.user.profile.last_location()
+        next_url = request.user.profile.last_location().get_absolute_url()
 
-        return HttpResponseRedirect(loc.get_absolute_url())
+        if request.is_ajax():
+            ctx = {'next_url': next_url}
+            return HttpResponse(json.dumps(ctx),
+                                content_type='application/json')
+        else:
+            return HttpResponseRedirect(next_url)
 
 
 class TrackParticipantView(LoggedInMixin, JSONResponseMixin, View):

@@ -11,8 +11,7 @@
         jQuery(document).ready(function() {
             var view = new ParticipantPageView({
                 el: jQuery("body")[0],
-                participant_id: {{request.user.id}},
-                section_id: {{section.id}}
+                participant_id: {{request.user.id}}
             });
         });
     </script>

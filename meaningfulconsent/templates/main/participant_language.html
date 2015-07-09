@@ -1,35 +1,20 @@
 {% extends 'base.html' %}
 
+{% load i18n %}
+
 {% block js %}
-    <script type="text/javascript">
-        jQuery(document).ready(function () {
-
-            jQuery("form").submit(function() {
-                var valid = true;
-
-                var children = jQuery(this).find("input,textarea,select");
-                jQuery.each(children, function() {
-                    if (valid && jQuery(this).is(":visible")) {
-                        if (this.type === 'radio') {
-                            // one in the group needs to be checked
-                            var selector = 'input[name=' + jQuery(this).attr("name") + ']';
-                            valid = jQuery(selector).is(":checked");
-                        }
-                    }
-                });
-
-                if (!valid) {
-                    alert("Please select a language before continuing.");
-                }
-
-                return valid;
+    <script src="{{STATIC_URL}}js/app/participant.js"></script>
+    <script type="text/javascript"> 
+        jQuery(document).ready(function() {
+            var view = new ParticipantPageView({
+                el: jQuery("body")[0],
+                participant_id: {{request.user.id}}
             });
         });
     </script>
 {% endblock %}
 
-{% block css %}
-{% endblock %}
+{% block css %}{% endblock %}
 
 {% block bodyclass %}{% endblock %}
 
@@ -37,32 +22,50 @@
 
 {% block title %}Choose language{% endblock %}
 
-{% block pagetitle %}<h1>Welcome!</h1>{% endblock %}
-
-{% block moduletabs %}{% endblock %}
-
-{% block participantnav %}{% endblock %}
-
 {% block content %}
-    Participant: {{request.user.username}}
-    <form action="/participant/language/" method="post">
-        {% csrf_token %}
-        <h3>Choose language...</h3>
-        <div class="radio">
-          <label>
-            <input type="radio" name="language" value="en" />
-                English
-          </label>
+    {% with percent_complete=0 %}
+    <div class="row">
+        <div class="content-carousel-progress progress">
+            <div class="progress-bar progress-bar-striped" role="progressbar"
+             aria-valuenow="{{percent_complete}}"
+             aria-valuemin="0" aria-valuemax="100"
+             style="width: {{percent_complete}}%">
+            <span class="sr-only">{{percent_complete}}% Complete</span>
+            </div>
         </div>
-        <div class="radio">
-          <label>
-            <input type="radio" name="language" value="es" />
-                Spanish
-          </label>
+    </div>
+    {% endwith %}
+
+    <div id="content" class="content-carousel row">
+        <div class="col-sm-1 previous"></div>
+        <div class="col-sm-10">
+            <div class="col-sm-3 col-sm-offset-4">
+            <form action="{% url 'participant-language' %}" method="post">
+                {% csrf_token %}
+                <h3>Choose Language</h3>
+                <div id="content" class="pageblock choose-language-quiz">
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="language" value="en" />
+                            English <span class="glyphicon glyphicon-ok hidden" />
+                      </label>
+                    </div>
+                    <div class="radio">
+                      <label>
+                        <input type="radio" name="language" value="es" />
+                            Spanish <span class="glyphicon glyphicon-ok hidden" />
+                      </label>
+                    </div>
+                </div>
+            </form>
+            </div>
         </div>
-        <input type="submit" class="btn btn-primary" value="Submit" />
-    </form>
+        <div class="col-sm-1 next">
+            <a href="#" class="btn dimmed">
+                <span class="glyphicon glyphicon-circle-arrow-right"></span>
+            </a>
+        </div>
+    </div>
 {% endblock %}
 
-{% block content-nav %}
-{% endblock %}
+{% block content-nav %}{% endblock %}

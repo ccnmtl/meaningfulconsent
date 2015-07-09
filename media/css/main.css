@@ -27,6 +27,65 @@ a[disabled] {
     color: #999;
 }
 
+/** Five column layout **/
+.col-xs-5ths,
+.col-sm-5ths,
+.col-md-5ths,
+.col-lg-5ths {
+    position: relative;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+    height: 400px;
+}
+
+.col-xs-5ths {
+    width: 20%;
+    float: left;
+}
+
+@media (min-width: 768px) {
+    .col-sm-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-md-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-lg-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+/* Priority colors */
+.pr-important {
+    background-color: #E84C23 !important;
+}
+
+.pr-somewhat-important {
+    background-color: #EB7657 !important;
+}
+
+.pr-neutral {
+    background-color: #EEA08C !important;
+}
+
+.pr-somewhat-unimportant {
+    background-color: #F1CAC0 !important;
+}
+
+.pr-unimportant {
+    background-color: #f5f5f5 !important;
+}
+
 /* LOGIN PAGE */
 .login-description {
     margin: 30px 30px 15px 30px;
@@ -462,7 +521,16 @@ div.participant-search-container .help-block {
     }
 }
 
-/* participant pages */
+/* participant pages & quizzes*/
+
+.casequestionintrotext {
+    display: none;
+}
+
+.casequestion ol {
+    display: inline-block;
+}
+
 .youtube-pageblock {
     text-align: center;
 }
@@ -615,6 +683,8 @@ and (orientation: portrait) {
 .pageblock.survey .caseanswercontainer {
     list-style: none;
     margin-left: -20px;
+<<<<<<< HEAD
+=======
 }
 
 .pageblock.survey .caseanswercontainer label {
@@ -650,67 +720,53 @@ and (orientation: portrait) {
 
 .casequestion ol {
     display: inline-block;
+>>>>>>> 9ce6b122c5a9f144bf4d731218264bafb9088a69
 }
 
-/** Five column layout **/
-.col-xs-5ths,
-.col-sm-5ths,
-.col-md-5ths,
-.col-lg-5ths {
-    position: relative;
-    min-height: 1px;
-    padding-right: 10px;
-    padding-left: 10px;
-    height: 400px;
+.pageblock.survey .caseanswercontainer label {
+    font-weight: normal;
+    margin-left: 5px;
 }
 
-.col-xs-5ths {
-    width: 20%;
-    float: left;
+.pageblock.survey .casequestiontext.panel-heading p {
+    padding: 20px 20px 0 20px;
 }
 
-@media (min-width: 768px) {
-    .col-sm-5ths {
-        width: 20%;
-        float: left;
-    }
+.pageblock.survey .casequestiontext.panel-heading textarea {
+    margin-left: 20px;
+    width: 60%;
 }
 
-@media (min-width: 992px) {
-    .col-md-5ths {
-        width: 20%;
-        float: left;
-    }
+
+
+/** topic rating summary **/
+.quiz-summary ul {
+    margin-top: 20px;
+    list-style-type: none;
+    padding-left: 0;
 }
 
-@media (min-width: 1200px) {
-    .col-lg-5ths {
-        width: 20%;
-        float: left;
-    }
+.quiz-summary ul li {
+    margin-bottom: 20px;
 }
 
-/* Priority colors */
-.pr-important {
-    background-color: #E84C23 !important;
+/* choose language */
+.choose-language-quiz .radio {
+    margin: 0 0 15px 30px;
 }
 
-.pr-somewhat-important {
-    background-color: #EB7657 !important;
+.choose-language-quiz .glyphicon-ok {
+    color: #5cb85c;
+    font-size: 24px;
+    margin-top: -10px;
+    margin-left: 1px;
 }
 
-.pr-neutral {
-    background-color: #EEA08C !important;
+.choose-language-quiz .radio label {
+    vertical-align: top;
 }
 
-.pr-somewhat-unimportant {
-    background-color: #F1CAC0 !important;
-}
-
-.pr-unimportant {
-    background-color: #f5f5f5 !important;
-}
-
+/* Participant Printout */
 .participant-printout {
     padding: 20px;
     width: 75%;

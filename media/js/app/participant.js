@@ -6,6 +6,7 @@
             'click .dimmed': 'onClickDisabled',
             'click .video-complete-quiz input[type="checkbox"]': 'onSubmitPage',
             'click .topic-rating-quiz input[type="radio"]': 'onSubmitPage',
+            'click .choose-language-quiz input[type="radio"]': 'onChooseLanguage',
             'click .survey input[type="radio"]': 'onSubmitPage'
         },
         initialize: function(options) {
@@ -23,8 +24,6 @@
                       'recordSecondsViewed');
 
             this.participant_id = options.participant_id;
-            this.section_id = options.section_id;
-
             this.seconds_viewed = 0;
             
             // load the youtube iframe api
@@ -102,6 +101,31 @@
         onClickDisabled: function(evt) {
             evt.preventDefault();
             return false;
+        },
+        onChooseLanguage: function(evt) {
+            var self = this;
+            var $nextButton = jQuery(".next a");
+            var $span = jQuery(".next a span");
+            jQuery('.choose-language-quiz .glyphicon-ok').addClass('hidden');
+            
+            var $label = jQuery(evt.currentTarget).nextAll('.glyphicon').first();
+            $label.removeClass('hidden');
+
+            var form = jQuery(evt.currentTarget).parents('form')[0];
+            $span.removeClass('glyphicon-circle-arrow-right').addClass('glyphicon-repeat spin');
+            jQuery.ajax({
+                type: form.method,
+                url: form.action,
+                data: jQuery(form).serialize(),
+                dataType: 'json',
+                success: function(the_json, textStatus, jqXHR) {
+                    $nextButton.popover('destroy');
+                    $nextButton.removeClass('dimmed');
+                    $nextButton.attr('href', the_json.next_url);
+                    $span.removeClass('glyphicon-repeat spin');
+                    $span.addClass('glyphicon-circle-arrow-right');
+                }
+            });
         },
         onSubmitPage: function(evt) {
             var self = this;
