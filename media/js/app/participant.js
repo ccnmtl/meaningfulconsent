@@ -16,7 +16,6 @@
                       'onPlayerReady',
                       'onPlayerStateChange',
                       'onYouTubeIframeAPIReady',
-                      'onNextPage',
                       'onClickDisabled',
                       'onSubmitPage',
                       'onSubmitQuiz',
@@ -59,21 +58,6 @@
         },        
         onChangeLanguage: function(evt) {
             jQuery("#participant-language-form").submit();
-        },
-        onNextPage: function(evt) {
-            var elts = jQuery("input[type='hidden'][name='next-section']");
-            if (elts.length < 1) {
-                jQuery(this.el).find('.end-session-modal').modal({
-                    'show': true,
-                    'backdrop': 'static',
-                    'keyboard': false
-                });            
-                return false;
-            } else {
-                var url = jQuery(elts[0]).val();
-                window.location = url;
-            }
-            return false;
         },
         onPlayerReady: function(event) {
             this.video_id = this.player.getVideoData().video_id;

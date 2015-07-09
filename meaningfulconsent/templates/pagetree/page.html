@@ -99,20 +99,20 @@
                                 </div>
                             {% endfor %}
                         </div>
-                        
                     </div>
                 </div>
-            </form>        
+            </form>
         </div>
         <div class="col-sm-1 next">
-            {% if next_section %}
-                <a href="{{next_section.get_absolute_url}}" data-spy="affix"
-                 class="btn 
-                 {% if needs_submit and not is_submitted %}dimmed{% endif %}">
+            {% if not next_section or next_section.is_root %}
+                <a href="#" role="button" data-toggle="modal"
+                    data-target="#end-session-modal" data-backdrop="static"
+                    data-keyboard="false"
             {% else %}
-                <a href="#" class="btn" role="button" data-toggle="modal"
-                 data-target="end-session-modal" data-spy="affix">
+                <a href="{{next_section.get_absolute_url}}"
             {% endif %}
+                    data-spy="affix"
+                    class="btn {% if needs_submit and not is_submitted %}dimmed{% endif %}">
                 <span class="glyphicon glyphicon-circle-arrow-right"></span>
             </a>
         </div>
@@ -167,31 +167,30 @@
             </div>
         </div>
     </div>
-    
+
     <!-- End Session -->
     <div class="modal" id="end-session-modal">
         <div class="modal-dialog">
             <div class="modal-content">
-                <div class="modal-header">
-                    {# Translators: Tutorial Complete Modal Header #}
-                    {% trans "Thank You!" %}
-                </div>
                 <div class="modal-body text-center">
+                    {# Translators: Tutorial Complete Modal Header #}
+                    <h3>{% trans "Activity Complete" %}</h3>
+                    
                     {# Translators: Tutorial Complete Modal Text #}
                     {% blocktrans trimmed %}
-                        You're done! <br />Please return the device to the facilitator.
+                        Please return the device to the facilitator.
                     {% endblocktrans %}
                 </div>
                 <div class="modal-footer">
-                    {% if request.user.profile.is_participant %}
-                        <button type="button" class="btn btn-default" data-toggle="modal"
-                            data-target="#login-modal" data-dismiss="modal">
-                                {# Translators: Tutorial Complete Facilitator Log in Button #}
-                                {% trans "Facilitator" %}
-                         </button>
-                    {% else %}
-                        <a href="/" class="btn btn-default">Facilitator Dashboard</a>
-                    {% endif %}
+                    <button type="button" class="btn btn-default" data-toggle="modal"
+                        data-target="#login-modal" data-dismiss="modal">
+                            {# Translators: Tutorial Complete Facilitator Log in Button #}
+                            {% trans "Facilitator" %}
+                     </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">
+                        {# Translators: Tutorial Paused Facilitator Resume button #}
+                        {% trans "Resume" %}
+                    </button>                                  
                 </div>
             </div>
         </div>

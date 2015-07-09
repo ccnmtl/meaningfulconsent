@@ -39,25 +39,27 @@
     <div id="content" class="content-carousel row">
         <div class="col-sm-1 previous"></div>
         <div class="col-sm-10">
-            <div class="col-sm-3 col-sm-offset-4">
-            <form action="{% url 'participant-language' %}" method="post">
-                {% csrf_token %}
-                <h3>Choose Language</h3>
-                <div id="content" class="pageblock choose-language-quiz">
-                    <div class="radio">
-                      <label>
-                        <input type="radio" name="language" value="en" />
-                            English <span class="glyphicon glyphicon-ok hidden" />
-                      </label>
+            <div class="row">
+                <div class="col-sm-5 col-sm-offset-4">
+                <form action="{% url 'participant-language' %}" method="post">
+                    {% csrf_token %}
+                    <h3>Choose Language</h3>
+                    <div id="content" class="pageblock choose-language-quiz">
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="language" value="en" />
+                                English <span class="glyphicon glyphicon-ok hidden" />
+                          </label>
+                        </div>
+                        <div class="radio">
+                          <label>
+                            <input type="radio" name="language" value="es" />
+                                Spanish <span class="glyphicon glyphicon-ok hidden" />
+                          </label>
+                        </div>
                     </div>
-                    <div class="radio">
-                      <label>
-                        <input type="radio" name="language" value="es" />
-                            Spanish <span class="glyphicon glyphicon-ok hidden" />
-                      </label>
-                    </div>
+                </form>
                 </div>
-            </form>
             </div>
         </div>
         <div class="col-sm-1 next">

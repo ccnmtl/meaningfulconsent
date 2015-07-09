@@ -459,7 +459,12 @@ div.participant-search-container .help-block {
 }
 
 .content-carousel .col-sm-1 a {
-    margin-top: 250px;
+    margin-top: 175px;
+}
+
+.content-carousel .col-sm-1.next,
+.content-carousel .col-sm-1.next a {
+    padding-left: 0;
 }
 
 .content-carousel .col-sm-1 a:active,
@@ -581,6 +586,11 @@ and (orientation: portrait) {
     .topic-rating-summary .panel-body {
         height: auto !important;
     }
+    
+    .topic-rating-quiz input[type=radio] + label {
+        font-size: 14px; 
+        width: 105px !important;
+    }
 }
 
 /* video complete quiz */
@@ -683,8 +693,6 @@ and (orientation: portrait) {
 .pageblock.survey .caseanswercontainer {
     list-style: none;
     margin-left: -20px;
-<<<<<<< HEAD
-=======
 }
 
 .pageblock.survey .caseanswercontainer label {
@@ -720,7 +728,6 @@ and (orientation: portrait) {
 
 .casequestion ol {
     display: inline-block;
->>>>>>> 9ce6b122c5a9f144bf4d731218264bafb9088a69
 }
 
 .pageblock.survey .caseanswercontainer label {
@@ -736,7 +743,6 @@ and (orientation: portrait) {
     margin-left: 20px;
     width: 60%;
 }
-
 
 
 /** topic rating summary **/
