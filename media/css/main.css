@@ -27,6 +27,65 @@ a[disabled] {
     color: #999;
 }
 
+/** Five column layout **/
+.col-xs-5ths,
+.col-sm-5ths,
+.col-md-5ths,
+.col-lg-5ths {
+    position: relative;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+    height: 400px;
+}
+
+.col-xs-5ths {
+    width: 20%;
+    float: left;
+}
+
+@media (min-width: 768px) {
+    .col-sm-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 992px) {
+    .col-md-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+@media (min-width: 1200px) {
+    .col-lg-5ths {
+        width: 20%;
+        float: left;
+    }
+}
+
+/* Priority colors */
+.pr-important {
+    background-color: #E84C23 !important;
+}
+
+.pr-somewhat-important {
+    background-color: #EB7657 !important;
+}
+
+.pr-neutral {
+    background-color: #EEA08C !important;
+}
+
+.pr-somewhat-unimportant {
+    background-color: #F1CAC0 !important;
+}
+
+.pr-unimportant {
+    background-color: #f5f5f5 !important;
+}
+
 /* LOGIN PAGE */
 .login-description {
     margin: 30px 30px 15px 30px;
@@ -391,18 +450,16 @@ div.participant-search-container .help-block {
 .content-carousel .col-sm-1 {
     display: table-cell;
     float: none;
-    vertical-align: middle;
+    vertical-align: top;
+    position: relative;
 }
 .content-carousel .col-sm-10 {
     display: table-cell;
     float: none;
 }
 
-.content-carousel .col-sm-1 {
-    display: table-cell;
-    float: none;
-    vertical-align: middle;
-    position: relative;
+.content-carousel .col-sm-1 a {
+    margin-top: 250px;
 }
 
 .content-carousel .col-sm-1 a:active,
@@ -464,7 +521,16 @@ div.participant-search-container .help-block {
     }
 }
 
-/* participant pages */
+/* participant pages & quizzes*/
+
+.casequestionintrotext {
+    display: none;
+}
+
+.casequestion ol {
+    display: inline-block;
+}
+
 .youtube-pageblock {
     text-align: center;
 }
@@ -542,6 +608,7 @@ and (orientation: portrait) {
 /** participant input -- topic-rating-quiz **/
 .topic-rating-quiz .panel {
     margin-bottom: 0;
+    text-align: center;
 }
 
 .topic-rating-quiz .panel-heading {
@@ -609,9 +676,30 @@ and (orientation: portrait) {
 }
 
 /** participant input -- survey **/
-div.pageblock.survey div.cases {
+.pageblock.survey .cases {
     margin-bottom: 30px;
 }
+
+.pageblock.survey .caseanswercontainer {
+    list-style: none;
+    margin-left: -20px;
+}
+
+.pageblock.survey .caseanswercontainer label {
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+.pageblock.survey .casequestiontext.panel-heading p {
+    padding: 20px 20px 0 20px;
+}
+
+.pageblock.survey .casequestiontext.panel-heading textarea {
+    margin-left: 20px;
+    width: 60%;
+}
+
+
 
 /** topic rating summary **/
 .quiz-summary ul {
@@ -624,73 +712,23 @@ div.pageblock.survey div.cases {
     margin-bottom: 20px;
 }
 
-.casequestionintrotext {
-    display: none;
+/* choose language */
+.choose-language-quiz .radio {
+    margin: 0 0 15px 30px;
 }
 
-.casequestion ol {
-    display: inline-block;
+.choose-language-quiz .glyphicon-ok {
+    color: #5cb85c;
+    font-size: 24px;
+    margin-top: -10px;
+    margin-left: 1px;
 }
 
-/** Five column layout **/
-.col-xs-5ths,
-.col-sm-5ths,
-.col-md-5ths,
-.col-lg-5ths {
-    position: relative;
-    min-height: 1px;
-    padding-right: 10px;
-    padding-left: 10px;
-    height: 400px;
+.choose-language-quiz .radio label {
+    vertical-align: top;
 }
 
-.col-xs-5ths {
-    width: 20%;
-    float: left;
-}
-
-@media (min-width: 768px) {
-    .col-sm-5ths {
-        width: 20%;
-        float: left;
-    }
-}
-
-@media (min-width: 992px) {
-    .col-md-5ths {
-        width: 20%;
-        float: left;
-    }
-}
-
-@media (min-width: 1200px) {
-    .col-lg-5ths {
-        width: 20%;
-        float: left;
-    }
-}
-
-/* Priority colors */
-.pr-important {
-    background-color: #E84C23 !important;
-}
-
-.pr-somewhat-important {
-    background-color: #EB7657 !important;
-}
-
-.pr-neutral {
-    background-color: #EEA08C !important;
-}
-
-.pr-somewhat-unimportant {
-    background-color: #F1CAC0 !important;
-}
-
-.pr-unimportant {
-    background-color: #f5f5f5 !important;
-}
-
+/* Participant Printout */
 .participant-printout {
     padding: 20px;
     width: 75%;

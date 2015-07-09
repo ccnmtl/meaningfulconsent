@@ -5,51 +5,25 @@
             'click button.change-language': 'onChangeLanguage',
             'click .dimmed': 'onClickDisabled',
             'click .video-complete-quiz input[type="checkbox"]': 'onSubmitPage',
-            'click .topic-rating-quiz input[type="radio"]': 'onSubmitPage'
-        },
-        isFormComplete: function(form) {
-            var complete = true;
-            var children = jQuery(form).find("input,textarea,select");
-            jQuery.each(children, function() {
-                if (complete) {
-                    
-                    if (this.tagName === 'INPUT' && this.type === 'text' ||
-                        this.tagName === 'TEXTAREA') {
-                        complete = jQuery(this).val().trim().length > 0;
-                    }
-            
-                    if (this.tagName === 'SELECT') {
-                        var value = jQuery(this).val();
-                        complete = value !== undefined && value.length > 0 &&
-                            jQuery(this).val().trim() !== '-----';
-                    }
-            
-                    if (this.type === 'checkbox' || this.type === 'radio') {
-                        // one in the group needs to be checked
-                        var selector = 'input[name=' + jQuery(this).attr("name") + ']';
-                        complete = jQuery(selector).is(":checked");
-                    }
-                }
-            });
-
-            return complete;
+            'click .topic-rating-quiz input[type="radio"]': 'onSubmitPage',
+            'click .choose-language-quiz input[type="radio"]': 'onChooseLanguage',
+            'click .survey input[type="radio"]': 'onSubmitPage'
         },
         initialize: function(options) {
             _.bindAll(this,
-                    'onPauseSession',
-                    'onPlayerReady',
-                    'onPlayerStateChange',
-                    'onYouTubeIframeAPIReady',
-                    'onNextPage',
-                    'onClickDisabled',
-                    'onSubmitPage',
-                    'onSubmitQuiz',
-                    'onSubmitVideoData',
-                    'recordSecondsViewed');
+                      'isFormComplete',
+                      'onPauseSession',
+                      'onPlayerReady',
+                      'onPlayerStateChange',
+                      'onYouTubeIframeAPIReady',
+                      'onNextPage',
+                      'onClickDisabled',
+                      'onSubmitPage',
+                      'onSubmitQuiz',
+                      'onSubmitVideoData',
+                      'recordSecondsViewed');
 
             this.participant_id = options.participant_id;
-            this.section_id = options.section_id;
-
             this.seconds_viewed = 0;
             
             // load the youtube iframe api
@@ -68,6 +42,21 @@
                 'content': 'Please answer all questions before you move on.'
             });
         },
+        isFormComplete: function(form) {
+            var complete = true;
+            var children = jQuery(form).find("input");
+            jQuery.each(children, function() {
+                if (complete) {
+                    if (this.type === 'radio') {
+                        // one in the group needs to be checked
+                        var selector = 'input[name=' + jQuery(this).attr("name") + ']';
+                        complete = jQuery(selector).is(":checked");
+                    }
+                }
+            });
+
+            return complete;
+        },        
         onChangeLanguage: function(evt) {
             jQuery("#participant-language-form").submit();
         },
@@ -113,14 +102,40 @@
             evt.preventDefault();
             return false;
         },
+        onChooseLanguage: function(evt) {
+            var self = this;
+            var $nextButton = jQuery(".next a");
+            var $span = jQuery(".next a span");
+            jQuery('.choose-language-quiz .glyphicon-ok').addClass('hidden');
+            
+            var $label = jQuery(evt.currentTarget).nextAll('.glyphicon').first();
+            $label.removeClass('hidden');
+
+            var form = jQuery(evt.currentTarget).parents('form')[0];
+            $span.removeClass('glyphicon-circle-arrow-right').addClass('glyphicon-repeat spin');
+            jQuery.ajax({
+                type: form.method,
+                url: form.action,
+                data: jQuery(form).serialize(),
+                dataType: 'json',
+                success: function(the_json, textStatus, jqXHR) {
+                    $nextButton.popover('destroy');
+                    $nextButton.removeClass('dimmed');
+                    $nextButton.attr('href', the_json.next_url);
+                    $span.removeClass('glyphicon-repeat spin');
+                    $span.addClass('glyphicon-circle-arrow-right');
+                }
+            });
+        },
         onSubmitPage: function(evt) {
             var self = this;
             var $nextButton = jQuery(".next a");
             var $span = jQuery(".next a span");
 
-            jQuery(".alert").hide();
-
             var form = jQuery(evt.currentTarget).parents('form')[0];
+            if (!self.isFormComplete(form)) {
+                return; // do nothing yet
+            }
             $span.removeClass('glyphicon-circle-arrow-right').addClass('glyphicon-repeat spin');
             
             if (this.player !== undefined &&
