@@ -106,9 +106,9 @@
             jQuery(this.el_sessions).html(this.template(ctx));
             
             if (this.participants.length > 0) {
-                jQuery(".administration").show();
+                jQuery(".participant-sessions.recent").show();
             } else {
-                jQuery(".administration").hide();
+                jQuery(".participant-sessions.recent").hide();
             }
             
             if (this.participants.hasOwnProperty('filterBy')) {
