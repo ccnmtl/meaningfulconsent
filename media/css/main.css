@@ -435,36 +435,23 @@ div.participant-search-container .help-block {
 }
 
 /* participant navigation */
-
-.content-carousel {
-    display: table;
-    margin-top: -5px;    
-}
-
 .content-carousel-progress {
     height: 15px;
     border-radius: 0;
     margin-bottom: 0;
 }
 
-.content-carousel .col-sm-1 {
-    display: table-cell;
-    float: none;
-    vertical-align: top;
-    position: relative;
+.content-carousel {
+    margin-top: -10px;
 }
+
 .content-carousel .col-sm-10 {
-    display: table-cell;
-    float: none;
+    padding-left: 40px;
+    padding-right: 40px;
 }
 
 .content-carousel .col-sm-1 a {
     margin-top: 175px;
-}
-
-.content-carousel .col-sm-1.next,
-.content-carousel .col-sm-1.next a {
-    padding-left: 0;
 }
 
 .content-carousel .col-sm-1 a:active,
@@ -480,11 +467,17 @@ div.participant-search-container .help-block {
 }
 
 .content-carousel .col-sm-1 a .glyphicon {
-    font-size: 40px;
+    font-size: 65px;
 }
 
 .content-carousel .col-sm-1.next .popover {
     width: 225px !important;
+}
+
+.content-carousel .col-sm-1.next .popover-title {
+    background: #f2dede;
+    border-color: #ebccd1;
+    color: #a94442;
 }
 
 .content-carousel h3.popover-title {
@@ -564,6 +557,16 @@ and (orientation: landscape) {
     .topic-rating-quiz {
         width: 800px;
     }
+    
+    .content-carousel .col-sm-10 {
+        padding-left: 30px;
+        padding-right: 30px;
+    }
+
+    .content-carousel .col-sm-1.next,
+    .content-carousel .col-sm-1.next a {
+        margin-left: -15px;
+    }    
 }
 
 @media only screen 
@@ -591,6 +594,11 @@ and (orientation: portrait) {
         font-size: 14px; 
         width: 105px !important;
     }
+
+    .content-carousel .col-sm-1.next,
+    .content-carousel .col-sm-1.next a {
+        margin-left: -25px !important;
+    }
 }
 
 /* video complete quiz */
@@ -605,7 +613,7 @@ and (orientation: portrait) {
 .video-complete-quiz p {
     display: inline-block;
     margin-top: 10px;
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 500;
     line-height: 1.1;
 }
@@ -613,7 +621,6 @@ and (orientation: portrait) {
 .video-complete-quiz input {
     font-size: 20px;
 }
-
 
 /** participant input -- topic-rating-quiz **/
 .topic-rating-quiz .panel {

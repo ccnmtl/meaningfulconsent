@@ -63,7 +63,11 @@
             </div>
         </div>
         <div class="col-sm-1 next">
-            <a href="#" class="btn dimmed">
+            <a href="#" class="btn dimmed"
+                data-trigger="manual" data-placement="left"
+                data-title="{% trans 'Oops!' %}"
+                data-content="{% trans 'Please answer all questions before you move on.' %}"
+                data-spy="affix">
                 <span class="glyphicon glyphicon-circle-arrow-right"></span>
             </a>
         </div>
