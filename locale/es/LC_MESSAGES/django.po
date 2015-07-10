@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-06 11:38-0400\n"
+"POT-Creation-Date: 2015-07-10 09:42-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,44 +17,56 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. Translators: Navbar command to pause the experience
-#: meaningfulconsent/templates/pagetree/page.html:49
+#: meaningfulconsent/templates/pagetree/page.html:44
 msgid "Pause"
 msgstr "Pausa"
 
+#: meaningfulconsent/templates/pagetree/page.html:117
+msgid "Oops!"
+msgstr ""
+
+#: meaningfulconsent/templates/pagetree/page.html:118
+msgid "Please answer all questions before you move on."
+msgstr ""
+
 #. Translators: Tutorial Paused Modal Header
-#: meaningfulconsent/templates/pagetree/page.html:154
+#: meaningfulconsent/templates/pagetree/page.html:160
 msgid "Tutorial Paused"
 msgstr "Tutorial en pausa"
 
 #. Translators: Tutorial Paused Facilitator Login button
 #. Translators: Tutorial Complete Facilitator Log in Button
-#: meaningfulconsent/templates/pagetree/page.html:160
-#: meaningfulconsent/templates/pagetree/page.html:190
+#: meaningfulconsent/templates/pagetree/page.html:166
+#: meaningfulconsent/templates/pagetree/page.html:194
 msgid "Facilitator"
 msgstr "Facilitador"
 
 #. Translators: Tutorial Paused Facilitator Resume button
-#: meaningfulconsent/templates/pagetree/page.html:164
+#: meaningfulconsent/templates/pagetree/page.html:170
+#: meaningfulconsent/templates/pagetree/page.html:198
 msgid "Resume"
 msgstr "Reanudar"
 
 #. Translators: Tutorial Complete Modal Header
-#: meaningfulconsent/templates/pagetree/page.html:177
-msgid "Thank You!"
-msgstr "Gracias!"
+#: meaningfulconsent/templates/pagetree/page.html:183
+msgid "Activity Complete"
+msgstr ""
 
 #. Translators: Tutorial Complete Modal Text
-#: meaningfulconsent/templates/pagetree/page.html:181
+#: meaningfulconsent/templates/pagetree/page.html:186
 #, fuzzy
 #| msgid ""
 #| "\n"
 #| "                                    You're done! <br />Please return the "
 #| "device to the facilitator.\n"
 #| "                                "
-msgid "You're done! <br />Please return the device to the facilitator."
+msgid "Please return the device to the facilitator."
 msgstr ""
 "Usted está hecho !<br/> Por favor devuelva el dispositivo para el "
 "facilitado.\n"
+
+#~ msgid "Thank You!"
+#~ msgstr "Gracias!"
 
 #~ msgid "Espa&ntilde;ol"
 #~ msgstr "Español"
