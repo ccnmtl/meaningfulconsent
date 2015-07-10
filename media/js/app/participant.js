@@ -7,13 +7,11 @@
             'click .video-complete-quiz input[type="checkbox"]': 'onSubmitPage',
             'click .topic-rating-quiz input[type="radio"]': 'onSubmitPage',
             'click .choose-language-quiz input[type="radio"]': 'onChooseLanguage',
-            'click .survey input[type="radio"]': 'onSubmitPage',
-            'click body': 'onDismissPopover'
+            'click .survey input[type="radio"]': 'onSubmitPage'
         },
         initialize: function(options) {
             _.bindAll(this,
                       'isFormComplete',
-                      'onDismissPopover',
                       'onPauseSession',
                       'onPlayerReady',
                       'onPlayerStateChange',
@@ -38,7 +36,21 @@
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-            jQuery('.dimmed').popover({});
+            // Customer Popover work to support click out on the iPad
+            var $popover = jQuery('.next a.dimmed');
+            $popover.popover({
+            }).click(function(evt) {
+                evt.preventDefault();
+                $popover.popover('toggle');
+                return false;
+            });
+
+            jQuery('body').on('click touchstart', function(evt) {
+                if (jQuery('.popover').is(':visible')) {
+                    evt.preventDefault();
+                    $popover.popover('hide');
+                }
+            });
         },
         isFormComplete: function(form) {
             var complete = true;
@@ -54,17 +66,6 @@
             });
 
             return complete;
-        },
-        onDismissPopover: function(evt) {
-            jQuery('.dimmed').each(function () {
-                //the 'is' for buttons that trigger popups
-                //the 'has' for icons within a button that triggers a popup
-                if (!jQuery(this).is(evt.target) &&
-                    jQuery(this).has(evt.target).length === 0 &&
-                        jQuery('.dimmed').has(evt.target).length === 0) {
-                    jQuery(this).popover('hide');
-                }
-            });
         },
         onChangeLanguage: function(evt) {
             jQuery("#participant-language-form").submit();
@@ -114,6 +115,7 @@
                 dataType: 'json',
                 success: function(the_json, textStatus, jqXHR) {
                     $nextButton.popover('destroy');
+                    $nextButton.off('click');
                     $nextButton.removeClass('dimmed');
                     $nextButton.attr('href', the_json.next_url);
                     $span.removeClass('glyphicon-repeat spin');
@@ -142,6 +144,7 @@
                 .done(function(first_call, second_call) {
                     setTimeout(function() {
                         $nextButton.popover('destroy');
+                        $nextButton.off('click');
                         $nextButton.removeClass('dimmed');
                         $span.removeClass('glyphicon-repeat spin');
                         $span.addClass('glyphicon-circle-arrow-right');
