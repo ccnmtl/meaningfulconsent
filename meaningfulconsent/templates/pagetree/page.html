@@ -10,7 +10,7 @@
     <script type="text/javascript"> 
         jQuery(document).ready(function() {
             var view = new ParticipantPageView({
-                el: jQuery("body")[0],
+                el: jQuery('html')[0],
                 participant_id: {{request.user.id}}
             });
         });
@@ -104,17 +104,23 @@
             </form>
         </div>
         <div class="col-sm-1 next">
+            {% language request.user.profile.language %}
             {% if not next_section or next_section.is_root %}
                 <a href="#" role="button" data-toggle="modal"
-                    data-target="#end-session-modal" data-backdrop="static"
+                    data-target="#end-session-modal"
+                    data-backdrop="static"
                     data-keyboard="false"
             {% else %}
                 <a href="{{next_section.get_absolute_url}}"
             {% endif %}
+                    data-placement="left"
+                    data-title="{% trans 'Oops!' %}"
+                    data-content="{% trans 'Please answer all questions before you move on.' %}"
                     data-spy="affix"
                     class="btn {% if needs_submit and not is_submitted %}dimmed{% endif %}">
                 <span class="glyphicon glyphicon-circle-arrow-right"></span>
             </a>
+            {% endlanguage %}
         </div>
     </div>
     {% endwith %}{% endwith %}

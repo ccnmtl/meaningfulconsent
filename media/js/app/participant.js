@@ -7,11 +7,13 @@
             'click .video-complete-quiz input[type="checkbox"]': 'onSubmitPage',
             'click .topic-rating-quiz input[type="radio"]': 'onSubmitPage',
             'click .choose-language-quiz input[type="radio"]': 'onChooseLanguage',
-            'click .survey input[type="radio"]': 'onSubmitPage'
+            'click .survey input[type="radio"]': 'onSubmitPage',
+            'click body': 'onDismissPopover'
         },
         initialize: function(options) {
             _.bindAll(this,
                       'isFormComplete',
+                      'onDismissPopover',
                       'onPauseSession',
                       'onPlayerReady',
                       'onPlayerStateChange',
@@ -22,6 +24,7 @@
                       'onSubmitVideoData',
                       'recordSecondsViewed');
 
+            var self = this;
             this.participant_id = options.participant_id;
             this.seconds_viewed = 0;
             
@@ -34,12 +37,8 @@
             tag.src = "https://www.youtube.com/iframe_api";
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-            
-            jQuery('.dimmed').popover({
-                'placement': 'left',
-                'title': 'Oops!',
-                'content': 'Please answer all questions before you move on.'
-            });
+
+            jQuery('.dimmed').popover({});
         },
         isFormComplete: function(form) {
             var complete = true;
@@ -55,7 +54,18 @@
             });
 
             return complete;
-        },        
+        },
+        onDismissPopover: function(evt) {
+            jQuery('.dimmed').each(function () {
+                //the 'is' for buttons that trigger popups
+                //the 'has' for icons within a button that triggers a popup
+                if (!jQuery(this).is(evt.target) &&
+                    jQuery(this).has(evt.target).length === 0 &&
+                        jQuery('.dimmed').has(evt.target).length === 0) {
+                    jQuery(this).popover('hide');
+                }
+            });
+        },
         onChangeLanguage: function(evt) {
             jQuery("#participant-language-form").submit();
         },
