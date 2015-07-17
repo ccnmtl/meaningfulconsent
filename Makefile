@@ -61,7 +61,6 @@ collectstatic: ./ve/bin/python validate
 	$(MANAGE) collectstatic --noinput --settings=$(APP).settings_production
 
 makemessages: ./ve/bin/python
-	$(MANAGE) makemessages -l en --ignore="ve" --ignore="login.html" --ignore="password*.html"
 	$(MANAGE) makemessages -l es --ignore="ve" --ignore="login.html" --ignore="password*.html"
 
 compilemessages: ./ve/bin/python

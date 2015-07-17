@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load quizsummary %}
+{% load i18n %}
 
 {% block js %}
     <script type="text/javascript">
@@ -13,7 +14,8 @@
 
 {% block content %}
     {% with cls="topic-rating-quiz" %}
-    {% get_quiz_summary user cls as ratings %}
+    {% get_quiz_summary participant cls as ratings %}
+    {% language participant.profile.language %}
         
     <div class="participant-printout center-block">
         <div>
@@ -28,10 +30,10 @@
         <!-- Important -->
         <div class="panel panel-default">
             <div class="panel-heading pr-very-important">
-                <h3 class="panel-title">Very important</h3>
+                <h3 class="panel-title">{% trans 'Very important' %}</h3>
             </div>
             <div class="panel-body">
-                {% for item in ratings.veryimportant %}
+                {% for item in ratings.5 %}
                     <p>{{item}}</p>
                 {% empty %}
                     <p>nothing chosen</p>                
@@ -42,10 +44,10 @@
         <!-- Somewhat Important -->
         <div class="panel panel-default">
             <div class="panel-heading pr-important">
-                <h3 class="panel-title">Important</h3>
+                <h3 class="panel-title">{% trans 'Important' %}</h3>
             </div>
             <div class="panel-body">
-                {% for item in ratings.important %}
+                {% for item in ratings.4 %}
                     <p>{{item}}</p>
                 {% empty %}
                     <p>nothing chosen</p>                
@@ -56,10 +58,10 @@
         <!-- Neutral -->
         <div class="panel panel-default">
             <div class="panel-heading pr-neutral">
-                <h3 class="panel-title">Neutral</h3>
+                <h3 class="panel-title">{% trans 'Neutral' %}</h3>
             </div>
             <div class="panel-body">
-                {% for item in ratings.neutral %}
+                {% for item in ratings.3 %}
                     <p>{{item}}</p>
                 {% empty %}
                     <p>nothing chosen</p>                
@@ -70,10 +72,10 @@
         <!-- Somewhat Unimportant -->
         <div class="panel panel-default">
             <div class="panel-heading pr-not-important">
-                <h3 class="panel-title">Not important</h3>
+                <h3 class="panel-title">{% trans 'Not important' %}</h3>
             </div>
             <div class="panel-body">
-                {% for item in ratings.notimportant %}
+                {% for item in ratings.2 %}
                     <p>{{item}}</p>
                 {% empty %}
                     <p>nothing chosen</p>                
@@ -85,10 +87,10 @@
         <!-- Unimportant -->
         <div class="panel panel-default">
             <div class="panel-heading pr-not-important-at-all">
-                <h3 class="panel-title">Not important at all</h3>
+                <h3 class="panel-title">{% trans 'Not important at all' %}</h3>
             </div>
             <div class="panel-body">
-                {% for item in ratings.notimportantatall %}
+                {% for item in ratings.1 %}
                     <p>{{item}}</p>
                 {% empty %}
                     <p>nothing chosen</p>                
@@ -96,5 +98,6 @@
             </div>
         </div>                  
     </div>
+    {% endlanguage %}
     {% endwith %}
 {% endblock %}
