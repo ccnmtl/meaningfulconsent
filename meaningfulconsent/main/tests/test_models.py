@@ -165,6 +165,14 @@ class QuizSummaryBlockTest(TestCase):
         block.edit({'quiz_class': 'updated class'}, None)
         self.assertEquals(block.quiz_class, 'updated class')
 
+    def test_as_dict_create_from_dict(self):
+        block = QuizSummaryBlockFactory()
+        d = block.as_dict()
+        self.assertEquals(block.quiz_class, d['quiz_class'])
+
+        block2 = QuizSummaryBlock.create_from_dict(d)
+        self.assertEquals(block2.quiz_class, block.quiz_class)
+
 
 class YouTubeBlockTest(TestCase):
 
@@ -208,6 +216,18 @@ class YouTubeBlockTest(TestCase):
         self.assertEquals(block.video_id, 'xyz')
         self.assertEquals(block.language, 'es')
         self.assertEquals(block.title, 'Foo')
+
+    def test_as_dict_create_from_dict(self):
+        block = YouTubeBlockFactory()
+        d = block.as_dict()
+        self.assertEquals(block.video_id, d['video_id'])
+        self.assertEquals(block.language, d['language'])
+        self.assertEquals(block.title, d['title'])
+
+        block2 = YouTubeBlock.create_from_dict(d)
+        self.assertEquals(block2.video_id, block.video_id)
+        self.assertEquals(block2.language, block.language)
+        self.assertEquals(block2.title, block.title)
 
 
 class SimpleImageBlockTest(TestCase):
