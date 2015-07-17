@@ -27,11 +27,11 @@
 
         <!-- Important -->
         <div class="panel panel-default">
-            <div class="panel-heading pr-important">
-                <h3 class="panel-title">Important</h3>
+            <div class="panel-heading pr-very-important">
+                <h3 class="panel-title">Very important</h3>
             </div>
             <div class="panel-body">
-                {% for item in ratings.important %}
+                {% for item in ratings.veryimportant %}
                     <p>{{item}}</p>
                 {% empty %}
                     <p>nothing chosen</p>                
@@ -41,11 +41,11 @@
 
         <!-- Somewhat Important -->
         <div class="panel panel-default">
-            <div class="panel-heading pr-somewhat-important">
-                <h3 class="panel-title">Somewhat Important</h3>
+            <div class="panel-heading pr-important">
+                <h3 class="panel-title">Important</h3>
             </div>
             <div class="panel-body">
-                {% for item in ratings.somewhatimportant %}
+                {% for item in ratings.important %}
                     <p>{{item}}</p>
                 {% empty %}
                     <p>nothing chosen</p>                
@@ -69,11 +69,11 @@
 
         <!-- Somewhat Unimportant -->
         <div class="panel panel-default">
-            <div class="panel-heading pr-somewhat-unimportant">
-                <h3 class="panel-title">Somewhat Unimportant</h3>
+            <div class="panel-heading pr-not-important">
+                <h3 class="panel-title">Not important</h3>
             </div>
             <div class="panel-body">
-                {% for item in ratings.somewhatunimportant %}
+                {% for item in ratings.notimportant %}
                     <p>{{item}}</p>
                 {% empty %}
                     <p>nothing chosen</p>                
@@ -84,11 +84,11 @@
 
         <!-- Unimportant -->
         <div class="panel panel-default">
-            <div class="panel-heading pr-unimportant">
-                <h3 class="panel-title">Unimportant</h3>
+            <div class="panel-heading pr-not-important-at-all">
+                <h3 class="panel-title">Not important at all</h3>
             </div>
             <div class="panel-body">
-                {% for item in ratings.unimportant %}
+                {% for item in ratings.notimportantatall %}
                     <p>{{item}}</p>
                 {% empty %}
                     <p>nothing chosen</p>                
