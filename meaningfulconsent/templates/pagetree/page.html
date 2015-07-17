@@ -124,9 +124,9 @@
         </div>
     </div>
     {% endwith %}{% endwith %}
-    
+
+    {% language request.user.profile.language %}    
     <!-- Confirm Language Switch -->
-    {% language request.user.profile.language %}
     <div class="modal" id="change-language-modal" tabindex="-1" role="dialog"
         aria-labelledby="Confirm Language Switch" aria-hidden="true">
         <div class="modal-dialog">

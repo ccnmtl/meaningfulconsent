@@ -120,6 +120,15 @@
                     $nextButton.attr('href', the_json.next_url);
                     $span.removeClass('glyphicon-repeat spin');
                     $span.addClass('glyphicon-circle-arrow-right');
+                },
+                error: function() {
+                    jQuery('#error-modal').modal({
+                        'show': true,
+                        'backdrop': 'static',
+                        'keyboard': false
+                    });
+                    $span.removeClass('glyphicon-repeat spin');
+                    $span.addClass('glyphicon-circle-arrow-right');
                 }
             });
         },
@@ -151,9 +160,13 @@
                     }, 500);
                 })
                 .fail(function() {
-                    jQuery(".error-inline").fadeIn(function() {
-                        $nextButton.hide();
+                    jQuery('#error-modal').modal({
+                        'show': true,
+                        'backdrop': 'static',
+                        'keyboard': false
                     });
+                    $span.removeClass('glyphicon-repeat spin');
+                    $span.addClass('glyphicon-circle-arrow-right');
                 });
         },
         onSubmitQuiz: function(form) {
