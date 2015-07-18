@@ -176,6 +176,17 @@ class QuizSummaryBlock(models.Model):
     def unlocked(self, user):
         return True
 
+    def as_dict(self):
+        return dict(
+            quiz_class=self.quiz_class
+        )
+
+    @classmethod
+    def create_from_dict(cls, d):
+        return cls.objects.create(
+            quiz_class=d.get('quiz_class', '')
+        )
+
 
 class QuizSummaryForm(forms.ModelForm):
     class Meta:
@@ -254,6 +265,21 @@ class YouTubeBlock(models.Model):
 
     def report_values(self):
         return self.report_columns()
+
+    def as_dict(self):
+        return dict(
+            video_id=self.video_id,
+            language=self.language,
+            title=self.title
+        )
+
+    @classmethod
+    def create_from_dict(cls, d):
+        return cls.objects.create(
+            video_id=d.get('video_id', ''),
+            language=d.get('language', ''),
+            title=d.get('title', '')
+        )
 
 
 class YouTubeForm(forms.ModelForm):
