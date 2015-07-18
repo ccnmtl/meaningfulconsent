@@ -39,11 +39,8 @@ class GetTopicRatings(template.Node):
                 # most recent submission. pick up the one response.
                 r = Response.objects.filter(
                     submission=submissions[0]).first()
-                answer = r.question.answer_set.get(value=r.value)
 
-                key = answer.label.replace("<br />", "")
-                key = key.replace(" ", "")
-                key = key.lower()
+                key = str(r.value)
 
                 if key not in ratings:
                     ratings[key] = []
