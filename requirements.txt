@@ -22,7 +22,7 @@ ipython==3.0.0
 ipdb==0.8
 lettuce==0.2.19ccnmtl
 rdflib==4.1.2
-selenium==2.45.0
+selenium==2.46.1
 coverage==3.7.1
 pyasn1==0.1.8
 pyOpenSSL==0.15.1
