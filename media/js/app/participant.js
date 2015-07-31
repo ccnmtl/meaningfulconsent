@@ -3,20 +3,19 @@
         events: {
             'click a.pause-session': 'onPauseSession',
             'click button.change-language': 'onChangeLanguage',
-            'click .dimmed': 'onClickDisabled',
-            'click .video-complete-quiz input[type="checkbox"]': 'onSubmitPage',
-            'click .topic-rating-quiz input[type="radio"]': 'onSubmitPage',
-            'click .choose-language-quiz input[type="radio"]': 'onChooseLanguage',
-            'click .survey input[type="radio"]': 'onSubmitPage'
+            'click .next a.btn-choose-language': 'onChooseLanguage',
+            'click .next a.btn-submit-page': 'onNextPage'
         },
         initialize: function(options) {
             _.bindAll(this,
                       'isFormComplete',
+                      'isInteractive',
+                      'onChangeLanguage',
                       'onPauseSession',
                       'onPlayerReady',
                       'onPlayerStateChange',
                       'onYouTubeIframeAPIReady',
-                      'onClickDisabled',
+                      'onNextPage',
                       'onSubmitPage',
                       'onSubmitQuiz',
                       'onSubmitVideoData',
@@ -36,14 +35,9 @@
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
-            // Customer Popover work to support click out on the iPad
-            var $popover = jQuery('.next a.dimmed');
-            $popover.popover({
-            }).click(function(evt) {
-                evt.preventDefault();
-                $popover.popover('toggle');
-                return false;
-            });
+            // Customer popover work to support click out on the iPad
+            var $popover = jQuery('.next a');
+            $popover.popover({});
 
             jQuery('body').on('click touchstart', function(evt) {
                 if (jQuery('.popover').is(':visible')) {
@@ -52,19 +46,32 @@
                 }
             });
         },
+        isInteractive: function(form) {
+            var children = jQuery(form).find("input,textarea,select");
+            return children.length > 0;
+        },
         isFormComplete: function(form) {
             var complete = true;
-            var children = jQuery(form).find("input");
+            var children = jQuery(form).find("input,textarea,select");
             jQuery.each(children, function() {
                 if (complete) {
-                    if (this.type === 'radio') {
+                    if (this.type === 'radio' || this.type === 'checkbox') {
                         // one in the group needs to be checked
-                        var selector = 'input[name=' + jQuery(this).attr("name") + ']';
+                        var selector = 'input[name=' +
+                            jQuery(this).attr("name") + ']';
                         complete = jQuery(selector).is(":checked");
+                    }
+                    if (this.tagName === 'INPUT' && this.type === 'text' ||
+                            this.tagName === 'TEXTAREA') {
+                        complete = jQuery(this).val().trim().length > 0;
+                    }
+                    if (this.tagName === 'SELECT') {
+                        var value = jQuery(this).val();
+                        complete = value !== undefined && value.length > 0 &&
+                            jQuery(this).val().trim() !== '-----';
                     }
                 }
             });
-
             return complete;
         },
         onChangeLanguage: function(evt) {
@@ -93,11 +100,9 @@
             });            
             return false;
         },
-        onClickDisabled: function(evt) {
-            evt.preventDefault();
-            return false;
-        },
         onChooseLanguage: function(evt) {
+            evt.preventDefault();
+            evt.stopImmediatePropagation();
             var self = this;
             var $nextButton = jQuery(".next a");
             var $span = jQuery(".next a span");
@@ -106,7 +111,12 @@
             var $label = jQuery(evt.currentTarget).nextAll('.glyphicon').first();
             $label.removeClass('hidden');
 
-            var form = jQuery(evt.currentTarget).parents('form')[0];
+            var form = jQuery("form[name='choose-language']")[0];
+            if (!self.isFormComplete(form)) {
+                $nextButton.popover('show');
+                return false; // do nothing yet
+            }
+            
             $span.removeClass('glyphicon-circle-arrow-right').addClass('glyphicon-repeat spin');
             jQuery.ajax({
                 type: form.method,
@@ -116,10 +126,9 @@
                 success: function(the_json, textStatus, jqXHR) {
                     $nextButton.popover('destroy');
                     $nextButton.off('click');
-                    $nextButton.removeClass('dimmed');
-                    $nextButton.attr('href', the_json.next_url);
                     $span.removeClass('glyphicon-repeat spin');
                     $span.addClass('glyphicon-circle-arrow-right');
+                    window.location = the_json.next_url;
                 },
                 error: function() {
                     jQuery('#error-modal').modal({
@@ -132,14 +141,29 @@
                 }
             });
         },
+        onNextPage: function(evt) {
+            evt.preventDefault();
+            evt.stopImmediatePropagation();
+
+            var form = jQuery("form[name='content-form']")[0];
+            if (!this.isInteractive(form)) {
+                var $nextButton = jQuery(".next a");
+                var href = $nextButton.attr('href');
+                window.location = href;
+            } else {
+                this.onSubmitPage(evt);
+            }
+        },
         onSubmitPage: function(evt) {
             var self = this;
             var $nextButton = jQuery(".next a");
             var $span = jQuery(".next a span");
+            var href = $nextButton.attr('href');
 
-            var form = jQuery(evt.currentTarget).parents('form')[0];
+            var form = jQuery("form[name='content-form']")[0];
             if (!self.isFormComplete(form)) {
-                return; // do nothing yet
+                $nextButton.popover('show');
+                return false; // do nothing yet
             }
             $span.removeClass('glyphicon-circle-arrow-right').addClass('glyphicon-repeat spin');
             
@@ -154,9 +178,19 @@
                     setTimeout(function() {
                         $nextButton.popover('destroy');
                         $nextButton.off('click');
-                        $nextButton.removeClass('dimmed');
                         $span.removeClass('glyphicon-repeat spin');
                         $span.addClass('glyphicon-circle-arrow-right');
+                        
+                        if (href === '#') {
+                            var target = $nextButton.attr('data-target');
+                            jQuery(target).modal({
+                                'show': true,
+                                'backdrop': 'static',
+                                'keyboard': false
+                            });
+                        } else {
+                            window.location = href;
+                        }
                     }, 500);
                 })
                 .fail(function() {
@@ -168,6 +202,7 @@
                     $span.removeClass('glyphicon-repeat spin');
                     $span.addClass('glyphicon-circle-arrow-right');
                 });
+            return false;
         },
         onSubmitQuiz: function(form) {
             return jQuery.ajax({

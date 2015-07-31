@@ -35,6 +35,14 @@
             <li>
                 <a href="{{section.get_edit_url}}">Edit Page</a>
             </li>
+            {% if is_submitted %}
+                <li>
+                    <form action="." method="post">{% csrf_token %}
+                        <input type="hidden" name="action" value="reset" />
+                        <input type="submit" value="Clear Answers" class="btn btn-anchor" />
+                    </form>
+                </li>
+            {% endif %}
         {% endif %}
 
         {% if request.user.profile.is_participant %}    
@@ -83,15 +91,15 @@
             {% endif %}
         </div>
         <div class="col-sm-10">
-            <form action="." method="post">
+            <form name='content-form' action="." method="post">
                 <div class="row">
                     <div class="col-md-12">
                         <div id="content">
                             {% for block in section.pageblock_set.all %}
                                 <div class="pageblock
-                                 {% if block.css_extra %}
-                                    {{block.css_extra}}
-                                 {% endif %}">
+                                    {% if block.css_extra %}
+                                        {{block.css_extra}}
+                                    {% endif %}">
                                     {% if block.label %}
                                         <h3>{{block.label}}</h3>
                                      {% endif %}
@@ -106,10 +114,7 @@
         <div class="col-sm-1 next">
             {% language request.user.profile.language %}
             {% if not next_section or next_section.is_root %}
-                <a href="#" role="button" data-toggle="modal"
-                    data-target="#end-session-modal"
-                    data-backdrop="static"
-                    data-keyboard="false"
+                <a href="#" data-target="#end-session-modal"
             {% else %}
                 <a href="{{next_section.get_absolute_url}}"
             {% endif %}
@@ -117,7 +122,7 @@
                     data-title="{% trans 'Oops!' %}"
                     data-content="{% trans 'Please answer all questions before you move on.' %}"
                     data-spy="affix"
-                    class="btn {% if needs_submit and not is_submitted %}dimmed{% endif %}">
+                    class="btn btn-submit-page">
                 <span class="glyphicon glyphicon-circle-arrow-right"></span>
             </a>
             {% endlanguage %}

@@ -41,7 +41,7 @@
         <div class="col-sm-10">
             <div class="row">
                 <div class="col-sm-5 col-sm-offset-4">
-                <form action="{% url 'participant-language' %}" method="post">
+                <form name='choose-language' action="{% url 'participant-language' %}" method="post">
                     {% csrf_token %}
                     <h3>Choose Language</h3>
                     <div id="content" class="pageblock choose-language-quiz">
@@ -63,7 +63,7 @@
             </div>
         </div>
         <div class="col-sm-1 next">
-            <a href="#" class="btn dimmed"
+            <a href="#" class="btn btn-choose-language"
                 data-trigger="manual" data-placement="left"
                 data-title="{% trans 'Oops!' %}"
                 data-content="{% trans 'Please answer all questions before you move on.' %}"
