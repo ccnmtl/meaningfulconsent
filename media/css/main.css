@@ -4,6 +4,7 @@ html {
 
 body {
   background-color: #fff;
+  min-height: 500px;
 }
 
 .pageblock {
@@ -64,6 +65,10 @@ a[disabled] {
         float: left;
     }
 }
+
+.topic-rating-summary .panel-heading {
+    padding: 10px 11px;
+} 
 
 /* Priority colors */
 .pr-very-important {
@@ -813,4 +818,11 @@ and (orientation: portrait) {
     #send-to-printer {
         display: none
     }
+}
+
+.btn-anchor {
+    color: #777;
+    background-color: white;
+    padding-top: 14px;
+    padding-bottom: 5px;
 }
