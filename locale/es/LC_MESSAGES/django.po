@@ -92,7 +92,7 @@ msgstr "Reanudar"
 #. Translators: Tutorial Complete Modal Header
 #: meaningfulconsent/templates/pagetree/page.html:188
 msgid "Activity Complete"
-msgstr ""
+msgstr "Actividad completa"
 
 #. Translators: Tutorial Complete Modal Text
 #: meaningfulconsent/templates/pagetree/page.html:191
