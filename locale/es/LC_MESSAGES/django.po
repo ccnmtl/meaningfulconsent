@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-07-17 13:04-0400\n"
+"POT-Creation-Date: 2015-08-01 12:36-0400\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,15 +16,27 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: meaningfulconsent/templates/main/participant_language.html:68
-#: meaningfulconsent/templates/pagetree/page.html:117
-msgid "Oops!"
+#: meaningfulconsent/templates/base.html:211
+msgid "Error"
 msgstr ""
 
-#: meaningfulconsent/templates/main/participant_language.html:69
-#: meaningfulconsent/templates/pagetree/page.html:118
-msgid "Please answer all questions before you move on."
+#: meaningfulconsent/templates/base.html:213
+msgid "An error occurred. Please see your facilitator."
+msgstr "Se produjo un error. Por favor, consulte a su facilitador."
+
+#: meaningfulconsent/templates/base.html:219
+msgid "OK"
 msgstr ""
+
+#: meaningfulconsent/templates/main/participant_language.html:68
+#: meaningfulconsent/templates/pagetree/page.html:122
+msgid "Oops!"
+msgstr "Ay!"
+
+#: meaningfulconsent/templates/main/participant_language.html:69
+#: meaningfulconsent/templates/pagetree/page.html:123
+msgid "Please answer all questions before you move on."
+msgstr "Por favor, conteste todas las preguntas antes de pasar"
 
 #: meaningfulconsent/templates/main/participant_printout.html:33
 #: meaningfulconsent/templates/main/quiz_summary_block.html:78
@@ -55,35 +67,35 @@ msgid "Not important<br />at all"
 msgstr "No es importante<br />en absoluto"
 
 #. Translators: Navbar command to pause the experience
-#: meaningfulconsent/templates/pagetree/page.html:44
+#: meaningfulconsent/templates/pagetree/page.html:52
 msgid "Pause"
 msgstr "Pausa"
 
 #. Translators: Tutorial Paused Modal Header
-#: meaningfulconsent/templates/pagetree/page.html:160
+#: meaningfulconsent/templates/pagetree/page.html:165
 msgid "Tutorial Paused"
 msgstr "Tutorial en pausa"
 
 #. Translators: Tutorial Paused Facilitator Login button
 #. Translators: Tutorial Complete Facilitator Log in Button
-#: meaningfulconsent/templates/pagetree/page.html:166
-#: meaningfulconsent/templates/pagetree/page.html:194
+#: meaningfulconsent/templates/pagetree/page.html:171
+#: meaningfulconsent/templates/pagetree/page.html:199
 msgid "Facilitator"
 msgstr "Facilitador"
 
 #. Translators: Tutorial Paused Facilitator Resume button
-#: meaningfulconsent/templates/pagetree/page.html:170
-#: meaningfulconsent/templates/pagetree/page.html:198
+#: meaningfulconsent/templates/pagetree/page.html:175
+#: meaningfulconsent/templates/pagetree/page.html:203
 msgid "Resume"
 msgstr "Reanudar"
 
 #. Translators: Tutorial Complete Modal Header
-#: meaningfulconsent/templates/pagetree/page.html:183
+#: meaningfulconsent/templates/pagetree/page.html:188
 msgid "Activity Complete"
-msgstr ""
+msgstr "Actividad completa"
 
 #. Translators: Tutorial Complete Modal Text
-#: meaningfulconsent/templates/pagetree/page.html:186
+#: meaningfulconsent/templates/pagetree/page.html:191
 #, fuzzy
 #| msgid ""
 #| "\n"
@@ -115,9 +127,6 @@ msgstr ""
 
 #~ msgid "Yes"
 #~ msgstr "Sí"
-
-#~ msgid "An error occurred. Please see your facilitator."
-#~ msgstr "Se produjo un error. Por favor, consulte a su facilitador."
 
 #~ msgid "Spanish"
 #~ msgstr "Español"
