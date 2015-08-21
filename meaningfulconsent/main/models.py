@@ -191,6 +191,7 @@ class QuizSummaryBlock(models.Model):
 class QuizSummaryForm(forms.ModelForm):
     class Meta:
         model = QuizSummaryBlock
+        exclude = []
 
 
 class YouTubeReportColumn(ReportColumnInterface):
@@ -286,6 +287,8 @@ class YouTubeForm(forms.ModelForm):
     class Meta:
         model = YouTubeBlock
         widgets = {'title': forms.TextInput}
+        exclude = []
+
 
 ReportableInterface.register(YouTubeBlock)
 
