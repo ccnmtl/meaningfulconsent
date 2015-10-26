@@ -447,7 +447,7 @@ class ParticipantViewSet(viewsets.ModelViewSet):
             user__username__startswith=USERNAME_PREFIX,
             user__is_active=False)
 
-        username = self.request.QUERY_PARAMS.get('username', None)
+        username = self.request.query_params.get('username', None)
         if username:
             queryset = queryset.filter(user__username__startswith=username)
 
