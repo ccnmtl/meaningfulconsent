@@ -22,7 +22,7 @@ from meaningfulconsent.main.views import ArchiveParticipantView, \
 admin.autodiscover()
 
 router = routers.DefaultRouter()
-router.register(r'participants', ParticipantViewSet)
+router.register(r'participants', ParticipantViewSet, base_name='participant')
 
 redirect_after_logout = getattr(settings, 'LOGOUT_REDIRECT_URL', None)
 
