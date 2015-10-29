@@ -13,11 +13,13 @@ from meaningfulconsent.main.models import Clinic, QuizSummaryBlock, \
 
 
 class ClinicFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = Clinic
+    class Meta:
+        model = Clinic
 
 
 class ParticipantFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = User
+    class Meta:
+        model = User
     username = 'MC1234567'
     is_active = False
     password = factory.PostGenerationMethodCall('set_password',
@@ -74,19 +76,22 @@ class PagetreeTestCase(TestCase):
 
 
 class QuizSummaryBlockFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = QuizSummaryBlock
+    class Meta:
+        model = QuizSummaryBlock
     quiz_class = "quiz class"
 
 
 class YouTubeBlockFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = YouTubeBlock
+    class Meta:
+        model = YouTubeBlock
     video_id = 'abcdefg'
     language = 'en'
     title = 'Sample Title'
 
 
 class SimpleImageBlockFactory(factory.DjangoModelFactory):
-    FACTORY_FOR = SimpleImageBlock
+    class Meta:
+        model = SimpleImageBlock
     caption = 'abcdefg'
     alt = 'alt text'
 
