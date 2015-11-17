@@ -2,7 +2,7 @@ MANAGE=./manage.py
 APP=meaningfulconsent
 FLAKE8=./ve/bin/flake8
 
-jenkins: ./ve/bin/python check test flake8 jshint
+jenkins: ./ve/bin/python check test flake8 jshint jscs
 
 ./ve/bin/python: requirements.txt bootstrap.py virtualenv.py
 	chmod +x manage.py bootstrap.py
