@@ -24,14 +24,14 @@
             var self = this;
             this.participant_id = options.participant_id;
             this.seconds_viewed = 0;
-            
+
             // load the youtube iframe api
             window.onYouTubeIframeAPIReady = this.onYouTubeIframeAPIReady;
             window.onPlayerReady = this.onPlayerReady;
             window.onPlayerStateChange = this.onPlayerStateChange;
-            
+
             var tag = document.createElement('script');
-            tag.src = "https://www.youtube.com/iframe_api";
+            tag.src = 'https://www.youtube.com/iframe_api';
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
@@ -47,19 +47,19 @@
             });
         },
         isInteractive: function(form) {
-            var children = jQuery(form).find("input,textarea,select");
+            var children = jQuery(form).find('input,textarea,select');
             return children.length > 0;
         },
         isFormComplete: function(form) {
             var complete = true;
-            var children = jQuery(form).find("input,textarea,select");
+            var children = jQuery(form).find('input,textarea,select');
             jQuery.each(children, function() {
                 if (complete) {
                     if (this.type === 'radio' || this.type === 'checkbox') {
                         // one in the group needs to be checked
                         var selector = 'input[name=' +
-                            jQuery(this).attr("name") + ']';
-                        complete = jQuery(selector).is(":checked");
+                            jQuery(this).attr('name') + ']';
+                        complete = jQuery(selector).is(':checked');
                     }
                     if (this.tagName === 'INPUT' && this.type === 'text' ||
                             this.tagName === 'TEXTAREA') {
@@ -75,7 +75,7 @@
             return complete;
         },
         onChangeLanguage: function(evt) {
-            jQuery("#participant-language-form").submit();
+            jQuery('#participant-language-form').submit();
         },
         onPlayerReady: function(event) {
             this.video_id = this.player.getVideoData().video_id;
@@ -88,7 +88,7 @@
                 this.recordSecondsViewed();
                 break;
             case YT.PlayerState.PLAYING:
-                this._start = new Date().getTime(); 
+                this._start = new Date().getTime();
                 break;
             }
         },
@@ -97,27 +97,29 @@
                 'show': true,
                 'backdrop': 'static',
                 'keyboard': false
-            });            
+            });
             return false;
         },
         onChooseLanguage: function(evt) {
             evt.preventDefault();
             evt.stopImmediatePropagation();
             var self = this;
-            var $nextButton = jQuery(".next a");
-            var $span = jQuery(".next a span");
+            var $nextButton = jQuery('.next a');
+            var $span = jQuery('.next a span');
             jQuery('.choose-language-quiz .glyphicon-ok').addClass('hidden');
-            
-            var $label = jQuery(evt.currentTarget).nextAll('.glyphicon').first();
+
+            var $label = jQuery(evt.currentTarget)
+                .nextAll('.glyphicon').first();
             $label.removeClass('hidden');
 
-            var form = jQuery("form[name='choose-language']")[0];
+            var form = jQuery('form[name="choose-language"]')[0];
             if (!self.isFormComplete(form)) {
                 $nextButton.popover('show');
                 return false; // do nothing yet
             }
-            
-            $span.removeClass('glyphicon-circle-arrow-right').addClass('glyphicon-repeat spin');
+
+            $span.removeClass('glyphicon-circle-arrow-right')
+                .addClass('glyphicon-repeat spin');
             jQuery.ajax({
                 type: form.method,
                 url: form.action,
@@ -145,9 +147,9 @@
             evt.preventDefault();
             evt.stopImmediatePropagation();
 
-            var form = jQuery("form[name='content-form']")[0];
+            var form = jQuery('form[name="content-form"]')[0];
             if (!this.isInteractive(form)) {
-                var $nextButton = jQuery(".next a");
+                var $nextButton = jQuery('.next a');
                 var href = $nextButton.attr('href');
                 window.location = href;
             } else {
@@ -156,17 +158,18 @@
         },
         onSubmitPage: function(evt) {
             var self = this;
-            var $nextButton = jQuery(".next a");
-            var $span = jQuery(".next a span");
+            var $nextButton = jQuery('.next a');
+            var $span = jQuery('.next a span');
             var href = $nextButton.attr('href');
 
-            var form = jQuery("form[name='content-form']")[0];
+            var form = jQuery('form[name="content-form"]')[0];
             if (!self.isFormComplete(form)) {
                 $nextButton.popover('show');
                 return false; // do nothing yet
             }
-            $span.removeClass('glyphicon-circle-arrow-right').addClass('glyphicon-repeat spin');
-            
+            $span.removeClass('glyphicon-circle-arrow-right')
+                .addClass('glyphicon-repeat spin');
+
             if (this.player !== undefined &&
                     this.player.hasOwnProperty('stopVideo')) {
                 this.player.stopVideo();
@@ -180,7 +183,7 @@
                         $nextButton.off('click');
                         $span.removeClass('glyphicon-repeat spin');
                         $span.addClass('glyphicon-circle-arrow-right');
-                        
+
                         if (href === '#') {
                             var target = $nextButton.attr('data-target');
                             jQuery(target).modal({
@@ -212,9 +215,10 @@
         },
         onSubmitVideoData: function(data, textStatus, jqXHR) {
             if (this.hasOwnProperty('video_id') && this.video_id.length > 0 &&
-                    this.hasOwnProperty('video_duration') && this.video_duration > 0) {
+                this.hasOwnProperty('video_duration') &&
+                this.video_duration > 0) {
                 return jQuery.ajax({
-                    type: "post",
+                    type: 'post',
                     url: '/participant/track/',
                     data: {
                         video_id: this.video_id,
@@ -243,5 +247,3 @@
         }
     });
 })();
-
-
