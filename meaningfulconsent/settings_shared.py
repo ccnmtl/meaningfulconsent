@@ -1,3 +1,4 @@
+# flake8: noqa
 # Django settings for meaningfulconsent project.
 import os.path
 from ccnmtlsettings.shared import common
@@ -50,6 +51,10 @@ LETTUCE_APPS = (
 THUMBNAIL_SUBDIR = "thumbs"
 
 PARTICIPANT_SECRET = "something secret"  # obviously changed in staging/prod
+
+AUTHENTICATION_BACKENDS += [
+    'meaningfulconsent.main.auth.ParticipantBackend'
+]
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
