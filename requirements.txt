@@ -60,7 +60,7 @@ django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==0.9.1
 django-treebeard==3.0
-django-pagetree==1.1.8
+django-pagetree==1.1.9
 django-pageblocks==1.0.3
 django-quizblock==1.1.4
 django-markwhat==1.4
