@@ -9,6 +9,7 @@ from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
 from django.contrib.auth.views import logout as auth_logout_view
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.http.response import HttpResponseRedirect, HttpResponse
 from django.shortcuts import get_object_or_404
@@ -16,6 +17,8 @@ from django.views.generic.base import TemplateView, View
 from djangowind.views import logout as wind_logout_view
 from pagetree.generic.views import EditView
 from pagetree.models import UserLocation, UserPageVisit, Hierarchy
+from pagetree.models import PageBlock
+from quizblock.models import Quiz
 
 from meaningfulconsent.main.auth import generate_random_username, \
     generate_password, USERNAME_PREFIX
@@ -41,6 +44,13 @@ def context_processor(request):
     ctx['site'] = Site.objects.get_current()
     ctx['MEDIA_URL'] = settings.MEDIA_URL
     return ctx
+
+
+def get_quiz_blocks(css_class):
+    quiz_type = ContentType.objects.get_for_model(Quiz)
+    blocks = PageBlock.objects.filter(css_extra=css_class,
+                                      content_type=quiz_type)
+    return blocks
 
 
 class LoginView(JSONResponseMixin, View):
