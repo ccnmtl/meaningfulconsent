@@ -68,9 +68,7 @@
                     {% block usernav %}
                     {% if request.user.is_anonymous %}
                         <li><a href="/about/">About</a></li>
-                        <li><a href="/credits/">Credits</a></li>
-                        <li><a href="/contact/">Contact</a></li>
-                        <li><a href="/help/">Help</a></li>
+                        <li><a href="mailto:ctl-meaningfulconsent@columbia.edu">Contact</a></li>
                         <li>
                             <a href="#" data-toggle="modal"
                              data-target="#login-modal">Log In</a>
@@ -106,9 +104,7 @@
                             </li>
                         {% endif %}
                         <li><a href="/about/">About</a></li>
-                        <li><a href="/credits/">Credits</a></li>
-                        <li><a href="/contact/">Contact</a></li>
-                        <li><a href="/help/">Help</a></li>
+                        <li><a href="mailto:ctl-meaningfulconsent@columbia.edu">Contact</a></li>
                         <li>
                             <a href="/accounts/logout/?next=/">
                                 <span title="Log Out">Log Out</span>
@@ -225,10 +221,6 @@
     {% endlanguage %}    
     
     {% block footer %}
-        <footer class="footer">
-            <p>Footer Information</p>
-            <!--<a href="http://ccnmtl.columbia.edu" target="_blank" title="Columbia Center for New Media Teaching and Learning"><img src="{{STATIC_URL}}img/logo_ccnmtl.png" /></a>-->
-        </footer>
     {% endblock %}
     
     <script src="{{STATIC_URL}}js/underscore-min.js"></script>
