@@ -72,23 +72,23 @@ a[disabled] {
 
 /* Priority colors */
 .pr-very-important {
-    background-color: #E84C23 !important;
+    background-color: #CCCCCC !important;
 }
 
 .pr-important {
-    background-color: #EB7657 !important;
+    background-color: #EEEEEE !important;
 }
 
 .pr-neutral {
-    background-color: #EEA08C !important;
+    background-color: #FFFFFF !important;
 }
 
 .pr-not-important {
-    background-color: #F1CAC0 !important;
+    background-color: #EEEEEE !important;
 }
 
 .pr-not-important-at-all {
-    background-color: #f5f5f5 !important;
+    background-color: #CCCCCC !important;
 }
 
 /* LOGIN PAGE */
@@ -658,31 +658,24 @@ and (orientation: portrait) {
 }
 
 .topic-rating-quiz input[type=radio] + label {
-    display: inline-block;
-    display:table-cell;
-    vertical-align:middle;
     font-weight: normal;
-    color: #333;
-    margin-bottom: 0px;
+    color: #000000;
     text-align: center;
-    vertical-align: top;
     cursor: pointer;
     width: 150px;
     height: 55px;
-    margin-right: 10px;
     padding: 4px 0px; 
     border: 1px solid #ccc;
-    border-color: #e6e6e6 #e6e6e6 #bfbfbf;
-    border-color: rgba(0,0,0,0.1) rgba(0,0,0,0.1) rgba(0,0,0,0.25);
-    border-bottom-color: #b3b3b3;
+    border-right: 0;
 }
 
+.topic-rating-quiz input[type=radio]:checked:hover + label:hover,
 .topic-rating-quiz input[type=radio]:checked + label {
-    background-image: none;
-    outline: 0;
-    -webkit-box-shadow: inset 0 2px 5px rgba(0,0,0,0.30),0 1px 2px rgba(0,0,0,0.10);
-    -moz-box-shadow: inset 0 2px 5px rgba(0,0,0,0.30),0 1px 2px rgba(0,0,0,0.10);
-    box-shadow: inset 0 2px 5px rgba(0,0,0,0.30),0 1px 2px rgba(0,0,0,0.10);
+    background-color: #729AC8 !important;
+}
+
+.topic-rating-quiz input[type=radio]:hover + label:hover {
+    background-color: #fba100 !important;
 }
 
 /** topic rating summary **/
