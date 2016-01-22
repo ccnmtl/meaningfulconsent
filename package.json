@@ -1,0 +1,22 @@
+{
+  "name": "meaningfulconsent",
+  "version": "0.0.0",
+  "description": "Meaningful Consent ==========",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ccnmtl/meaningfulconsent.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/ccnmtl/meaningfulconsent/issues"
+  },
+  "devDependencies": {
+    "jshint": "~2.9.1",
+    "jscs": "~2.8.0"
+  }
+}
