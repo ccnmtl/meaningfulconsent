@@ -670,12 +670,12 @@ and (orientation: portrait) {
 }
 
 .topic-rating-quiz input[type=radio]:checked:hover + label:hover,
-.topic-rating-quiz input[type=radio]:checked + label {
-    background-color: #729AC8 !important;
+.topic-rating-quiz input[type=radio]:checked + label {    
+    background-color: #fba100 !important;
 }
 
 .topic-rating-quiz input[type=radio]:hover + label:hover {
-    background-color: #fba100 !important;
+    background-color: #729AC8 !important;
 }
 
 /** topic rating summary **/
