@@ -1,7 +1,7 @@
 MANAGE=./manage.py
 APP=meaningfulconsent
 JS_FILES=media/js/app/
-MAX_COMPLEXITY=12
+MAX_COMPLEXITY=6
 
 all: jenkins
 
