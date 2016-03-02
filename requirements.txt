@@ -20,7 +20,7 @@ lxml==3.5.0
 fuzzywuzzy==0.8.0
 sure==1.2.24
 ipython==4.1.1
-ipdb==0.8.1
+ipdb==0.9.0
 lettuce==0.2.19ccnmtl
 rdflib==4.2.1
 selenium==2.48.0
