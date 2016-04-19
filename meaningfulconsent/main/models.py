@@ -1,7 +1,7 @@
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.fields import GenericRelation
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.fields import CharField
@@ -141,7 +141,7 @@ class UserVideoView(models.Model):
 
 
 class QuizSummaryBlock(models.Model):
-    pageblocks = generic.GenericRelation(
+    pageblocks = GenericRelation(
         PageBlock, related_query_name="quiz_summary")
     template_file = "main/quiz_summary_block.html"
     display_name = "Quiz Summary Block"
@@ -219,7 +219,7 @@ class YouTubeReportColumn(ReportColumnInterface):
 
 
 class YouTubeBlock(models.Model):
-    pageblocks = generic.GenericRelation(
+    pageblocks = GenericRelation(
         PageBlock, related_query_name="user_video")
     template_file = "main/youtube_video_block.html"
     display_name = "YouTube Video"
@@ -294,7 +294,7 @@ ReportableInterface.register(YouTubeBlock)
 
 
 class SimpleImageBlock(models.Model):
-    pageblocks = generic.GenericRelation(PageBlock)
+    pageblocks = GenericRelation(PageBlock)
     image = models.ImageField(upload_to="images")
     caption = models.TextField(blank=True)
     alt = models.CharField(max_length=100, null=True, blank=True)

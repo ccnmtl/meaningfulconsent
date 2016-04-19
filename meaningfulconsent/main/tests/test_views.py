@@ -141,7 +141,7 @@ class IndexViewTest(ParticipantTestCase):
         response = self.client.get('/', follow=True)
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.redirect_chain,
-                          [('http://testserver/participant/language/', 302)])
+                          [('/participant/language/', 302)])
 
 
 class LoginTest(ParticipantTestCase):
@@ -285,7 +285,7 @@ class LoginParticipantViewTest(ParticipantTestCase):
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.templates[0].name, "pagetree/page.html")
         self.assertEquals(response.redirect_chain[0],
-                          ('http://testserver/pages/en/one/introduction/',
+                          ('/pages/en/one/introduction/',
                            302))
 
 
@@ -302,9 +302,9 @@ class LanguageParticipantViewTest(ParticipantTestCase):
 
         response = self.client.post(url, {'language': 'es'}, follow=True)
         self.assertEquals(response.redirect_chain[0],
-                          ('http://testserver/pages/es//', 302))
+                          ('/pages/es//', 302))
         self.assertEquals(response.redirect_chain[1],
-                          ('http://testserver/pages/es/one/', 302))
+                          ('/pages/es/one/', 302))
 
         sections = self.hierarchy_en.get_root().get_descendants()
         UserPageVisit.objects.create(user=self.user,
@@ -315,7 +315,7 @@ class LanguageParticipantViewTest(ParticipantTestCase):
                                      status="complete")
         response = self.client.post(url, {'language': 'en'}, follow=True)
         self.assertEquals(response.redirect_chain[0],
-                          ('http://testserver/pages/en/one/introduction/',
+                          ('/pages/en/one/introduction/',
                            302))
 
     def test_post_as_participant(self):
@@ -328,9 +328,9 @@ class LanguageParticipantViewTest(ParticipantTestCase):
 
         response = self.client.post(url, {'language': 'es'}, follow=True)
         self.assertEquals(response.redirect_chain[0],
-                          ('http://testserver/pages/es//', 302))
+                          ('/pages/es//', 302))
         self.assertEquals(response.redirect_chain[1],
-                          ('http://testserver/pages/es/one/', 302))
+                          ('/pages/es/one/', 302))
 
         self.assertTrue('Pausa' in response.content)
 
@@ -375,7 +375,7 @@ class ClearParticipantViewTest(ParticipantTestCase):
         response = self.client.get('/participant/clear/', follow=True)
         self.assertEquals(response.status_code, 200)
         self.assertEquals(response.redirect_chain[0],
-                          ('http://testserver/pages/en//', 302))
+                          ('/pages/en//', 302))
 
         visits = UserPageVisit.objects.filter(user=self.user)
         self.assertEquals(len(visits), 1)
