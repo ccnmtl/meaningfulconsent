@@ -63,7 +63,7 @@ django-smoketest==1.0.0
 django-extensions==1.6.1
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
-django-impersonate==0.9.2
+django-impersonate==1.0.1
 django-treebeard==3.0
 django-pagetree==1.1.14
 django-pageblocks==1.0.4
