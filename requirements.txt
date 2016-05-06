@@ -36,7 +36,7 @@ six==1.10.0
 fake-factory==0.5.3
 factory_boy==2.6.1
 python-ldap==2.4.22
-contextlib2==0.5.1
+contextlib2==0.5.2
 rcssmin==1.0.6
 rjsmin==1.0.12
 Jinja2==2.8
