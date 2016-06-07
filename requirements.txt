@@ -44,7 +44,7 @@ Jinja2==2.8
 Markupsafe==0.23
 
 django-bootstrap3==7.0.1
-djangowind==0.14.3
+djangowind==0.15.0
 sorl==3.1
 typogrify==2.0.7
 django-staticmedia==0.2.2
