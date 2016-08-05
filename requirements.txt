@@ -71,7 +71,7 @@ django-impersonate==1.0.1
 django-treebeard==4.0.1
 django-pagetree==1.2.2
 django-pageblocks==1.0.4
-django-quizblock==1.2.1
+django-quizblock==1.2.2
 django-markwhat==1.5
 djangorestframework==3.2.4
 gunicorn==19.6.0
