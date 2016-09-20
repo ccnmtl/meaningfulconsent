@@ -207,7 +207,7 @@ class YouTubeReportColumn(ReportColumnInterface):
     def metadata(self):
         '''hierarchy, itemIdentifier', 'group', 'item type', 'item text' '''
         return [self.hierarchy.name, self.identifier(), 'YouTube Video',
-                'percent viewed', '%s' % (self.title)]
+                'percent viewed', '%s' % (self.title.encode('utf-8'))]
 
     def user_value(self, user):
         try:
