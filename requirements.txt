@@ -37,7 +37,7 @@ logilab-astng==0.24.3
 pylint==1.6.4
 six==1.10.0
 ipaddress==1.0.17
-fake-factory==0.7.2
+Faker==0.7.3
 factory_boy==2.7.0
 ldap3==2.1.1
 contextlib2==0.5.4
