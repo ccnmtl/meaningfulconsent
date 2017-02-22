@@ -75,7 +75,7 @@ django-quizblock==1.2.2
 django-markwhat==1.5.1
 djangorestframework==3.2.4
 gunicorn==19.6.0
-boto==2.45.0
+boto==2.46.1
 python-dateutil==2.6.0
 django-storages==1.5.2
 django-cacheds3storage==0.1.2
