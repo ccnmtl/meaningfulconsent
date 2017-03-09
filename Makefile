@@ -12,3 +12,8 @@ makemessages: ./ve/bin/python
 
 compilemessages: ./ve/bin/python
 	$(MANAGE) compilemessages
+
+eslint: $(JS_SENTINAL)
+	$(NODE_MODULES)/.bin/eslint $(JS_FILES)
+
+.PHONY: eslint
