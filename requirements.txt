@@ -43,7 +43,7 @@ ldap3==2.2.2
 contextlib2==0.5.4
 rcssmin==1.0.6
 rjsmin==1.0.12
-Jinja2==2.9.5
+Jinja2==2.9.6
 MarkupSafe==1.0
 
 django-bootstrap3==8.2.2
