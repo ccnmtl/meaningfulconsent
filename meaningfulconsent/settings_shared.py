@@ -59,8 +59,8 @@ AUTHENTICATION_BACKENDS += [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'meaningfulconsent.main.mixins.FacilitatorRestPermission',),
-    'PAGINATE_BY': 20,
-    'PAGINATE_BY_PARAM': 'page_size'
+    'PAGE_SIZE': 20,
+    'PAGE_SIZE_QUERY_PARAM': 'page_size',
 }
 
 LOCALE_PATHS = (
