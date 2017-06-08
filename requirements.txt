@@ -22,7 +22,7 @@ lxml==3.8.0
 fuzzywuzzy==0.15.0
 sure==1.4.6
 ipython==6.1.0
-ipdb==0.10.2
+ipdb==0.10.3
 rdflib==4.2.2
 selenium==2.53.6
 coverage==4.4.1
