@@ -15,6 +15,7 @@ class UserVideoViewAdmin(admin.ModelAdmin):
     search_fields = ("user__username",)
     list_display = ("user", "video_id", "video_duration", "seconds_viewed")
 
+
 admin.site.register(UserVideoView, UserVideoViewAdmin)
 
 
@@ -24,5 +25,6 @@ class UserProfileAdmin(admin.ModelAdmin):
 
     search_fields = ("user__username",)
     list_display = ("user", "clinic", "language", "created")
+
 
 admin.site.register(UserProfile, UserProfileAdmin)
