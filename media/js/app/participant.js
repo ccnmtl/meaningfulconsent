@@ -83,13 +83,13 @@
         },
         onPlayerStateChange: function(event) {
             switch (event.data) {
-            case YT.PlayerState.ENDED:
-            case YT.PlayerState.PAUSED:
-                this.recordSecondsViewed();
-                break;
-            case YT.PlayerState.PLAYING:
-                this._start = new Date().getTime();
-                break;
+                case YT.PlayerState.ENDED:
+                case YT.PlayerState.PAUSED:
+                    this.recordSecondsViewed();
+                    break;
+                case YT.PlayerState.PLAYING:
+                    this._start = new Date().getTime();
+                    break;
             }
         },
         onPauseSession: function(evt) {
