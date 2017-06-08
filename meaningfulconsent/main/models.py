@@ -120,6 +120,7 @@ def create_user_profile(sender, instance, created, **kwargs):
             clinic = clinics[0]
         UserProfile.objects.get_or_create(user=instance, clinic=clinic)
 
+
 post_save.connect(create_user_profile, sender=User)
 
 
