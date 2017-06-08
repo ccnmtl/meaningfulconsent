@@ -2,8 +2,6 @@ language: python
 sudo: false
 python:
   - "2.7"
-before-install:
-  - pip install --upgrade pip
 script:
   - make
 notifications:
