@@ -44,10 +44,6 @@ PAGEBLOCKS = [
     'main.SimpleImageBlock',
     'main.YouTubeBlock']
 
-LETTUCE_APPS = (
-    'meaningfulconsent.main',
-)
-
 THUMBNAIL_SUBDIR = "thumbs"
 
 PARTICIPANT_SECRET = "something secret"  # obviously changed in staging/prod
