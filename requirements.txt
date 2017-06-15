@@ -11,7 +11,7 @@ statsd==3.2.1
 pep8==1.7.0
 pyflakes==1.5.0
 mccabe==0.6.1
-pycodestyle==2.3
+pycodestyle==2.3.1
 enum34==1.1.6
 configparser==3.5.0
 flake8==3.3.0
@@ -21,8 +21,8 @@ cssselect==1.0.1
 lxml==3.8.0
 fuzzywuzzy==0.15.0
 sure==1.4.6
-ipython==5.4.1
-ipdb==0.10.2
+ipython==5.4.1 # pyup: <6.0.0
+ipdb==0.10.2 # pyup: <0.10.3
 rdflib==4.2.2
 selenium==3.4.3
 coverage==4.4.1
@@ -41,7 +41,7 @@ logilab-astng==0.24.3
 pylint==1.7.1
 six==1.10.0
 ipaddress==1.0.18
-Faker==0.7.15
+Faker==0.7.17
 factory_boy==2.8.1
 ldap3==2.2.4
 contextlib2==0.5.5
