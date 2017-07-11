@@ -36,7 +36,7 @@ urllib3==1.21.1  # requests
 certifi==2017.4.17  # requests
 requests==2.18.1
 
-logilab-common==1.4.0
+logilab-common==1.4.1
 logilab-astng==0.24.3
 pylint==1.7.2
 six==1.10.0
