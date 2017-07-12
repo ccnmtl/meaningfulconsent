@@ -82,7 +82,7 @@ django-markwhat==1.5.1
 djangorestframework==3.6.3
 gunicorn==19.7.1
 boto==2.48.0
-python-dateutil==2.6.0
+python-dateutil==2.6.1
 django-storages==1.6.3
 django-cacheds3storage==0.1.2
 django-smtp-ssl==1.0
