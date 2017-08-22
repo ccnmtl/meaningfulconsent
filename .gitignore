@@ -22,3 +22,4 @@ media/django_extensions/
 media/stick.js
 uploads
 node_modules
+package-lock.json

@@ -76,17 +76,11 @@
             'click .btn-verify-record': 'onVerifyRecording'
         },
         initialize: function(options) {
-            _.bindAll(this,
-                      'render',
-                      'onArchiveParticipant',
-                      'onClearParticipantSearch',
-                      'onConfirmArchiveParticipant',
-                      'onCreateParticipant',
-                      'onEditParticipantNotes',
-                      'onSaveParticipantNotes',
-                      'onSearchParticipants',
-                      'onTurnPage',
-                      'onVerifyRecording');
+            _.bindAll(this, 'render', 'onArchiveParticipant',
+                'onClearParticipantSearch', 'onConfirmArchiveParticipant',
+                'onCreateParticipant', 'onEditParticipantNotes',
+                'onSaveParticipantNotes', 'onSearchParticipants',
+                'onTurnPage', 'onVerifyRecording');
 
             var html = jQuery('#participant-sessions-template').html();
             this.template = _.template(html);
@@ -219,7 +213,6 @@
             });
         },
         onSearchParticipants: function(evt) {
-            var self = this;
             evt.preventDefault();
 
             var filterBy = jQuery('input[name="participant-search"]').val();
@@ -239,7 +232,8 @@
             jQuery('#notes-modal').find('textarea.notes').focus();
         },
         getParameterByName: function(name, url) {
-            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
+            // eslint-disable-next-line security/detect-non-literal-regexp
             var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
             var results = regex.exec(url);
             return results === null ? '' : decodeURIComponent(
