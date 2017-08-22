@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "eslintConfig": {
+    "extends": "secure"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/ccnmtl/meaningfulconsent.git"
