@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "eslintConfig": {
+    "extends": "secure"
+  },
   "repository": {
     "type": "git",
     "url": "git://github.com/ccnmtl/meaningfulconsent.git"
@@ -18,6 +21,8 @@
   "devDependencies": {
     "eslint": "~4.0.0",
     "jshint": "~2.9.1",
-    "jscs": "~3.0.7"
+    "eslint-config-scanjs": "^1.0.0-beta4",
+    "eslint-plugin-no-unsafe-innerhtml": "^1.0.16",
+    "eslint-plugin-security": "^1.4.0"
   }
 }

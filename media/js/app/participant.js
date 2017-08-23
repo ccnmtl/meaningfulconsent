@@ -8,20 +8,19 @@
         },
         initialize: function(options) {
             _.bindAll(this,
-                      'isFormComplete',
-                      'isInteractive',
-                      'onChangeLanguage',
-                      'onPauseSession',
-                      'onPlayerReady',
-                      'onPlayerStateChange',
-                      'onYouTubeIframeAPIReady',
-                      'onNextPage',
-                      'onSubmitPage',
-                      'onSubmitQuiz',
-                      'onSubmitVideoData',
-                      'recordSecondsViewed');
+                'isFormComplete',
+                'isInteractive',
+                'onChangeLanguage',
+                'onPauseSession',
+                'onPlayerReady',
+                'onPlayerStateChange',
+                'onYouTubeIframeAPIReady',
+                'onNextPage',
+                'onSubmitPage',
+                'onSubmitQuiz',
+                'onSubmitVideoData',
+                'recordSecondsViewed');
 
-            var self = this;
             this.participant_id = options.participant_id;
             this.seconds_viewed = 0;
 
@@ -31,6 +30,7 @@
             window.onPlayerStateChange = this.onPlayerStateChange;
 
             var tag = document.createElement('script');
+            // eslint-disable-next-line  scanjs-rules/assign_to_src
             tag.src = 'https://www.youtube.com/iframe_api';
             var firstScriptTag = document.getElementsByTagName('script')[0];
             firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
@@ -83,13 +83,13 @@
         },
         onPlayerStateChange: function(event) {
             switch (event.data) {
-                case YT.PlayerState.ENDED:
-                case YT.PlayerState.PAUSED:
-                    this.recordSecondsViewed();
-                    break;
-                case YT.PlayerState.PLAYING:
-                    this._start = new Date().getTime();
-                    break;
+            case YT.PlayerState.ENDED:
+            case YT.PlayerState.PAUSED:
+                this.recordSecondsViewed();
+                break;
+            case YT.PlayerState.PLAYING:
+                this._start = new Date().getTime();
+                break;
             }
         },
         onPauseSession: function(evt) {
@@ -130,6 +130,7 @@
                     $nextButton.off('click');
                     $span.removeClass('glyphicon-repeat spin');
                     $span.addClass('glyphicon-circle-arrow-right');
+                    // eslint-disable-next-line scanjs-rules/assign_to_location
                     window.location = the_json.next_url;
                 },
                 error: function() {
@@ -151,6 +152,7 @@
             if (!this.isInteractive(form)) {
                 var $nextButton = jQuery('.next a');
                 var href = $nextButton.attr('href');
+                // eslint-disable-next-line scanjs-rules/assign_to_location
                 window.location = href;
             } else {
                 this.onSubmitPage(evt);
@@ -178,6 +180,7 @@
 
             jQuery.when(this.onSubmitQuiz(form), this.onSubmitVideoData())
                 .done(function(first_call, second_call) {
+                    // eslint-disable-next-line scanjs-rules/call_setTimeout
                     setTimeout(function() {
                         $nextButton.popover('destroy');
                         $nextButton.off('click');
@@ -192,6 +195,7 @@
                                 'keyboard': false
                             });
                         } else {
+                            // eslint-disable-next-line scanjs-rules/assign_to_location
                             window.location = href;
                         }
                     }, 500);
@@ -233,8 +237,8 @@
         onYouTubeIframeAPIReady: function() {
             this.player = new YT.Player('player', {
                 events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
+                    'onReady': window.onPlayerReady,
+                    'onStateChange': window.onPlayerStateChange
                 }
             });
         },
