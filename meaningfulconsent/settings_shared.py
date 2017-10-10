@@ -55,6 +55,8 @@ AUTHENTICATION_BACKENDS += [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': (
         'meaningfulconsent.main.mixins.FacilitatorRestPermission',),
+    'DEFAULT_PAGINATION_CLASS':
+        'rest_framework.pagination.LimitOffsetPagination',
     'PAGE_SIZE': 20,
     'PAGE_SIZE_QUERY_PARAM': 'page_size',
 }
