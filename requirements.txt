@@ -51,7 +51,7 @@ rjsmin==1.0.12
 Jinja2==2.9.6
 MarkupSafe==1.0
 
-django-bootstrap3==9.0.0
+django-bootstrap3==9.1.0
 djangowind==1.0.1
 requirements/src/sorl-3.1.tar.gz
 typogrify==2.0.7
