@@ -24,7 +24,7 @@ sure==1.4.7
 ipython==5.5.0 # pyup: <6.0.0
 ipdb==0.10.2 # pyup: <0.10.3
 rdflib==4.2.2
-selenium==3.6.0
+selenium==3.7.0
 coverage==4.4.1
 pyasn1==0.3.7
 pyOpenSSL==17.3.0
