@@ -238,7 +238,7 @@ class CreateParticipantViewTest(ParticipantTestCase):
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
 
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         user = User.objects.get(username=the_json['user']['username'])
         self.assertTrue(user.profile.is_participant())
 
@@ -341,7 +341,7 @@ class LanguageParticipantViewTest(ParticipantTestCase):
         response = self.client.post(url, {'language': 'es'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
 
-        the_json = loads(response.content)
+        the_json = loads(response.content.decode('utf-8'))
         self.assertEqual(the_json['next_url'], '/pages/es//')
 
 
@@ -401,7 +401,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
                                     {},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
         self.assertEquals(the_json['msg'], "Invalid video id")
 
@@ -409,7 +409,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
                                     {'video_id': 'ABCDEFG'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
         self.assertEquals(the_json['msg'], "Invalid video duration")
 
@@ -420,7 +420,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
         response = self.client.post('/participant/track/', ctx,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
         self.assertEquals(the_json['msg'], "Invalid video duration")
 
@@ -428,7 +428,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
         response = self.client.post('/participant/track/', ctx,
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertFalse(the_json['success'])
         self.assertEquals(the_json['msg'], "Invalid video duration")
 
@@ -441,7 +441,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
                                      'video_duration': 100},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
 
         uvv = UserVideoView.objects.get(user=self.user)
@@ -456,7 +456,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
                                      'seconds_viewed': 50},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
 
         uvv = UserVideoView.objects.get(user=self.user)
@@ -479,7 +479,7 @@ class TrackParticipantViewTest(ParticipantTestCase):
                                      'seconds_viewed': 200},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['success'])
 
         uvv = UserVideoView.objects.get(user=self.participant)
