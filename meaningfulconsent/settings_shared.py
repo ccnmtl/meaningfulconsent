@@ -25,7 +25,6 @@ MIDDLEWARE_CLASSES += [  # noqa
 
 INSTALLED_APPS += [  # noqa
     'bootstrap3',
-    'sorl.thumbnail',
     'typogrify',
     'bootstrapform',
     'django_extensions',

@@ -19,8 +19,9 @@ def generate_random_username():
 
 
 def generate_password(username):
-    digest = hmac.new(settings.PARTICIPANT_SECRET,
-                      msg=username, digestmod=hashlib.sha256).digest()
+    digest = hmac.new(settings.PARTICIPANT_SECRET.encode('utf-8'),
+                      msg=username.encode('utf-8'),
+                      digestmod=hashlib.sha256).digest()
     return base64.b64encode(digest).decode()
 
 

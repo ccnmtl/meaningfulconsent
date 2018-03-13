@@ -1,3 +1,5 @@
+from __future__ import unicode_literals
+
 from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
@@ -8,10 +10,12 @@ from django.db.models.fields import CharField
 from django.db.models.fields.related import OneToOneField
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
+from django.utils.encoding import python_2_unicode_compatible
+from rest_framework import serializers, viewsets
+
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from pagetree.reports import PagetreeReport, ReportableInterface, \
     StandaloneReportColumn, ReportColumnInterface
-from rest_framework import serializers, viewsets
 
 
 USERNAME_LENGTH = 9
@@ -23,10 +27,11 @@ LANGUAGES = (
 )
 
 
+@python_2_unicode_compatible
 class Clinic(models.Model):
     name = CharField(max_length=25)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
 
@@ -141,6 +146,7 @@ class UserVideoView(models.Model):
 # custom pageblocks
 
 
+@python_2_unicode_compatible
 class QuizSummaryBlock(models.Model):
     pageblocks = GenericRelation(
         PageBlock, related_query_name="quiz_summary")
@@ -151,8 +157,8 @@ class QuizSummaryBlock(models.Model):
     def pageblock(self):
         return self.pageblocks.all()[0]
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return str(self.pageblock())
 
     @classmethod
     def add_form(self):
@@ -208,7 +214,7 @@ class YouTubeReportColumn(ReportColumnInterface):
     def metadata(self):
         '''hierarchy, itemIdentifier', 'group', 'item type', 'item text' '''
         return [self.hierarchy.name, self.identifier(), 'YouTube Video',
-                'percent viewed', '%s' % (self.title.encode('utf-8'))]
+                'percent viewed', self.title]
 
     def user_value(self, user):
         try:
@@ -232,8 +238,8 @@ class YouTubeBlock(models.Model):
     def pageblock(self):
         return self.pageblocks.all()[0]
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return str(self.pageblock())
 
     @classmethod
     def add_form(self):
@@ -294,6 +300,7 @@ class YouTubeForm(forms.ModelForm):
 ReportableInterface.register(YouTubeBlock)
 
 
+@python_2_unicode_compatible
 class SimpleImageBlock(models.Model):
     pageblocks = GenericRelation(PageBlock)
     image = models.ImageField(upload_to="images")
@@ -305,8 +312,8 @@ class SimpleImageBlock(models.Model):
     def pageblock(self):
         return self.pageblocks.all()[0]
 
-    def __unicode__(self):
-        return unicode(self.pageblock())
+    def __str__(self):
+        return str(self.pageblock())
 
     def needs_submit(self):
         return False

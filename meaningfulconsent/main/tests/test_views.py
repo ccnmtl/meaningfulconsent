@@ -26,7 +26,7 @@ class BasicTest(TestCase):
     def test_smoketest(self):
         response = self.client.get("/smoketest/")
         self.assertEquals(response.status_code, 200)
-        assert "PASS" in response.content
+        assert b"PASS" in response.content
 
 
 class PagetreeViewTestsLoggedOut(TestCase):
@@ -113,8 +113,8 @@ class IndexViewTest(ParticipantTestCase):
 
     def test_anonymous_user(self):
         response = self.client.get('/')
-        self.assertTrue('Log In' in response.content)
-        self.assertFalse('Log Out' in response.content)
+        self.assertTrue(b'Log In' in response.content)
+        self.assertFalse(b'Log Out' in response.content)
         self.assertEquals(response.template_name[0], "main/splash.html")
         self.assertEquals(response.status_code, 200)
 
@@ -124,9 +124,9 @@ class IndexViewTest(ParticipantTestCase):
         response = self.client.get('/')
         self.assertEquals(response.template_name[0], "main/facilitator.html")
         self.assertEquals(response.status_code, 200)
-        self.assertFalse('Log In' in response.content)
-        self.assertTrue('Log Out' in response.content)
-        self.assertTrue('Dashboard' in response.content)
+        self.assertFalse(b'Log In' in response.content)
+        self.assertTrue(b'Log Out' in response.content)
+        self.assertTrue(b'Dashboard' in response.content)
 
     def test_participant(self):
         self.login_participant()
@@ -195,8 +195,8 @@ class LogoutTest(ParticipantTestCase):
         response = self.client.get('/accounts/logout/?next=/', follow=True)
         self.assertEquals(response.template_name[0], "main/splash.html")
         self.assertEquals(response.status_code, 200)
-        self.assertTrue('Log In' in response.content)
-        self.assertFalse('Log Out' in response.content)
+        self.assertTrue(b'Log In' in response.content)
+        self.assertFalse(b'Log Out' in response.content)
 
     def test_logout_participant(self):
         self.client.login(username=self.user.username, password="test")
@@ -324,7 +324,7 @@ class LanguageParticipantViewTest(ParticipantTestCase):
         self.assertEquals(self.participant.profile.language, 'en')
 
         response = self.client.get('/pages/en/', {}, follow=True)
-        self.assertTrue('Pause' in response.content)
+        self.assertTrue(b'Pause' in response.content)
 
         response = self.client.post(url, {'language': 'es'}, follow=True)
         self.assertEquals(response.redirect_chain[0],
@@ -332,7 +332,7 @@ class LanguageParticipantViewTest(ParticipantTestCase):
         self.assertEquals(response.redirect_chain[1],
                           ('/pages/es/one/', 302))
 
-        self.assertTrue('Pausa' in response.content)
+        self.assertTrue(b'Pausa' in response.content)
 
     def test_post_as_participant_ajax(self):
         url = reverse('participant-language')

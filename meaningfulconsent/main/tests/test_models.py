@@ -140,7 +140,7 @@ class QuizSummaryBlockTest(TestCase):
 
         self.section_one.append_pageblock('test', '', block)
 
-        self.assertTrue(block.__unicode__().startswith('One'))
+        self.assertTrue(block.__str__().startswith('One'))
         self.assertIsNotNone(block.pageblock())
         self.assertFalse(block.needs_submit())
         self.assertTrue(block.unlocked(None))
@@ -184,7 +184,7 @@ class YouTubeBlockTest(TestCase):
 
         self.section_one.append_pageblock('test', '', block)
 
-        self.assertTrue(block.__unicode__().startswith('One'))
+        self.assertTrue(block.__str__().startswith('One'))
         self.assertIsNotNone(block.pageblock())
         self.assertFalse(block.needs_submit())
         self.assertTrue(block.unlocked(None))
@@ -240,7 +240,7 @@ class SimpleImageBlockTest(TestCase):
 
         self.section_one.append_pageblock('test', '', block)
 
-        self.assertTrue(block.__unicode__().startswith('One'))
+        self.assertTrue(block.__str__().startswith('One'))
         self.assertIsNotNone(block.pageblock())
         self.assertFalse(block.needs_submit())
         self.assertTrue(block.unlocked(None))
