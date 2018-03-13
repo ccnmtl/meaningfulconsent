@@ -162,7 +162,7 @@ class LoginTest(ParticipantTestCase):
                                      'password': ''},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['error'], True)
 
         response = self.client.post('/accounts/login/',
@@ -170,7 +170,7 @@ class LoginTest(ParticipantTestCase):
                                      'password': 'test'},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['next'], "/")
         self.assertTrue('error' not in the_json)
 
@@ -183,7 +183,7 @@ class LoginTest(ParticipantTestCase):
                                      'password': pwd},
                                     HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertTrue(the_json['error'], True)
 
 
