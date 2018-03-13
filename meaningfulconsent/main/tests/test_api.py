@@ -25,7 +25,7 @@ class ParticipantApiTest(ParticipantTestCase):
         response = self.client.get('/api/participants/',
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertEquals(the_json['count'], 1)
 
         participants = the_json['results']
@@ -39,13 +39,13 @@ class ParticipantApiTest(ParticipantTestCase):
         response = self.client.get('/api/participants/?username=foo',
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertEquals(the_json['count'], 0)
 
         response = self.client.get('/api/participants/?username=MC',
                                    HTTP_X_REQUESTED_WITH='XMLHttpRequest')
         self.assertEquals(response.status_code, 200)
-        the_json = json.loads(response.content)
+        the_json = json.loads(response.content.decode('utf-8'))
         self.assertEquals(the_json['count'], 1)
 
         participants = the_json['results']
