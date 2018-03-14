@@ -22,8 +22,8 @@ class ParticipantFactory(factory.DjangoModelFactory):
         model = User
     username = 'MC1234567'
     is_active = False
-    password = factory.PostGenerationMethodCall('set_password',
-                                                generate_password('MC1234567'))
+    password = factory.PostGenerationMethodCall(
+        'set_password', generate_password('MC1234567'))
 
 
 class ParticipantTestCase(TestCase):

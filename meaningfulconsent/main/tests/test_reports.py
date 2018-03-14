@@ -73,48 +73,48 @@ class MeaningfulConsentReportTest(ParticipantTestCase):
         header = ['hierarchy', 'itemIdentifier', 'exercise type',
                   'itemType', 'itemText', 'answerIdentifier',
                   'answerText']
-        self.assertEquals(rows.next(), header)
+        self.assertEquals(next(rows), header)
 
-        self.assertEquals(rows.next(), "")
+        self.assertEquals(next(rows), "")
 
         # participant id
-        self.assertEquals(rows.next(), ['', 'participant_id', 'profile',
-                                        'string', 'Randomized Participant Id'])
+        self.assertEquals(next(rows), ['', 'participant_id', 'profile',
+                                       'string', 'Randomized Participant Id'])
 
         # en percent complete
-        self.assertEquals(rows.next(), ['', 'english_percent_complete',
-                                        'profile',
-                                        'percent', '% of hierarchy completed'])
+        self.assertEquals(next(rows), ['', 'english_percent_complete',
+                                       'profile',
+                                       'percent', '% of hierarchy completed'])
 
         # en last access
-        self.assertEquals(rows.next(), ['', 'english_last_access',
-                                        'profile', 'date string',
-                                        'last access date'])
+        self.assertEquals(next(rows), ['', 'english_last_access',
+                                       'profile', 'date string',
+                                       'last access date'])
 
         # en time spent
-        self.assertEquals(rows.next(), ['', 'english_time_spent',
-                                        'profile', 'integer', 'minutes'])
+        self.assertEquals(next(rows), ['', 'english_time_spent',
+                                       'profile', 'integer', 'minutes'])
 
         # es percent complete
-        self.assertEquals(rows.next(), ['', 'spanish_percent_complete',
-                                        'profile',
-                                        'percent', '% of hierarchy completed'])
+        self.assertEquals(next(rows), ['', 'spanish_percent_complete',
+                                       'profile',
+                                       'percent', '% of hierarchy completed'])
 
         # es last access
-        self.assertEquals(rows.next(), ['', 'spanish_last_access',
-                                        'profile', 'date string',
-                                        'last access date'])
+        self.assertEquals(next(rows), ['', 'spanish_last_access',
+                                       'profile', 'date string',
+                                       'last access date'])
 
         # es time spent
-        self.assertEquals(rows.next(), ['', 'spanish_time_spent',
-                                        'profile', 'integer', 'minutes'])
+        self.assertEquals(next(rows), ['', 'spanish_time_spent',
+                                       'profile', 'integer', 'minutes'])
 
         youtube_metadata = [u'en', u'avideo', 'YouTube Video',
-                            'percent viewed', u'Title']
-        self.assertEquals(rows.next(), youtube_metadata)
+                            'percent viewed', 'Title']
+        self.assertEquals(next(rows), youtube_metadata)
 
         try:
-            rows.next()
+            next(rows)
         except StopIteration:
             pass  # expected
 
@@ -126,9 +126,9 @@ class MeaningfulConsentReportTest(ParticipantTestCase):
                   'spanish_percent_complete', 'spanish_last_access',
                   'spanish_time_spent',
                   'avideo']
-        self.assertEquals(rows.next(), header)
+        self.assertEquals(next(rows), header)
 
-        row = rows.next()
+        row = next(rows)
         self.assertEquals(row[0], self.participant.username)
         self.assertEquals(row[1], 50)
         self.assertIsNotNone(row[2])
@@ -138,7 +138,7 @@ class MeaningfulConsentReportTest(ParticipantTestCase):
         self.assertEquals(row[6], 0)
         self.assertEquals(row[7], 25.0)
 
-        row = rows.next()
+        row = next(rows)
         self.assertEquals(row[0], self.participant2.username)
         self.assertEquals(row[1], 0)
         self.assertEquals(row[2], '')
@@ -149,6 +149,6 @@ class MeaningfulConsentReportTest(ParticipantTestCase):
         self.assertEquals(row[7], 0)
 
         try:
-            rows.next()
+            next(rows)
         except StopIteration:
             pass  # expected
