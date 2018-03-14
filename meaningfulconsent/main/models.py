@@ -225,6 +225,7 @@ class YouTubeReportColumn(ReportColumnInterface):
             return 0
 
 
+@python_2_unicode_compatible
 class YouTubeBlock(models.Model):
     pageblocks = GenericRelation(
         PageBlock, related_query_name="user_video")
