@@ -80,7 +80,7 @@ django-pagetree==1.4.1
 django-pageblocks==2.0.0
 django-quizblock==1.2.3
 django-markwhat==1.6.0
-djangorestframework==3.8.1
+djangorestframework==3.8.2
 gunicorn==19.7.1
 boto==2.48.0
 python-dateutil==2.7.2
