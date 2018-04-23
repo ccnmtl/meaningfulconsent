@@ -1,7 +1,7 @@
 Django==1.11.12 # pyup: <2.0
 feedparser==5.2.1
 Markdown==2.6.11
-simplejson==3.13.2
+simplejson==3.14.0
 smartypants==2.0.1
 uuid==1.30
 psycopg2==2.7.4
