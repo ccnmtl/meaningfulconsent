@@ -51,7 +51,7 @@ rjsmin==1.0.12
 Jinja2==2.10
 MarkupSafe==1.0
 
-django-bootstrap3==10.0.0
+django-bootstrap3==10.0.1
 djangowind==1.1.0
 typogrify==2.0.7
 django-staticmedia==0.2.2
