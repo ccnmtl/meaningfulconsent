@@ -19,7 +19,7 @@ tornado==4.5.3 # pyup: <5.0
 cssselect==1.0.3
 lxml==4.2.1
 fuzzywuzzy==0.16.0
-sure==1.4.9
+sure==1.4.11
 ipython==5.7.0 # pyup: <6.0.0
 ipdb==0.10.2 # pyup: <0.10.3
 rdflib==4.2.2
