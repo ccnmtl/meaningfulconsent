@@ -4,7 +4,7 @@ Markdown==2.6.11
 simplejson==3.15.0
 smartypants==2.0.1
 uuid==1.30
-psycopg2==2.7.4
+psycopg2==2.7.5
 Pillow==5.1.0
 versiontools==1.9.1
 statsd==3.2.2
