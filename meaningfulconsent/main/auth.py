@@ -28,7 +28,7 @@ def generate_password(username):
 class ParticipantBackend(object):
 
     def match(self, username):
-        pattern = 'MC\d{7}'
+        pattern = 'MC\d{7}'  # noqa: W605
         prog = re.compile(pattern)
         result = prog.match(username)
 
