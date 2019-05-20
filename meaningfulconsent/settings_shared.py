@@ -45,7 +45,7 @@ PAGEBLOCKS = [
 
 THUMBNAIL_SUBDIR = "thumbs"
 
-PARTICIPANT_SECRET = "something secret"  # obviously changed in staging/prod
+PARTICIPANT_SECRET = "something secret"  # nosec, changed in staging/prod
 
 AUTHENTICATION_BACKENDS += [
     'meaningfulconsent.main.auth.ParticipantBackend'

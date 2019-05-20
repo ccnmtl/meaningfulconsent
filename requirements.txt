@@ -41,7 +41,7 @@ six==1.12.0
 ipaddress==1.0.22
 text-unidecode==1.2
 Faker==1.0.7
-factory_boy==2.11.1
+factory_boy==2.12.0
 ldap3==2.6
 contextlib2==0.5.5
 rcssmin==1.0.6
@@ -93,7 +93,7 @@ pytz==2019.1
 pbr==5.2.0
 PyYAML>=3.10.0 # MIT
 stevedore>=1.20.0 # Apache-2.0
-bandit==1.5.1
+bandit==1.6.0
 
 entrypoints==0.3
 functools32==3.2.3-2; python_version < '3'
