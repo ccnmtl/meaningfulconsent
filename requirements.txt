@@ -24,7 +24,7 @@ ipdb==0.10.2 # pyup: <0.10.3
 selenium==3.141.0
 coverage==4.5.3
 pyasn1==0.4.5
-cryptography==2.6.1  # pyOpenSSL
+cryptography==2.7  # pyOpenSSL
 pyOpenSSL==19.0.0
 ndg-httpsclient==0.5.1
 
