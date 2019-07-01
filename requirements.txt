@@ -1,4 +1,4 @@
-Django==1.11.21 # pyup: <2.0
+Django==1.11.22 # pyup: <2.0
 feedparser==5.2.1
 Markdown==2.6.11 # pyup: < 3
 simplejson==3.16.0
