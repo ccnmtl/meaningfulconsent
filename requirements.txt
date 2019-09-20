@@ -4,7 +4,6 @@ Markdown==2.6.11 # pyup: < 3
 simplejson==3.16.0
 smartypants==2.0.1
 psycopg2==2.8.3
-Pillow==6.1.0
 versiontools==1.9.1
 statsd==3.3.0
 pep8==1.7.1
@@ -15,7 +14,7 @@ configparser==4.0.2
 flake8==3.7.8
 tornado==4.5.3 # pyup: <5.0
 cssselect==1.1.0
-lxml==4.4.0
+lxml==4.3.5  # pyup: <4.4.0
 fuzzywuzzy==0.17.0
 sure==1.4.11
 ipython==5.8.0 # pyup: <6.0.0
@@ -27,11 +26,15 @@ cryptography==2.7  # pyOpenSSL
 pyOpenSSL==19.0.0
 ndg-httpsclient==0.5.1
 
+# for python 3.4
+Pillow==5.4.1  # pyup: <6.0.0
+typing==3.7.4.1; python_version < '3.5'
+
 chardet==3.0.4  # requests
 idna==2.8  # requests
 urllib3==1.25.4  # requests
 certifi==2019.9.11  # requests
-requests==2.22.0
+requests==2.21.0  # pyup: <2.22.0
 
 logilab-common==1.4.3
 logilab-astng==0.24.3
