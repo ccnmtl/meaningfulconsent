@@ -32,7 +32,7 @@ typing==3.7.4.1; python_version < '3.5'
 
 chardet==3.0.4  # requests
 idna==2.8  # requests
-urllib3==1.25.4  # requests
+urllib3==1.25.5  # requests
 certifi==2019.9.11  # requests
 requests==2.21.0  # pyup: <2.22.0
 
