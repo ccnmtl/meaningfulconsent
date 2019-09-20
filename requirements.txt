@@ -4,19 +4,17 @@ Markdown==2.6.11 # pyup: < 3
 simplejson==3.16.0
 smartypants==2.0.1
 psycopg2==2.8.3
-Pillow==6.1.0
 versiontools==1.9.1
 statsd==3.3.0
 pep8==1.7.1
 pyflakes==2.1.1
 mccabe==0.6.1
 pycodestyle==2.5.0
-enum34==1.1.6; python_version < '3.4'
 configparser==4.0.2
 flake8==3.7.8
 tornado==4.5.3 # pyup: <5.0
 cssselect==1.1.0
-lxml==4.4.0
+lxml==4.3.5  # pyup: <4.4.0
 fuzzywuzzy==0.17.0
 sure==1.4.11
 ipython==5.8.0 # pyup: <6.0.0
@@ -28,15 +26,19 @@ cryptography==2.7  # pyOpenSSL
 pyOpenSSL==19.0.0
 ndg-httpsclient==0.5.1
 
+# for python 3.4
+Pillow==5.4.1  # pyup: <6.0.0
+typing==3.7.4.1; python_version < '3.5'
+
 chardet==3.0.4  # requests
 idna==2.8  # requests
 urllib3==1.25.4  # requests
 certifi==2019.9.11  # requests
-requests==2.22.0
+requests==2.21.0  # pyup: <2.22.0
 
 logilab-common==1.4.3
 logilab-astng==0.24.3
-pylint==1.9.5 # pyup: <2.0.0
+pylint==2.3.1
 six==1.12.0
 ipaddress==1.0.22
 text-unidecode==1.3
@@ -70,7 +72,6 @@ django-jenkins==0.110.0
 django-smoketest==1.1.0
 django-extensions==2.2.1
 # needed for django-extensions
-typing==3.7.4.1; python_version < '3.5'
 django-stagingcontext==0.1.0
 django-ga-context==0.1.0
 django-impersonate==1.4.1
@@ -81,7 +82,6 @@ django-quizblock==1.2.5
 django-markwhat==1.6.2
 djangorestframework==3.9.4 # pyup: <3.10
 gunicorn==19.9.0
-futures==3.2.0; python_version < '3'
 s3transfer==0.2.1
 jmespath==0.9.4
 
@@ -103,4 +103,3 @@ stevedore>=1.20.0 # Apache-2.0
 bandit==1.6.2
 
 entrypoints==0.3
-functools32==3.2.3-2; python_version < '3'
