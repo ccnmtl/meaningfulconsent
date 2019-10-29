@@ -27,7 +27,7 @@ pyOpenSSL==19.0.0
 ndg-httpsclient==0.5.1
 
 # for python 3.4
-Pillow==5.4.1  # pyup: <6.0.0
+Pillow==6.2.0  # pyup: <6.0.0
 typing==3.7.4.1; python_version < '3.5'
 
 chardet==3.0.4  # requests
