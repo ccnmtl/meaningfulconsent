@@ -32,8 +32,8 @@ typing==3.7.4.1; python_version < '3.5'
 
 chardet==3.0.4  # requests
 idna==2.8  # requests
-urllib3==1.25.6  # requests
-certifi==2019.9.11  # requests
+urllib3==1.25.6  # requests, sentry-sdk
+certifi==2019.9.11  # requests, sentry-sdk
 requests==2.21.0  # pyup: <2.22.0
 
 logilab-common==1.4.3
@@ -62,6 +62,7 @@ django-appconf==1.0.3
 django-compressor==2.3
 django-statsd-mozilla==0.4.0
 raven==6.10.0
+sentry-sdk==0.13.2
 django-bootstrap-form==3.4
 
 sqlparse==0.3.0
