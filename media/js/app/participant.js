@@ -173,7 +173,7 @@
                 .addClass('glyphicon-repeat spin');
 
             if (this.player !== undefined &&
-                    this.player.hasOwnProperty('stopVideo')) {
+                    Object.prototype.hasOwnProperty.call(this.player, 'stopVideo')) {
                 this.player.stopVideo();
                 this.recordSecondsViewed();
             }
@@ -218,8 +218,9 @@
                 data: jQuery(form).serialize()});
         },
         onSubmitVideoData: function(data, textStatus, jqXHR) {
-            if (this.hasOwnProperty('video_id') && this.video_id.length > 0 &&
-                this.hasOwnProperty('video_duration') &&
+            if (Object.prototype.hasOwnProperty.call(this, 'video_id') &&
+                this.video_id.length > 0 &&
+                Object.prototype.hasOwnProperty.call(this, 'video_duration') &&
                 this.video_duration > 0) {
                 return jQuery.ajax({
                     type: 'post',

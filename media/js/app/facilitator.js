@@ -17,7 +17,7 @@
             context.pages = Math.ceil(this.total / PAGE_SIZE);
             context.page = this.page;
 
-            if (this.hasOwnProperty('filterBy')) {
+            if (Object.prototype.hasOwnProperty.call(this, 'filterBy')) {
                 context.filterBy = this.filterBy;
             } else {
                 context.filterBy = '';
@@ -49,7 +49,7 @@
         },
         url: function() {
             var url = this.urlRoot + '?page=' + this.page;
-            if (this.hasOwnProperty('filterBy')) {
+            if (Object.prototype.hasOwnProperty.call(this, 'filterBy')) {
                 url += '&username=' + this.filterBy;
             }
             return url;
@@ -105,7 +105,7 @@
                 jQuery('.participant-sessions.recent').hide();
             }
 
-            if (this.participants.hasOwnProperty('filterBy')) {
+            if (Object.prototype.hasOwnProperty.call(this.participants, 'filterBy')) {
                 jQuery('#participant-clear-button').show();
             } else {
                 jQuery('#participant-clear-button').hide();
