@@ -23,7 +23,7 @@ selenium==3.141.0
 coverage==4.5.4
 pyasn1==0.4.7
 cryptography==2.8  # pyOpenSSL
-pyOpenSSL==19.0.0
+pyOpenSSL==19.1.0
 ndg-httpsclient==0.5.1
 
 # for python 3.4
