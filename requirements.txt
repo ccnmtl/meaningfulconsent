@@ -1,7 +1,7 @@
 Django==1.11.26 # pyup: <2.0
 feedparser==5.2.1
 Markdown==2.6.11 # pyup: < 3
-simplejson==3.16.0
+simplejson==3.17.0
 smartypants==2.0.1
 psycopg2==2.8.4
 versiontools==1.9.1
