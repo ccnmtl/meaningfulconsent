@@ -18,7 +18,7 @@ TEMPLATES[0]['OPTIONS']['context_processors'].append(  # noqa
     'meaningfulconsent.main.views.context_processor'
 )
 
-MIDDLEWARE_CLASSES += [  # noqa
+MIDDLEWARE += [  # noqa
     'django.middleware.csrf.CsrfViewMiddleware',
     'meaningfulconsent.main.middleware.HttpResponseNotAllowedMiddleware'
 ]

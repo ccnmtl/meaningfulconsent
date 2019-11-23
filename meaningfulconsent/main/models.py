@@ -4,18 +4,17 @@ from django import forms
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.contrib.contenttypes.fields import GenericRelation
-from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models.fields import CharField
 from django.db.models.fields.related import OneToOneField
 from django.db.models.signals import post_save
 from django.template.defaultfilters import slugify
+from django.urls.base import reverse
 from django.utils.encoding import python_2_unicode_compatible
-from rest_framework import serializers, viewsets
-
 from pagetree.models import Hierarchy, UserPageVisit, PageBlock
 from pagetree.reports import PagetreeReport, ReportableInterface, \
     StandaloneReportColumn, ReportColumnInterface
+from rest_framework import serializers, viewsets
 
 
 USERNAME_LENGTH = 9
@@ -36,11 +35,13 @@ class Clinic(models.Model):
 
 
 class UserProfile(models.Model):
-    user = OneToOneField(User, related_name="profile")
-    clinic = models.ForeignKey(Clinic)
+    user = OneToOneField(User, related_name="profile",
+                         on_delete=models.CASCADE)
+    clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE)
     language = models.CharField(max_length=2, default="en", choices=LANGUAGES)
     creator = models.ForeignKey(User, null=True, blank=True,
-                                related_name='creator')
+                                related_name='creator',
+                                on_delete=models.CASCADE)
     archived = models.BooleanField(default=False)
     notes = models.TextField(null=True, blank=True)
     created = models.DateTimeField(auto_now_add=True, editable=False)
@@ -130,7 +131,7 @@ post_save.connect(create_user_profile, sender=User)
 
 
 class UserVideoView(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     video_id = models.CharField(max_length=256)
     video_duration = models.IntegerField(default=0)
     seconds_viewed = models.IntegerField(default=0)

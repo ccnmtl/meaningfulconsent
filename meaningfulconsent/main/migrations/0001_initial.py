@@ -42,9 +42,9 @@ class Migration(migrations.Migration):
                 ('notes', models.TextField(null=True, blank=True)),
                 ('created', models.DateTimeField(auto_now_add=True)),
                 ('modified', models.DateTimeField(auto_now=True)),
-                ('clinic', models.ForeignKey(to='main.Clinic')),
-                ('creator', models.ForeignKey(related_name='creator', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
-                ('user', models.OneToOneField(related_name='profile', to=settings.AUTH_USER_MODEL)),
+                ('clinic', models.ForeignKey(to='main.Clinic', on_delete=models.CASCADE)),
+                ('creator', models.ForeignKey(related_name='creator', blank=True, to=settings.AUTH_USER_MODEL, null=True, on_delete=models.CASCADE)),
+                ('user', models.OneToOneField(related_name='profile', to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
             },
@@ -57,7 +57,7 @@ class Migration(migrations.Migration):
                 ('video_id', models.CharField(max_length=256)),
                 ('video_duration', models.IntegerField(default=0)),
                 ('seconds_viewed', models.IntegerField(default=0)),
-                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL, on_delete=models.CASCADE)),
             ],
             options={
             },

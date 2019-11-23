@@ -1,25 +1,24 @@
 import debug_toolbar
-import django.contrib.auth.views
-import django.views.static
-import djangowind.views
 from django.conf import settings
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.views import password_change, password_change_done, \
-    password_reset_done, password_reset_confirm, password_reset_complete
+from django.contrib.auth.views import PasswordResetDoneView, \
+    PasswordResetConfirmView
+from django.urls.conf import path
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.views.generic import TemplateView
+import django.views.static
 from pagetree.generic.views import PageView
 from rest_framework import routers
 
-from meaningfulconsent.main.mixins import is_facilitator
 from meaningfulconsent.main.models import ParticipantViewSet
 from meaningfulconsent.main.views import ArchiveParticipantView, \
     ClearParticipantView, CreateParticipantView, IndexView, LoginView, \
     LoginParticipantView, LogoutView, ParticipantLanguageView, \
     ParticipantNoteView, RestrictedEditView, TrackParticipantView, \
-    ParticipantPrintView, ReportView
+    ParticipantPrintView, ReportView, ManageParticipantsView, \
+    FacilitatorPasswordChangeView, FacilitatorPasswordChangeDoneView
 
 
 admin.autodiscover()
@@ -27,44 +26,31 @@ admin.autodiscover()
 router = routers.DefaultRouter()
 router.register(r'participants', ParticipantViewSet, base_name='participant')
 
-redirect_after_logout = getattr(settings, 'LOGOUT_REDIRECT_URL', None)
-
 auth_urls = url(r'^accounts/', include('django.contrib.auth.urls'))
-
-logout_page = url(r'^accounts/logout/$', django.contrib.auth.views.logout,
-                  {'next_page': redirect_after_logout})
-admin_logout_page = url(r'^accounts/logout/$',
-                        django.contrib.auth.views.logout,
-                        {'next_page': '/admin/'})
-
 if hasattr(settings, 'CAS_BASE'):
     auth_urls = url(r'^accounts/', include('djangowind.urls'))
-    logout_page = url(r'^accounts/logout/$', djangowind.views.logout,
-                      {'next_page': redirect_after_logout})
-    admin_logout_page = url(r'^admin/logout/$', djangowind.views.logout,
-                            {'next_page': redirect_after_logout})
 
 
 urlpatterns = [
     url(r'^$', ensure_csrf_cookie(IndexView.as_view())),
-    url(r'^admin/', include(admin.site.urls)),
+    path('admin/', admin.site.urls),
     url(r'^accounts/login/$', LoginView.as_view()),
     url(r'^accounts/logout/$', LogoutView.as_view()),
 
     # password change & reset. overriding to gate them.
     url(r'^accounts/password_change/$',
-        is_facilitator(password_change),
+        FacilitatorPasswordChangeView.as_view(),
         name='password_change'),
     url(r'^accounts/password_change/done/$',
-        is_facilitator(password_change_done),
+        FacilitatorPasswordChangeDoneView.as_view(),
         name='password_change_done'),
-    url(r'^password/reset/done/$', password_reset_done,
+    url(r'^password/reset/done/$', PasswordResetDoneView.as_view(),
         name='password_reset_done'),
     url(r'^password/reset/confirm/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$',
-        password_reset_confirm,
+        PasswordResetConfirmView.as_view(),
         name='password_reset_confirm'),
     url(r'^password/reset/complete/$',
-        password_reset_complete, name='password_reset_complete'),
+        PasswordResetDoneView.as_view(), name='password_reset_complete'),
 
     auth_urls,
     url(r'^api/', include(router.urls)),
@@ -77,8 +63,7 @@ urlpatterns = [
     url(r'^pagetree/', include('pagetree.urls')),
     url(r'^quizblock/', include('quizblock.urls')),
 
-    url(r'^participants/manage/$', is_facilitator(
-        TemplateView.as_view(template_name="main/manage_participants.html"))),
+    url(r'^participants/manage/$', ManageParticipantsView.as_view()),
     url(r'^participants/report/$', ReportView.as_view(), {},
         'report-view'),
 
