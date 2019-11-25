@@ -81,7 +81,7 @@ django-pageblocks==2.0.0
 django-quizblock==1.2.5
 django-markwhat==1.6.2
 djangorestframework==3.10.3
-gunicorn==20.0.0
+gunicorn==20.0.2
 s3transfer==0.2.1
 jmespath==0.9.4
 
