@@ -33,7 +33,7 @@ typing==3.7.4.1; python_version < '3.5'
 chardet==3.0.4  # requests
 idna==2.8  # requests
 urllib3==1.25.7  # requests, sentry-sdk
-certifi==2019.9.11  # requests, sentry-sdk
+certifi==2019.11.28  # requests, sentry-sdk
 requests==2.21.0  # pyup: <2.22.0
 
 logilab-common==1.4.4
