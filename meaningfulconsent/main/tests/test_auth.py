@@ -1,5 +1,7 @@
 from django.contrib.auth.models import User
 from django.test import TestCase
+from django.test.client import RequestFactory
+
 from meaningfulconsent.main.auth import ParticipantBackend, \
     generate_random_username, generate_password
 from meaningfulconsent.main.models import Clinic
@@ -10,6 +12,7 @@ class ParticipantAuthTest(TestCase):
     def setUp(self):
         Clinic.objects.create(name="pilot")
         self.backend = ParticipantBackend()
+        self.request = RequestFactory().get('/')
 
     def test_match(self):
         self.assertFalse(self.backend.match(''))
@@ -25,16 +28,19 @@ class ParticipantAuthTest(TestCase):
         self.assertTrue(self.backend.match(username))
 
     def test_authenticate_invalid_username(self):
-        self.assertEquals(self.backend.authenticate("foobar"), None)
+        self.assertEquals(
+            self.backend.authenticate(self.request, "foobar"), None)
 
     def test_authenticate_user_does_not_exist(self):
-        self.assertEquals(self.backend.authenticate("MC1234567"), None)
+        self.assertEquals(
+            self.backend.authenticate(self.request, "MC1234567"), None)
 
     def test_authenticate_user_is_active(self):
         user = User.objects.create(username='MC1234567')
         user.set_password('test')
         user.save()
-        self.assertEquals(self.backend.authenticate("MC1234567"), None)
+        self.assertEquals(
+            self.backend.authenticate(self.request, "MC1234567"), None)
 
     def test_authenticate_user_invalid_password(self):
         user = User.objects.create(username='MC1234567', is_active=False)
@@ -42,7 +48,8 @@ class ParticipantAuthTest(TestCase):
         user.save()
 
         self.assertEquals(
-            self.backend.authenticate(username="MC1234567", password="test"),
+            self.backend.authenticate(
+                self.request, username="MC1234567", password="test"),
             None)
 
     def test_authenticate_user_success(self):
@@ -54,7 +61,8 @@ class ParticipantAuthTest(TestCase):
         user.save()
 
         self.assertEquals(
-            self.backend.authenticate(username=unm, password=pwd), user)
+            self.backend.authenticate(
+                self.request, username=unm, password=pwd), user)
 
     def test_get_user(self):
         unm = generate_random_username()

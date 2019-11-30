@@ -12,7 +12,9 @@ from django.conf import settings
 from django.contrib.auth import login, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.models import User
-from django.contrib.auth.views import logout as auth_logout_view
+from django.contrib.auth.views import (
+    LogoutView as DjangoLogoutView,
+    PasswordChangeView, PasswordChangeDoneView)
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.sites.models import Site
 from django.http.response import HttpResponseRedirect, HttpResponse
@@ -20,8 +22,8 @@ from django.shortcuts import get_object_or_404
 from django.views.generic.base import TemplateView, View
 from djangowind.views import logout as wind_logout_view
 from pagetree.generic.views import EditView
-from pagetree.models import UserLocation, UserPageVisit, Hierarchy
 from pagetree.models import PageBlock
+from pagetree.models import UserLocation, UserPageVisit, Hierarchy
 from quizblock.models import Quiz
 
 from meaningfulconsent.main.auth import generate_random_username, \
@@ -33,11 +35,11 @@ from meaningfulconsent.main.models import UserVideoView, \
 
 
 def user_is_participant(user):
-    return not user.is_anonymous() and user.profile.is_participant()
+    return not user.is_anonymous and user.profile.is_participant()
 
 
 def user_is_facilitator(user):
-    return not user.is_anonymous() and not user.profile.is_participant()
+    return not user.is_anonymous and not user.profile.is_participant()
 
 
 def context_processor(request):
@@ -67,8 +69,8 @@ class LoginView(JSONResponseMixin, View):
             if request.user is not None:
                 next_url = request.POST.get('next', '/')
                 return self.render_to_json_response({'next': next_url})
-        else:
-            return self.render_to_json_response({'error': True})
+
+        return self.render_to_json_response({'error': True})
 
 
 class LogoutView(LoggedInMixin, View):
@@ -80,7 +82,17 @@ class LogoutView(LoggedInMixin, View):
         elif hasattr(settings, 'WIND_BASE'):
             return wind_logout_view(request, next_page="/")
         else:
-            return auth_logout_view(request, "/")
+            return DjangoLogoutView.as_view()(request, "/")
+
+
+class FacilitatorPasswordChangeView(LoggedInFacilitatorMixin,
+                                    PasswordChangeView):
+    template_name = "registration/password_change_form.html"
+
+
+class FacilitatorPasswordChangeDoneView(LoggedInFacilitatorMixin,
+                                        PasswordChangeDoneView):
+    template_name = "registration/password_change_done.html"
 
 
 class RestrictedEditView(LoggedInMixinSuperuser, EditView):
@@ -93,7 +105,7 @@ class IndexView(TemplateView):
         if user_is_participant(user):
             return HttpResponseRedirect(user.profile.last_location_url())
 
-        if user.is_anonymous():
+        if user.is_anonymous:
             self.template_name = "main/splash.html"
         else:
             self.template_name = "main/facilitator.html"
@@ -156,7 +168,7 @@ class LoginParticipantView(LoggedInFacilitatorMixin, View):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            if user.is_authenticated():
+            if user.is_authenticated:
                 return HttpResponseRedirect(user.profile.last_location_url())
 
         raise http.Http404
@@ -244,6 +256,10 @@ class ParticipantNoteView(LoggedInFacilitatorMixin, JSONResponseMixin, View):
         context = {'success': True}
 
         return self.render_to_json_response(context)
+
+
+class ManageParticipantsView(LoggedInFacilitatorMixin, TemplateView):
+    template_name = "main/manage_participants.html"
 
 
 class ReportView(LoggedInFacilitatorMixin, View):
