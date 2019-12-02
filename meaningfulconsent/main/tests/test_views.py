@@ -2,10 +2,10 @@ from json import loads
 import json
 
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
 from django.http.response import Http404
 from django.test import TestCase
 from django.test.client import Client, RequestFactory
+from django.urls.base import reverse
 from pagetree.helpers import get_hierarchy
 from pagetree.models import UserPageVisit
 
@@ -80,7 +80,7 @@ class PagetreeViewTestsLoggedIn(TestCase):
         self.assertEqual(r.status_code, 200)
 
     def test_edit_page(self):
-        self.assertTrue(self.user.is_authenticated())
+        self.assertTrue(self.user.is_authenticated)
 
         # you must be a superuser to edit pages
         r = self.client.get("/pages/en/edit/section-1/")
