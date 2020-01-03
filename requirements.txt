@@ -50,7 +50,7 @@ Jinja2==2.10.1
 MarkupSafe==1.1.1
 
 django-bootstrap3==12.0.3
-djangowind==1.2.2
+djangowind==1.2.3
 typogrify==2.0.7
 django-staticmedia==0.2.2
 django-indexer==0.3.0
