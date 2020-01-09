@@ -24,7 +24,7 @@ from meaningfulconsent.main.views import ArchiveParticipantView, \
 admin.autodiscover()
 
 router = routers.DefaultRouter()
-router.register(r'participants', ParticipantViewSet, base_name='participant')
+router.register(r'participants', ParticipantViewSet, basename='participant')
 
 auth_urls = url(r'^accounts/', include('django.contrib.auth.urls'))
 if hasattr(settings, 'CAS_BASE'):
